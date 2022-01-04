@@ -25,8 +25,8 @@ class Herbivores:
         self.age += 1
         return self.age
 
-    def weight_flux(self):
-        self.weight += herb['beta'] * herb['F']
+    def weight_flux(self, gain):
+        self.weight += herb['beta'] * gain
         return self.weight
 
     def weight_loss(self):
@@ -44,7 +44,7 @@ class Herbivores:
 
         else:
             p = herb['omega'] * (1 - self.fitness)
-            a = random.random()
+            a = random.random() # husk å bytte navn på variabelen
             if a < p:
                 self.alive = False
 
