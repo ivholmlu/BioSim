@@ -11,8 +11,8 @@ def test_aging():
     num_years = 10
     animal = Herbivores(test_animal)
     for _ in range(num_years):
-        animal.aging()
-    assert animal.age == num_years
+        animal.ages()
+    assert animal.age == num_years + test_animal['age']
 
 
 def test_herbivores_creation():
@@ -20,7 +20,7 @@ def test_herbivores_creation():
     Creation has age set to 0
     """
     Herb = Herbivores(test_animal)
-    assert Herb.age == 0
+    assert Herb.age == test_animal['age']
 
 
 @pytest.mark.parametrize('age_p, weight_p, expected_fitness', [(40.0, 10.0, 0.250),
