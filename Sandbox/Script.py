@@ -15,37 +15,34 @@ L = Lowland(nu_herbs, 378)
 
 # "A simulation"
 for _ in range(100):
-    # Stage 0 - initial fitness calculation
+    # Stage 0 - calculating fitness, sorting by fitness
     [x.fitness_flux() for x in nu_herbs]
-    nu_herbs.sort(key=lambda r: r.fitness, reverse=True)
+    L.sort_fitness()
 
     # Stage 1 - feeding, weight gain
     L.feed()
+    L.sort_fitness()
 
     # Stage 2 - procreation
     n = len(nu_herbs)
     proc = [x.birth(n) for x in nu_herbs]
 
-        # Challenge - how are going to add a new baby if it returns True!
-        # Suggestion, make born an attribute of Herbivores class,
-            # in other words, making it a self-object
     for herbivore in nu_herbs:
         if herbivore.give_birth is True:
             nu_herbs.append(Herbivores(herbivore.baby))
+    L.sort_fitness()
 
     # Stage 3 - Migration (skip for now)
 
     # Stage 4 - Aging
     [x.aging() for x in nu_herbs]
+    L.sort_fitness()
 
     # Stage 5 - Weight loss
     [x.weight_loss() for x in nu_herbs]
+    L.sort_fitness()
 
-    # Stage 6 - fitness calculation (again)
-    [x.fitness_flux() for x in nu_herbs]
-    nu_herbs.sort(key=lambda r: r.fitness, reverse=True)
-
-    # Stage 7 - Death
+    # Stage 6 - Death
     [x.death() for x in nu_herbs]
 
     for herbivore in nu_herbs:
@@ -54,3 +51,7 @@ for _ in range(100):
 
 
     L.replenish()
+
+#%%
+for i,j in enumerate(nu_herbs, 1):
+    print(i, j.age, j.weight, j.fitness)
