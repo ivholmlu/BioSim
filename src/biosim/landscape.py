@@ -1,4 +1,4 @@
-from biosim.animals import Herbivores
+from .animals import Herbivores
 # class Landscape:
 #pass
 
@@ -7,6 +7,9 @@ class Lowland:  # senere Lowland(Landscape):
         self.f_max = f_max
         self.list_animals = list_animals
         self.current_fodder = self.f_max
+
+    def sort_fitness(self):
+        self.list_animals.sort(key=lambda animal: animal.fitness, reverse=True)
 
     def feed(self):  # fordeler mat, mater faktisk dyrene.
         for animal in self.list_animals:
