@@ -1,4 +1,4 @@
-from biosim.Herbivores import Herbivores
+from biosim.animals import Herbivores
 from biosim.landscape import Lowland
 import random
 
@@ -15,10 +15,9 @@ L = Lowland(nu_herbs, 378)
 
 # "A simulation"
 for _ in range(100):
-    # Stage 0 - calculate fitness
+    # Stage 0 - initial fitness calculation
     [x.fitness_flux() for x in nu_herbs]
-    nu_herbs.sort(key=lambda r: r.fitness, reverse = True)
-
+    nu_herbs.sort(key=lambda r: r.fitness, reverse=True)
 
     # Stage 1 - feeding, weight gain
     L.feed()
@@ -42,7 +41,11 @@ for _ in range(100):
     # Stage 5 - Weight loss
     [x.weight_loss() for x in nu_herbs]
 
-    # Stage 6 - Death
+    # Stage 6 - fitness calculation (again)
+    [x.fitness_flux() for x in nu_herbs]
+    nu_herbs.sort(key=lambda r: r.fitness, reverse=True)
+
+    # Stage 7 - Death
     [x.death() for x in nu_herbs]
 
     for herbivore in nu_herbs:
