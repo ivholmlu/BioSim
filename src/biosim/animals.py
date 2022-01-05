@@ -33,7 +33,6 @@ class Herbivores:
         self.weight += beta * gain
         self.fitness_flux()
 
-
     def birth(self, N, gamma=param['gamma'], w_birth=param['w_birth'],
               sigma_birth=param['sigma_birth'], zeta=param['zeta']):
         phi = self.fitness
@@ -46,14 +45,13 @@ class Herbivores:
             if a < p:
                 # mother_weight = self.weight - baby * zeta
                 self.weight -= baby * zeta
-                if self.weight > 0:  # bytt til mother_weight
+                if self.weight >= 0:  # bytt til mother_weight
                     self.give_birth = True
                     self.baby['weight'] = baby
                 else:
                     self.weight += baby * zeta
 
         self.fitness_flux()
-
 
     def migration(self):
         pass
@@ -62,7 +60,6 @@ class Herbivores:
         self.age += 1
         self.fitness_flux()
         return self.age
-
 
     def weight_loss(self, eta=param['eta']):
         self.weight -= self.weight * eta
