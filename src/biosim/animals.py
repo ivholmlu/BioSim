@@ -31,6 +31,8 @@ class Herbivores:
 
     def weight_gain(self, gain=0, beta=param['beta']):
         self.weight += beta * gain
+        self.fitness_flux()
+
 
     def birth(self, N, gamma=param['gamma'], w_birth=param['w_birth'],
               sigma_birth=param['sigma_birth'], zeta=param['zeta']):
@@ -50,16 +52,21 @@ class Herbivores:
                 else:
                     self.weight += baby * zeta
 
+        self.fitness_flux()
+
 
     def migration(self):
         pass
 
     def aging(self):
         self.age += 1
+        self.fitness_flux()
         return self.age
+
 
     def weight_loss(self, eta=param['eta']):
         self.weight -= self.weight * eta
+        self.fitness_flux()
 
     def death(self, omega=param['omega']):
         if self.weight == 0:
