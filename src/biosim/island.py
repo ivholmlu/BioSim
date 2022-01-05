@@ -8,9 +8,11 @@ class Island():
     def cycle(self):
         # Kan videre forbedres ved å implementere .sort_fitness() i hver av funksjonene
         self.island.init_fitness()
+        self.island.sort_fitness()
         self.island.feed()
         self.island.sort_fitness()
         self.island.procreate()
+        self.island.sort_fitness()
         self.island.aging()
         self.island.sort_fitness()
         self.island.weight_cut()
