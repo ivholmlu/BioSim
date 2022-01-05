@@ -21,7 +21,7 @@ class Herbivores:
         self.fitness = 0
         self.alive = True
         self.give_birth = False
-        self.baby = {'age': 0, 'weight': 0}
+        self.baby = {'age': 0, 'weight': 0.0}
 
     def fitness_flux(self, a_half=param['a_half'], w_half=param['w_half'],
                      phi_age=param['phi_age'], phi_weight=param['phi_weight']):
