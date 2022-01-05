@@ -14,9 +14,9 @@ nu_herbs = [Herbivores(x) for x in tot_animals] # Liste med herbivore-objekter
 L = Lowland(nu_herbs, 378)
 
 # "A simulation"
-for _ in range(100):
+for _ in range(301):
     # Stage 0 - calculating fitness, sorting by fitness
-    [x.fitness_flux() for x in nu_herbs]
+    init_fitness = [x.fitness_flux() for x in nu_herbs]
     L.sort_fitness()
 
     # Stage 1 - feeding, weight gain
@@ -25,7 +25,7 @@ for _ in range(100):
 
     # Stage 2 - procreation
     n = len(nu_herbs)
-    proc = [x.birth(n) for x in nu_herbs]
+    procreate = [x.birth(n) for x in nu_herbs]
 
     for herbivore in nu_herbs:
         if herbivore.give_birth is True:
@@ -35,11 +35,11 @@ for _ in range(100):
     # Stage 3 - Migration (skip for now)
 
     # Stage 4 - Aging
-    [x.aging() for x in nu_herbs]
+    age_increase = [x.aging() for x in nu_herbs]
     L.sort_fitness()
 
     # Stage 5 - Weight loss
-    [x.weight_loss() for x in nu_herbs]
+    weight_cut = [x.weight_loss() for x in nu_herbs]
     L.sort_fitness()
 
     # Stage 6 - Death
@@ -49,9 +49,8 @@ for _ in range(100):
         if herbivore.alive is False:
             nu_herbs.remove(herbivore)
 
-
     L.replenish()
 
 #%%
-for i,j in enumerate(nu_herbs, 1):
+for i, j in enumerate(nu_herbs, 1):
     print(i, j.age, j.weight, j.fitness)
