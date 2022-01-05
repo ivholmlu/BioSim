@@ -23,6 +23,17 @@ class Herbivores:
         self.give_birth = False
         self.baby = {'age': 0, 'weight': 0.0}
 
+    # Vi får bekymre oss for dette på et senere tidspunkt
+    #@classmethod
+    #def set_params(cls, new_params):
+     #   for key in new_params.keys():
+      #      if key not in new_params.keys():
+       #         raise KeyError('Invalid parameter name: ' + key)
+        #    else:
+         #       cls.param[key] = new_params[key]
+
+        #return cls.param
+
     def fitness_flux(self, a_half=param['a_half'], w_half=param['w_half'],
                      phi_age=param['phi_age'], phi_weight=param['phi_weight']):
         q_age = 1 / (1 + math.exp(phi_age * (self.age - a_half)))
@@ -56,7 +67,7 @@ class Herbivores:
     def migration(self):
         pass
 
-    def aging(self):
+    def ages(self):
         self.age += 1
         self.fitness_flux()
         return self.age
