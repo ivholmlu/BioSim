@@ -19,6 +19,8 @@ class Herbivores:
         self.weight = dict['weight']
         self.fitness = 0
         self.alive = True
+        self.give_birth = False
+        self.baby = {'age': 0, 'weight': 0}
 
     def aging(self):
         self.age += 1
@@ -35,17 +37,20 @@ class Herbivores:
         self.fitness = q_age * q_weight
         return self.fitness
 
-    def birth(self, N, gamma = param['gamma'], phi = self.fitness, w_birth = param['w_birth'],
+    def birth(self, N, gamma = param['gamma'], w_birth = param['w_birth'],
               sigma_birth = param['sigma_birth'], zeta = param['zeta']):
+        phi = self.fitness
         p = min(1, gamma*phi*(N-1))
         a = random.random()
-        born = False
-        baby = w_birth * zeta
+        baby = random.gauss(w_birth, sigma_birth)
+
         if self.weight > baby:
             if a < p:
-                self.weight -= baby
-                born = True
-        return born
+                self.weight -= baby * zeta
+                if self.weight > 0:
+                    self.give_birth = True
+                else:
+                    self.weight += baby * zeta
 
     def death(self, omega=param['omega']):
         if self.weight == 0:
