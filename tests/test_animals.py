@@ -26,7 +26,7 @@ def test_herbivores_creation():
 @pytest.mark.parametrize('age_p, weight_p, expected_fitness', [(40.0, 10.0, 0.250),
                                                                (40.0, 3, 0.165906),
                                                                (30, 25, 0.815553)])
-def test_fitness_flux_at_half(age_p, weight_p, expected_fitness):
+def test_fitness_flux(age_p, weight_p, expected_fitness):
     """
     Testing the fitness function with the formula.
     If both values (?) at 0.50 in value the result should be 0.25
@@ -40,12 +40,7 @@ def test_fitness_flux_at_half(age_p, weight_p, expected_fitness):
 
 #@pytest.mark.parametrize('age', 'weight', 'expected_fitness',
                          #[(40.0, 10.0, 0.250),])
-def test_fitness_flux():
-    """
-    Test fitness_flux with other values.
-    values are checked up against CAS in geogebra
-    """
-    pass
+
 
 
 
