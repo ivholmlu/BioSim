@@ -20,13 +20,11 @@ class Herbivores:
         self.fitness = 0
         self.alive = True
 
-    def age(self):
+    def aging(self):
         self.age += 1
-        return self.age
 
-    def weight_flux(self, beta=param['beta'], gain=0):
+    def weight_gain(self, beta=param['beta'], gain=0):
         self.weight += beta * gain
-        return self.weight
 
     def weight_loss(self, eta=param['eta']):
         self.weight -= self.weight * eta
