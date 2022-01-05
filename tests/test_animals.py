@@ -1,9 +1,11 @@
+import pytest
 from biosim.animals import Herbivores
 
-test_animal = {'age': 0, 'weight': 0}
+test_animal = {'age': 40, 'weight': 25}
 
-# @pytest.fixture(autouse = True)
-# def create_Herb(self):
+
+
+
 
 def test_aging():
     num_years = 10
@@ -20,19 +22,24 @@ def test_herbivores_creation():
     Herb = Herbivores(test_animal)
     assert Herb.age == 0
 
-def test_fitness_flux_at_half():
+
+@pytest.mark.parametrize('age_p, weight_p, expected_fitness', [(40.0, 10.0, 0.250),
+                                                               (40.0, 3, 0.165906),
+                                                               (30, 25, 0.815553)])
+def test_fitness_flux_at_half(age_p, weight_p, expected_fitness):
     """
     Testing the fitness function with the formula.
     If both values (?) at 0.50 in value the result should be 0.25
     """
-    #Sette verdier inn som parameter når pytest er i bruk
     herb = Herbivores(test_animal)
-    herb.age = 40.0
-    herb.weight = 10.0
-    herb.fitness_flux(phi_age=1, phi_weight=1)
+    herb.age = age_p
+    herb.weight = weight_p
     herb.fitness_flux()
-    assert herb.fitness == 0.250
+    assert herb.fitness == pytest.approx(expected_fitness)
 
+
+#@pytest.mark.parametrize('age', 'weight', 'expected_fitness',
+                         #[(40.0, 10.0, 0.250),])
 def test_fitness_flux():
     """
     Test fitness_flux with other values.
@@ -61,8 +68,5 @@ def test_weight_loss():
     initial_weight = herb.weight
     herb.weight_loss()
     assert herb.weight == initial_weight - initial_weight * Herbivores.param['eta']
-
-
-
 
 
