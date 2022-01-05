@@ -1,7 +1,8 @@
 from .animals import Herbivores
 
+
 class Lowland:  # senere Lowland(Landscape):
-    def __init__(self, list_animals=None, f_max=300): # vha. set_lanscape_parameters så skal vi få inn f_max.
+    def __init__(self, list_animals=None, f_max=300):  # vha. set_lanscape_parameters så skal vi få inn f_max.
         self.f_max = f_max
         self.list_animals = list_animals
         self.current_fodder = self.f_max
@@ -43,7 +44,7 @@ class Lowland:  # senere Lowland(Landscape):
 
     def weight_cut(self):
         new_weight = [self.population.weight_loss(animal) for animal in
-                    self.population if animal.alive is False]
+                      self.population if animal.alive is False]
 
     def deceased(self):
         for animal in self.population:
