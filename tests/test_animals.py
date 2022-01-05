@@ -1,22 +1,17 @@
 from biosim.animals import Herbivores
 
+test_animal = {'age': 0, 'weight': 0}
 
-test_animal = {'age' : 0, 'weight' : 10}
-
-
-
-
-
-#    @pytest.fixture(autouse = True)
-#    def create_Herb(self):
+# @pytest.fixture(autouse = True)
+# def create_Herb(self):
 
 def test_aging():
-
     num_years = 10
     animal = Herbivores(test_animal)
     for _ in range(num_years):
         animal.aging()
     assert animal.age == num_years
+
 
 def test_herbivores_creation():
     """
@@ -24,6 +19,28 @@ def test_herbivores_creation():
     """
     Herb = Herbivores(test_animal)
     assert Herb.age == 0
+
+def test_fitness_flux_at_half():
+    """
+    Testing the fitness function with the formula.
+    If both values (?) at 0.50 in value the result should be 0.25
+    """
+    #Sette verdier inn som parameter når pytest er i bruk
+    herb = Herbivores(test_animal)
+    herb.age = 40.0
+    herb.weight = 10.0
+    herb.fitness_flux(phi_age=1, phi_weight=1)
+    herb.fitness_flux()
+    assert herb.fitness == 0.250
+
+def test_fitness_flux():
+    """
+    Test fitness_flux with other values.
+    values are checked up against CAS in geogebra
+    """
+    pass
+
+
 
 def test_certain_death():
     """
