@@ -32,8 +32,19 @@ def test_certain_death():
     """
     herb = Herbivores(test_animal)
     herb.death(omega = 1)
-    herb.fitness = 0
-    assert herb.alive == False
+    herb.fitness = 0 #Fikse denne når vi går over til @pytest
+    assert herb.alive is False
+
+def test_weight_loss():
+    """
+    test_weight_loss has set weight and eta parameters
+    Checks if it gives right return on eight after calculations
+    """
+    herb = Herbivores(test_animal)
+    initial_weight = herb.weight
+    herb.weight_loss()
+    assert herb.weight == initial_weight - initial_weight * Herbivores.param['eta']
+
 
 
 
