@@ -32,7 +32,7 @@ class Lowland:  # senere Lowland(Landscape):
 
     def procreate(self):
         num_pop = len(self.population)
-        eligibility_to_procreate = [animal.birth()
+        eligibility_to_procreate = [animal.birth(num_pop)
                                     for animal in self.population]
         spawned = [self.population.append(Herbivores(animal.baby))
                    for animal in self.population if animal.give_birth is True]
