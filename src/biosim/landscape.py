@@ -1,7 +1,6 @@
+from biosim.Herbivores import Herbivores
 # class Landscape:
     #  pass
-
-import Herbivores
 
 class Lowland:  # senere Lowland(Landscape):
     def __init__(self, list_animals=None, f_max=300): # vha. set_lanscape_parameters så skal vi få inn f_max.
