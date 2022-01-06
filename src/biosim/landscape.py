@@ -2,7 +2,7 @@ from .animals import Herbivores
 
 
 class Lowland:  # senere Lowland(Landscape):
-    def __init__(self, list_animals=None, f_max=300):  # vha. set_lanscape_parameters så skal vi få inn f_max.
+    def __init__(self, list_animals=None, f_max=800):  # vha. set_lanscape_parameters så skal vi få inn f_max.
         self.f_max = f_max
         self.list_animals = list_animals
         self.current_fodder = self.f_max
