@@ -14,7 +14,7 @@ class Lowland:  # senere Lowland(Landscape):
         self.population = [Herbivores(animal) for animal in pop]
 
     def init_fitness(self):
-        fitness0 = [animal.fitnes_flux() for animal in self.population]
+        fitness0 = [animal.fitness_flux() for animal in self.population]
 
     def sort_fitness(self):
         self.population.sort(key=lambda animal: animal.fitness, reverse=True)
