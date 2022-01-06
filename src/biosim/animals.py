@@ -59,10 +59,12 @@ class Herbivores:
                 if self.weight >= 0:  # bytt til mother_weight
                     self.give_birth = True
                     self.baby['weight'] = baby
+                    return Herbivores(self.baby)
                 else:
                     self.weight += baby * zeta
 
         self.fitness_flux()
+
 
     def migration(self):
         pass
