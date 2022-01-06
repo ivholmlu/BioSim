@@ -20,7 +20,6 @@ class Herbivores:
         self.weight = dict['weight']
         self.fitness = 0
         self.alive = True
-        self.give_birth = False
         self.baby = {'age': 0, 'weight': 0.0}
 
     # Vi får bekymre oss for dette på et senere tidspunkt
@@ -57,9 +56,8 @@ class Herbivores:
                 # mother_weight = self.weight - baby * zeta
                 self.weight -= baby * zeta
                 if self.weight >= 0:  # bytt til mother_weight
-                    self.give_birth = True
                     self.baby['weight'] = baby
-                    return Herbivores(self.baby)
+                    return type(self)(self.baby)
                 else:
                     self.weight += baby * zeta
 
