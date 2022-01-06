@@ -2,14 +2,14 @@
 import random
 from biosim.landscape import Lowland
 from biosim.island import Island
-
-random.seed(61361137)
+#%%
+random.seed(123)
 
 ini_herbs = [{'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
                       for _ in range(50)]}]
-c = Island(ini_herbs)
+a = Island(ini_herbs)
 
 for _ in range(200):
     a.cycle()
@@ -24,6 +24,7 @@ for i, j in enumerate(a.population, 1):
 print(n)
 
 #%%
+random.seed(123)
 ini_herbs = [{'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
@@ -40,3 +41,4 @@ for _ in range(200):
     c.deceased()
     c.replenish()
 print(len(c.population))
+
