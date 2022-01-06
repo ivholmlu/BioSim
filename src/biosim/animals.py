@@ -1,8 +1,6 @@
 """
 Class for herbivores. Will later on be merged into class for animals.
 There will herbivores be a subclass
-
-
 """
 import math
 import random
@@ -22,8 +20,8 @@ class Herbivores:
         self.alive = True
         self.baby = {'age': 0, 'weight': 0.0}
 
-    # Vi får bekymre oss for dette på et senere tidspunkt
-    #@classmethod
+# Vi får bekymre oss for dette på et senere tidspunkt
+#@classmethod
     #def set_params(cls, new_params):
      #   for key in new_params.keys():
       #      if key not in new_params.keys():
@@ -46,13 +44,11 @@ class Herbivores:
     def birth(self, N, gamma=param['gamma'], w_birth=param['w_birth'],
               sigma_birth=param['sigma_birth'], zeta=param['zeta']):
         phi = self.fitness
-
         p = min(1, gamma * phi * (N - 1))
-        a = random.random()
         baby = random.gauss(w_birth, sigma_birth)
 
         if self.weight > baby:
-            if a < p:
+            if random.random() < p:
                 # mother_weight = self.weight - baby * zeta
                 self.weight -= baby * zeta
                 if self.weight >= 0:  # bytt til mother_weight
@@ -81,6 +77,5 @@ class Herbivores:
             self.alive = False
         else:
             p = omega * (1 - self.fitness)
-            a = random.random()  # husk å bytte navn på variabelen
-            if a < p:
+            if random.random() < p:
                 self.alive = False
