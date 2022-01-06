@@ -42,23 +42,21 @@ class Herbivores:
         self.fitness_flux()
 
     def birth(self, N, gamma=param['gamma'], w_birth=param['w_birth'],
-              sigma_birth=param['sigma_birth'], zeta=param['zeta']):
+              sigma_birth=param['sigma_birth'], xi=param['xi']):
         phi = self.fitness
         p = min(1, gamma * phi * (N - 1))
         baby = random.gauss(w_birth, sigma_birth)
 
         if self.weight > baby:
             if random.random() < p:
-                # mother_weight = self.weight - baby * zeta
-                self.weight -= baby * zeta
-                if self.weight >= 0:  # bytt til mother_weight
+                self.weight -= baby * xi
+                if self.weight >= 0:
                     self.baby['weight'] = baby
                     return type(self)(self.baby)
                 else:
-                    self.weight += baby * zeta
+                    self.weight += baby * xi
 
         self.fitness_flux()
-
 
     def migration(self):
         pass
@@ -66,7 +64,6 @@ class Herbivores:
     def ages(self):
         self.age += 1
         self.fitness_flux()
-        return self.age
 
     def weight_loss(self, eta=param['eta']):
         self.weight -= self.weight * eta
