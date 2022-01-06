@@ -5,13 +5,16 @@ class Lowland:  # senere Lowland(Landscape):
     def __init__(self, list_animals=None, f_max=800):  # vha. set_lanscape_parameters så skal vi få inn f_max.
         self.f_max = f_max
         self.list_animals = list_animals
+        self.pop = self.list_animals[0]['pop']
         self.current_fodder = self.f_max
-        self.population = None
+        self.population = [Herbivores(animal) for animal in self.pop]
         self.babies = None
 
-    def add_population(self):
-        pop = self.list_animals[0]['pop']
-        self.population = [Herbivores(animal) for animal in pop]
+        # må finne bedre måte å implementere dyrebestanden inn
+
+    #def add_population(self):
+     #   pop = self.list_animals[0]['pop']
+      #  self.population = [Herbivores(animal) for animal in pop]
 
     def init_fitness(self):
         fitness0 = [animal.fitness_flux() for animal in self.population]
@@ -52,3 +55,6 @@ class Lowland:  # senere Lowland(Landscape):
 
     def replenish(self):  # fyller på mat for hvert år som går, kan være i overklassen.
         self.current_fodder = self.f_max
+
+    def get_population(self):
+        return len(self.population)
