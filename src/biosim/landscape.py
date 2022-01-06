@@ -42,8 +42,7 @@ class Lowland:  # senere Lowland(Landscape):
             animal.ages()
 
     def weight_cut(self):
-        new_weight = [self.population.weight_loss(animal) for animal in
-                      self.population if animal.alive is False]
+        new_weight = [animal.weight_loss() for animal in self.population]
 
     def deceased(self):
         for animal in self.population:
