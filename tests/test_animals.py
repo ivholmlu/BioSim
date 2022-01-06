@@ -4,9 +4,6 @@ from biosim.animals import Herbivores
 test_animal = {'age': 40, 'weight': 25}
 
 
-
-
-
 def test_aging():
     num_years = 10
     animal = Herbivores(test_animal)
@@ -19,8 +16,8 @@ def test_herbivores_creation():
     """
     Creation has age set to 0
     """
-    Herb = Herbivores(test_animal)
-    assert Herb.age == test_animal['age']
+    herb = Herbivores(test_animal)
+    assert herb.age == test_animal['age']
 
 
 @pytest.mark.parametrize('age_p, weight_p, expected_fitness', [(40.0, 10.0, 0.250),
@@ -38,21 +35,16 @@ def test_fitness_flux(age_p, weight_p, expected_fitness):
     assert herb.fitness == pytest.approx(expected_fitness)
 
 
-#@pytest.mark.parametrize('age', 'weight', 'expected_fitness',
-                         #[(40.0, 10.0, 0.250),])
-
-
-
-
 def test_certain_death():
     """
     test_certain_death has omega=1 creating certain death for the herbivores
     since the fitness = 0 at creation
     """
     herb = Herbivores(test_animal)
-    herb.death(omega = 1)
-    herb.fitness = 0 #Fikse denne når vi går over til @pytest
+    herb.death(omega=1)
+    herb.fitness = 0
     assert herb.alive is False
+
 
 def test_weight_loss():
     """
@@ -63,5 +55,3 @@ def test_weight_loss():
     initial_weight = herb.weight
     herb.weight_loss()
     assert herb.weight == initial_weight - initial_weight * Herbivores.param['eta']
-
-
