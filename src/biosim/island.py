@@ -10,13 +10,9 @@ class Island():
         self.island.init_fitness()
         self.island.sort_fitness()
         self.island.feed()
-        self.island.sort_fitness()
         self.island.procreate()
-        self.island.sort_fitness()
         self.island.aging()
-        self.island.sort_fitness()
         self.island.weight_cut()
-        self.island.sort_fitness()
         self.island.deceased()
         self.island.replenish()
 
