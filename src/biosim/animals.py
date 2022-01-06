@@ -5,6 +5,7 @@ There will herbivores be a subclass
 import math
 import random
 
+
 class Herbivores:
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
              'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
@@ -19,8 +20,8 @@ class Herbivores:
         self.alive = True
         self.baby = {'age': 0, 'weight': 0.0}
 
-    # Vi får bekymre oss for dette på et senere tidspunkt
-    #@classmethod
+# Vi får bekymre oss for dette på et senere tidspunkt
+#@classmethod
     #def set_params(cls, new_params):
      #   for key in new_params.keys():
       #      if key not in new_params.keys():
