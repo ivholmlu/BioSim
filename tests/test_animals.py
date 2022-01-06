@@ -28,6 +28,7 @@ def test_fitness_flux(age_p, weight_p, expected_fitness):
     Testing the fitness function with the formula.
     If both values (?) at 0.50 in value the result should be 0.25
     """
+
     herb = Herbivores(test_animal)
     herb.age = age_p
     herb.weight = weight_p
