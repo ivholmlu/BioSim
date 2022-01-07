@@ -1,5 +1,5 @@
 from .animals import Herbivores, Carnivores
-
+import itertools
 
 class Lowland:  # senere Lowland(Landscape):
     def __init__(self, list_animals=None, f_max=800):  # vha. set_lanscape_parameters så skal vi få inn f_max.
@@ -20,6 +20,9 @@ class Lowland:  # senere Lowland(Landscape):
             else:
                 self.carnivores.append(Carnivores(animal))
 
+        # z = [self.herbivores.append(Herbivores(x)) if x.species == 'Herbivore'
+        #        else self.carnivores.append(Carnivores(x)) for x in self.pop]
+
     def init_fitness(self):
         fitness0 = [animal.fitness_flux() for animal in self.population]
 
@@ -28,16 +31,32 @@ class Lowland:  # senere Lowland(Landscape):
 
     def feed(self):  # fordeler mat, mater faktisk dyrene.
         for animal in self.population:
-            if self.current_fodder >= animal.param['F']:
-                animal.weight_gain(animal.param['F'])
-                self.current_fodder -= animal.param['F']
+            if animal.species == 'Herbivore':
+                if self.current_fodder >= animal.param['F']:
+                    animal.weight_gain(animal.param['F'])
+                    self.current_fodder -= animal.param['F']
 
-            elif self.current_fodder < animal.param['F']:
-                animal.weight_gain(self.current_fodder)
-                self.current_fodder -= self.current_fodder
+                elif self.current_fodder < animal.param['F']:
+                    animal.weight_gain(self.current_fodder)
+                    self.current_fodder -= self.current_fodder
 
-            elif self.current_fodder == 0:
-                break
+                elif self.current_fodder == 0:
+                    break
+            else:
+                for carnivore in self.carnivores:
+                    F_tilde = 0
+                    for herbivore in self.herbivores:
+                        p = (carnivore.fitness - herbivore.fitness) / carnivore.param['DeltaPhiMax']
+                        if random.random() < p:
+                            herbivore.alive = False
+                        elif p == 1:
+                            herbivore.alive = False
+
+
+
+
+                pass
+
 
     def procreate(self):
         num_pop = len(self.population)
