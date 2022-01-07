@@ -1,4 +1,4 @@
-from .animals import Herbivores
+from .animals import Herbivores, Carnivores
 
 
 class Lowland:  # senere Lowland(Landscape):
@@ -7,14 +7,18 @@ class Lowland:  # senere Lowland(Landscape):
         self.list_animals = list_animals
         self.pop = self.list_animals[0]['pop']
         self.current_fodder = self.f_max
-        self.population = [Herbivores(animal) for animal in self.pop]
+        self.carnivores = []
+        self.herbivores = []
         self.babies = None
 
         # må finne bedre måte å implementere dyrebestanden inn
 
-    #def add_population(self):
-     #   pop = self.list_animals[0]['pop']
-      #  self.population = [Herbivores(animal) for animal in pop]
+    def add_population(self):
+        for animal in self.pop:
+            if animal.species == 'Herbivore':
+                self.herbivores.append(Herbivores(animal))
+            else:
+                self.carnivores.append(Carnivores(animal))
 
     def init_fitness(self):
         fitness0 = [animal.fitness_flux() for animal in self.population]
