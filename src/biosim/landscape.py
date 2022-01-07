@@ -15,7 +15,7 @@ class Lowland:  # senere Lowland(Landscape):
 
     def add_population(self):
         for animal in self.pop:
-            if animal.species == 'Herbivore':
+            if animal['species']== 'Herbivore':
                 self.herbivores.append(Herbivores(animal))
             else:
                 self.carnivores.append(Carnivores(animal))
