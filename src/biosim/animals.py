@@ -16,7 +16,7 @@ class Animals:
         self.fed = 0
         self.fitness = 0
         self.alive = True
-        self.baby = {'age': 0, 'weight': 0.0}
+        self.baby = {'age': 0, 'weight': 0.0, 'species' : self.species}
 
     def fitness_flux(self):
         q_age = 1 / (1 + math.exp(self.param['phi_age'] *
