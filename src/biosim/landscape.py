@@ -42,16 +42,23 @@ class Lowland:  # senere Lowland(Landscape):
 
                 elif self.current_fodder == 0:
                     break
+
             else:
                 for carnivore in self.carnivores:
-                    F_tilde = 0
-                    for herbivore in self.herbivores:
-                        p = (carnivore.fitness - herbivore.fitness) / carnivore.param['DeltaPhiMax']
-                        if random.random() < p:
-                            herbivore.alive = False
-                        elif p == 1:
-                            herbivore.alive = False
+                    phi_carn = carnivore.fitness
+                    delta_phi_max = carnivore.param['DeltaPhiMax']
 
+                    while carnivore.fed < carnivore.param['F']:
+                        for herbivore in self.herbivores:
+                            phi_herb = herbivore.fitness
+                            if 0 < phi_carn - phi_herb < delta_phi_max:
+                                p = phi_carn - phi_herb / delta_phi_max
+                                if random.random() < p:
+                                    herbivore.alive = False
+                                    carnivore.fed += herbivore.weight
+                            elif phi_carn - phi_herb > delta_phi_max:
+                                herbivore.alive = False
+                                carnivore.fed += herbivore.weight
 
 
 
