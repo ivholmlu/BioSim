@@ -13,6 +13,7 @@ class Animals:
         self.species = dict['species']
         self.age = dict['age']
         self.weight = dict['weight']
+        self.fed = 0
         self.fitness = 0
         self.alive = True
         self.baby = {'age': 0, 'weight': 0.0}
