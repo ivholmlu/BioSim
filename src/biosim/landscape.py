@@ -1,5 +1,6 @@
 from .animals import Herbivores, Carnivores
 import itertools
+import random
 
 class Lowland:  # senere Lowland(Landscape):
     def __init__(self, list_animals=None, f_max=800):  # vha. set_lanscape_parameters så skal vi få inn f_max.
