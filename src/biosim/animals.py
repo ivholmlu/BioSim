@@ -5,9 +5,9 @@ There will herbivores be a subclass
 import math
 import random
 
-class Animals:
 
-    param = {}
+class Animals:
+    param = None
 
     def __init__(self, dict=None):
         self.species = dict['species']
@@ -17,30 +17,30 @@ class Animals:
         self.alive = True
         self.baby = {'age': 0, 'weight': 0.0}
 
-    def fitness_flux(self, a_half=param['a_half'], w_half=param['w_half'],
-                     phi_age=param['phi_age'], phi_weight=param['phi_weight']):
-        q_age = 1 / (1 + math.exp(phi_age * (self.age - a_half)))
-        q_weight = 1 / (1 + math.exp(-phi_weight * (self.weight - w_half)))
+    def fitness_flux(self):
+        q_age = 1 / (1 + math.exp(self.param['phi_age'] *
+                                  (self.age - self.param['a_half'])))
+        q_weight = 1 / (1 + math.exp(-self.param['phi_weight'] *
+                                     (self.weight - self.param['w_half'])))
         self.fitness = q_age * q_weight
 
-    def weight_gain(self, gain=0, beta=param['beta']):
-        self.weight += beta * gain
+    def weight_gain(self, gain=0):
+        self.weight += self.param['beta'] * gain
         self.fitness_flux()
 
-    def birth(self, N, gamma=param['gamma'], w_birth=param['w_birth'],
-              sigma_birth=param['sigma_birth'], xi=param['xi']):
+    def birth(self, N):
         phi = self.fitness
-        p = min(1, gamma * phi * (N - 1))
-        baby = random.gauss(w_birth, sigma_birth)
+        p = min(1, self.param['gamma'] * phi * (N - 1))
+        baby = random.gauss(self.param['w_birth'], self.param['sigma_birth'])
 
         if self.weight > baby:
             if random.random() < p:
-                self.weight -= baby * xi
+                self.weight -= baby * self.param['xi']
                 if self.weight >= 0:
                     self.baby['weight'] = baby
                     return type(self)(self.baby)
                 else:
-                    self.weight += baby * xi
+                    self.weight += baby * self.param['xi']
 
         self.fitness_flux()
 
@@ -51,46 +51,41 @@ class Animals:
         self.age += 1
         self.fitness_flux()
 
-    def weight_loss(self, eta=self.param['eta']):
-        self.weight -= self.weight * eta
+    def weight_loss(self):
+        self.weight -= self.weight * self.param['eta']
         self.fitness_flux()
 
-    def death(self, omega=self.param['omega']):
+    def death(self):
         if self.weight == 0:
             self.alive = False
         else:
-            p = omega * (1 - self.fitness)
+            p = self.param['omega'] * (1 - self.fitness)
             if random.random() < p:
                 self.alive = False
 
-class Herbivores(animals):
 
+class Herbivores(Animals):
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
-                 'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
-                 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
-                 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
-                 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
+             'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
+             'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
+             'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
+             'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
 
 
-class Carnivores(animals):
-
+class Carnivores(Animals):
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
-                 'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
-                 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
-                 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
-                 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
-
-
-
-
+             'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
+             'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
+             'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
+             'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
 
 # Vi får bekymre oss for dette på et senere tidspunkt
-#@classmethod
-    #def set_params(cls, new_params):
-     #   for key in new_params.keys():
-      #      if key not in new_params.keys():
-       #         raise KeyError('Invalid parameter name: ' + key)
-        #    else:
-         #       cls.param[key] = new_params[key]
+# @classmethod
+# def set_params(cls, new_params):
+#   for key in new_params.keys():
+#      if key not in new_params.keys():
+#         raise KeyError('Invalid parameter name: ' + key)
+#    else:
+#       cls.param[key] = new_params[key]
 
-        #return cls.param
+# return cls.param
