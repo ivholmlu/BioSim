@@ -5,15 +5,12 @@ There will herbivores be a subclass
 import math
 import random
 
-class animals:
+class Animals:
 
-    param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
-            'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
-            'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
-            'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
-            'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
+    param = {}
 
     def __init__(self, dict=None):
+        self.species = dict['species']
         self.age = dict['age']
         self.weight = dict['weight']
         self.fitness = 0
@@ -54,11 +51,11 @@ class animals:
         self.age += 1
         self.fitness_flux()
 
-    def weight_loss(self, eta=param['eta']):
+    def weight_loss(self, eta=self.param['eta']):
         self.weight -= self.weight * eta
         self.fitness_flux()
 
-    def death(self, omega=param['omega']):
+    def death(self, omega=self.param['omega']):
         if self.weight == 0:
             self.alive = False
         else:
@@ -68,9 +65,7 @@ class animals:
 
 class Herbivores(animals):
 
-    def __init__(self):
-
-        self.param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
+    param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
                  'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
                  'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
                  'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
@@ -79,9 +74,7 @@ class Herbivores(animals):
 
 class Carnivores(animals):
 
-    def __init__(self):
-
-        self.param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
+    param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
                  'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
                  'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
                  'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
