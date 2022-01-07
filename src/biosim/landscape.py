@@ -59,9 +59,14 @@ class Lowland:  # senere Lowland(Landscape):
 
 
     def procreate(self):
-        num_pop = len(self.population)
-        self.babies = [baby for parent in self.population if (baby := parent.birth(num_pop))]
-        self.population += self.babies
+        num_pop_herb = len(self.herbivores)
+        num_pop_carn = len(self.carnivores)
+        #Herbivores
+        self.babies = [baby for parent in self.herbivores if (baby := parent.birth(num_pop_herb))]
+        self.herbivores += self.babies
+        #Carnivores
+        self.babies = [baby for parent in self.carnivores if(baby := parent.birth(num_pop_carn))]
+        self.carnivores += self.babies
 
     def aging(self):
         for animal in self.population:
