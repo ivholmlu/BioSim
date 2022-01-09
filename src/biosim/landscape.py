@@ -53,21 +53,28 @@ class Landscape:
             delta_phi_max = carnivore.param['DeltaPhiMax']
             attempts = 0
 
-            while carnivore.eaten < carnivore.param['F'] or attempts == len(self.carnivores):
-                for i, herbivore in enumerate(self.herbivores, 1):
-                    attempts = i
-                    if 0 < carnivore.fitness - herbivore.fitness < delta_phi_max:
-                        if random.random() < carnivore.fitness - herbivore.fitness / delta_phi_max:
-                            herbivore.alive = False
-                            carnivore.eaten += herbivore.weight
-                    elif carnivore.fitness - herbivore > delta_phi_max:
+            for i, herbivore in enumerate(self.herbivores, 1):
+                attempts = i
+                if 0 < carnivore.fitness - herbivore.fitness < delta_phi_max:
+                    if random.random() < carnivore.fitness - herbivore.fitness / delta_phi_max:
                         herbivore.alive = False
                         carnivore.eaten += herbivore.weight
+                elif carnivore.fitness - herbivore.fitness > delta_phi_max:
+                    herbivore.alive = False
+                    carnivore.eaten += herbivore.weight
 
-            if carnivore.eaten >= carnivore.param['F']:
-                carnivore.weight_gain(carnivore.param['F'])
-            else:
-                carnivore.weight_gain(carnivore.eaten)
+                if carnivore.eaten < carnivore.param['F'] or attempts < len(self.herbivores):
+                    continue
+                else:
+                    if carnivore.eaten >= carnivore.param['F']:
+                        carnivore.weight_gain(carnivore.param['F'])
+                    else:
+                        carnivore.weight_gain(carnivore.eaten)
+                    carnivore.eaten = 0
+                    break
+
+
+
 
     def procreate(self):
         num_pop_herb = len(self.herbivores)
