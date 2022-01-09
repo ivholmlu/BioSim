@@ -1,8 +1,33 @@
 import pytest
-from biosim.animals import Herbivores
+from biosim.animals import Herbivores, Carnivores
 
 
-test_animal = {'age': 40, 'weight': 25, 'species' : 'Herbivore'}
+test_animal1 = {'age': 40, 'weight': 25, 'species' : 'Herbivore'}
+
+
+
+
+@pytest.mark.parametrize("weight, gain",
+                        [(0, 10),
+                         (20, 50),
+                         (22, 10)])
+class Test_weight:
+
+    def test_weight_gain_Herbivores(self, weight, gain):
+        test_animal = {'age' : 0, 'weight' : weight, 'species' : 'Herbivores'}
+        animal = Herbivores(test_animal)
+        animal.weight_gain(gain)
+        assert animal.weight == weight + gain * animal.param['beta']
+
+    def test_weight_gain_Carnivores(self, weight, gain):
+        test_animal = {'age' : 0, 'weight' : weight, 'species' : 'Herbivores'}
+        animal = Carnivores(test_animal)
+        animal.weight_gain(gain)
+        assert animal.weight == weight + gain * animal.param['beta']
+
+
+
+
 
 
 @pytest.mark.parametrize("age, num_years, expected_age",
@@ -11,8 +36,8 @@ test_animal = {'age': 40, 'weight': 25, 'species' : 'Herbivore'}
 #Sliter med å få dictionary inn i parametriseringen.
 #Funket ikke å skrive inn med dictionary selv om man bruke testclass
 def test_aging(age, num_years, expected_age):
-    test_animal['age'] = age
-    animal = Herbivores(test_animal)
+    test_animal1['age'] = age
+    animal = Herbivores(test_animal1)
     for _ in range(num_years):
         animal.ages()
     assert animal.age == expected_age
