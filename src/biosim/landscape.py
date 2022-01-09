@@ -95,3 +95,4 @@ class Lowland:  # senere Lowland(Landscape):
 
     def get_population(self):
         return len(self.carnivores+self.herbivores)
+
