@@ -12,7 +12,7 @@ class Landscape:
         self.carnivores = []
         self.herbivores = []
 
-    def replenish(self):  # fyller på mat for hvert år som går, kan være i overklassen.
+    def replenish(self):
         self.current_fodder = self.f_max
 
     def append_population(self, ext_population=None):
@@ -31,8 +31,7 @@ class Landscape:
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
         # Vi sorterer kun herbivores ut ifra fitness
 
-    def feed(self):  # Rewrite the feeding method. Perhaps make two separate feeding methods for each type?
-        # At least rewrite the carnivore feeding logic.
+    def feed(self):
         for herbivore in self.herbivores:
             if herbivore.species == 'Herbivore':
                 if self.current_fodder >= herbivore.param['F']:
@@ -46,26 +45,27 @@ class Landscape:
                 elif self.current_fodder == 0:
                     break
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=False)
+        random.shuffle(self.carnivores)
 
         for carnivore in self.carnivores:
-            phi_carn = carnivore.fitness
             delta_phi_max = carnivore.param['DeltaPhiMax']
+            attempts = 0
 
-            while carnivore.fed < carnivore.param['F']:
-                for herbivore in self.herbivores:
-                    phi_herb = herbivore.fitness
-                    if 0 < phi_carn - phi_herb < delta_phi_max:
-                        p = phi_carn - phi_herb / delta_phi_max
-                        if random.random() < p:
+            while carnivore.eaten < carnivore.param['F'] or attempts == len(self.carnivores):
+                for i, herbivore in enumerate(self.herbivores, 1):
+                    attempts = i
+                    if 0 < carnivore.fitness - herbivore.fitness < delta_phi_max:
+                        if random.random() < carnivore.fitness - herbivore.fitness / delta_phi_max:
                             herbivore.alive = False
-                            carnivore.fed += herbivore.weight
-                            carnivore.weight_gain(carnivore.fed)
-                    elif phi_carn - phi_herb > delta_phi_max:
+                            carnivore.eaten += herbivore.weight
+                    elif carnivore.fitness - herbivore > delta_phi_max:
                         herbivore.alive = False
-                        carnivore.fed += herbivore.weight
-                        carnivore.weight_gain(carnivore.fed)
+                        carnivore.eaten += herbivore.weight
 
-            carnivore.weight_gain(carnivore.fed)
+            if carnivore.eaten >= carnivore.param['F']:
+                carnivore.weight_gain(carnivore.param['F'])
+            else:
+                carnivore.weight_gain(carnivore.eaten)
 
     def procreate(self):
         num_pop_herb = len(self.herbivores)
