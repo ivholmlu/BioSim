@@ -2,10 +2,10 @@ from .animals import Herbivores, Carnivores
 import itertools
 import random
 
+class Landscape:
 
-class Lowland:  # senere Lowland(Landscape):
-    def __init__(self, list_animals=None, f_max=800):  # vha. set_lanscape_parameters så skal vi få inn f_max.
-        self.f_max = f_max
+    def __init__(self, list_animals=None):  # vha. set_lanscape_parameters så skal vi få inn f_max.
+        self.f_max = 0
         self.list_animals = list_animals
         self.pop = self.list_animals[0]['pop']
         self.current_fodder = self.f_max
@@ -95,4 +95,19 @@ class Lowland:  # senere Lowland(Landscape):
 
     def get_population(self):
         return len(self.carnivores+self.herbivores)
+
+class Lowland(Landscape):
+    habitable = True
+    f_max = 800
+
+class Highland(Landscape):
+    habitable = True
+    f_max = 300
+
+class Desert(Landscape):
+    habitable = True
+    f_max = 0
+
+class Water(Landscape):
+    habitable = False
 

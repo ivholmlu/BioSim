@@ -1,4 +1,4 @@
-from .landscape import Lowland
+from .landscape import Lowland, Highland, Desert, Water
 
 class Island():
     def __init__(self, list_of_animals=None):
