@@ -25,6 +25,17 @@ class Test_weight:
         animal.weight_gain(gain)
         assert animal.weight == weight + gain * animal.param['beta']
 
+    def test_weight_loss_Herbivores(self, weight, gain):
+        test_animal = {'age': 0, 'weight': weight, 'species': 'Herbivores'}
+        animal = Herbivores(test_animal)
+        animal.weight_loss()
+        assert animal.weight == weight - weight * animal.param['eta']
+
+    def test_weight_loss_Carnivores(self, weight, gain):
+        test_animal = {'age': 0, 'weight': weight, 'species': 'Carnivores'}
+        animal = Carnivores(test_animal)
+        animal.weight_loss()
+        assert animal.weight == weight - weight * animal.param['eta']
 
 
 
