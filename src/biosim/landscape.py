@@ -2,10 +2,11 @@ from .animals import Herbivores, Carnivores
 import itertools
 import random
 
+
 class Landscape:
+    f_max = 0
 
     def __init__(self, list_animals=None):  # vha. set_lanscape_parameters så skal vi få inn f_max.
-        self.f_max = 0
         self.list_animals = list_animals
         self.pop = self.list_animals[0]['pop']
         self.current_fodder = self.f_max
@@ -25,7 +26,7 @@ class Landscape:
                           else self.carnivores.append(Carnivores(animal)) for animal in nu_pop]
 
     def init_fitness(self):
-        fitness0 = [animal.fitness_flux() for animal in self.carnivores+self.herbivores]
+        fitness0 = [animal.fitness_flux() for animal in self.carnivores + self.herbivores]
 
     def sort_fitness(self):
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
@@ -44,6 +45,7 @@ class Landscape:
 
                 elif self.current_fodder == 0:
                     break
+
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=False)
         random.shuffle(self.carnivores)
 
@@ -70,12 +72,12 @@ class Landscape:
     def procreate(self):
         num_pop_herb = len(self.herbivores)
         num_pop_carn = len(self.carnivores)
-        #Herbivores
+        # Herbivores
         baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(num_pop_herb))]
         self.herbivores += baby_herb
 
-        #Carnivores
-        baby_carn = [baby for parent in self.carnivores if(baby := parent.birth(num_pop_carn))]
+        # Carnivores
+        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(num_pop_carn))]
         self.carnivores += baby_carn
 
     def aging(self):
@@ -94,20 +96,23 @@ class Landscape:
                            is True]
 
     def get_population(self):
-        return len(self.carnivores+self.herbivores)
+        return len(self.carnivores + self.herbivores)
+
 
 class Lowland(Landscape):
     habitable = True
     f_max = 800
 
+
 class Highland(Landscape):
     habitable = True
     f_max = 300
+
 
 class Desert(Landscape):
     habitable = True
     f_max = 0
 
+
 class Water(Landscape):
     habitable = False
-
