@@ -32,6 +32,10 @@ class Landscape:
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
         # Vi sorterer kun herbivores ut ifra fitness
 
+    def sort_weight(self):
+        self.herbivores.sort(key=lambda animal: animal.weight, reverse=True)
+        # Vi sorterer kun herbivores ut ifra fitness
+
     def feed(self):
         for herbivore in self.herbivores:
             if herbivore.species == 'Herbivore':
@@ -56,7 +60,7 @@ class Landscape:
             for i, herbivore in enumerate(self.herbivores, 1):
                 attempts = i
                 if 0 < carnivore.fitness - herbivore.fitness < delta_phi_max:
-                    if random.random() < carnivore.fitness - herbivore.fitness / delta_phi_max:
+                    if random.random() < ((carnivore.fitness - herbivore.fitness)/ delta_phi_max):
                         herbivore.alive = False
                         carnivore.eaten += herbivore.weight
                 elif carnivore.fitness - herbivore.fitness > delta_phi_max:
@@ -70,11 +74,9 @@ class Landscape:
                         carnivore.weight_gain(carnivore.param['F'])
                     else:
                         carnivore.weight_gain(carnivore.eaten)
-                    carnivore.eaten = 0
                     break
 
-
-
+            carnivore.eaten = 0
 
     def procreate(self):
         num_pop_herb = len(self.herbivores)
