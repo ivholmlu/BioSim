@@ -6,9 +6,7 @@ import random
 class Landscape:
     f_max = 0
 
-    def __init__(self, list_animals=None):  # vha. set_lanscape_parameters så skal vi få inn f_max.
-        self.list_animals = list_animals
-        self.pop = self.list_animals[0]['pop']
+    def __init__(self):  # vha. set_lanscape_parameters så skal vi få inn f_max.
         self.current_fodder = self.f_max
         self.carnivores = []
         self.herbivores = []
@@ -17,13 +15,8 @@ class Landscape:
         self.current_fodder = self.f_max
 
     def append_population(self, ext_population=None):
-        if ext_population is None:
-            init_pop = [self.herbivores.append(Herbivores(animal)) if animal['species'] == 'Herbivore'
-                        else self.carnivores.append(Carnivores(animal)) for animal in self.pop]
-        else:
-            nu_pop = ext_population[0]['pop']
-            append_pop = [self.herbivores.append(Herbivores(animal)) if animal['species'] == 'Herbivore'
-                          else self.carnivores.append(Carnivores(animal)) for animal in nu_pop]
+        init_pop = [self.herbivores.append(Herbivores(animal)) if animal['species'] == 'Herbivore'
+                    else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
 
     def init_fitness(self):
         fitness0 = [animal.fitness_flux() for animal in self.carnivores + self.herbivores]
@@ -38,17 +31,16 @@ class Landscape:
 
     def feed(self):
         for herbivore in self.herbivores:
-            if herbivore.species == 'Herbivore':
-                if self.current_fodder >= herbivore.param['F']:
-                    herbivore.weight_gain(herbivore.param['F'])
-                    self.current_fodder -= herbivore.param['F']
+            if self.current_fodder >= herbivore.param['F']:
+                herbivore.weight_gain(herbivore.param['F'])
+                self.current_fodder -= herbivore.param['F']
 
-                elif self.current_fodder < herbivore.param['F']:
-                    herbivore.weight_gain(self.current_fodder)
-                    self.current_fodder -= self.current_fodder
+            elif self.current_fodder < herbivore.param['F']:
+                herbivore.weight_gain(self.current_fodder)
+                self.current_fodder -= self.current_fodder
 
-                elif self.current_fodder == 0:
-                    break
+            elif self.current_fodder == 0:
+                break
 
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=False)
         random.shuffle(self.carnivores)
@@ -60,7 +52,7 @@ class Landscape:
             for i, herbivore in enumerate(self.herbivores, 1):
                 attempts = i
                 if 0 < carnivore.fitness - herbivore.fitness < delta_phi_max:
-                    if random.random() < ((carnivore.fitness - herbivore.fitness)/ delta_phi_max):
+                    if random.random() < ((carnivore.fitness - herbivore.fitness) / delta_phi_max):
                         herbivore.alive = False
                         carnivore.eaten += herbivore.weight
                 elif carnivore.fitness - herbivore.fitness > delta_phi_max:
