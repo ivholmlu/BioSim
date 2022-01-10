@@ -33,15 +33,15 @@ class Animals:
         phi = self.fitness
         p = min(1, self.param['gamma'] * phi * (N - 1))
         baby = random.gauss(self.param['w_birth'], self.param['sigma_birth'])
+        zeta_lim = self.param['zeta'] * (self.param['w_birth'] + self.param['sigma_birth'])
 
-        if self.weight > baby:
-            if random.random() < p:
-                self.weight -= baby * self.param['xi']
-                if self.weight >= 0:
-                    self.baby['weight'] = baby
-                    return type(self)(self.baby)
-                else:
-                    self.weight += baby * self.param['xi']
+        if self.weight > baby and random.random() < p and self.weight > zeta_lim: # La til zeta_lim! DET FIKSER ALT
+            self.weight -= baby * self.param['xi']
+            if self.weight >= 0:
+                self.baby['weight'] = baby
+                return type(self)(self.baby)
+            else:
+                self.weight += baby * self.param['xi']
 
         self.fitness_flux()
 
@@ -58,7 +58,7 @@ class Animals:
         self.fitness_flux()
 
     def death(self):
-        if self.weight == 0:
+        if self.weight <= 0:
             self.alive = False
         else:
             p = self.param['omega'] * (1 - self.fitness)
