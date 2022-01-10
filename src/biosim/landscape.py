@@ -4,15 +4,15 @@ import random
 
 
 class Landscape:
-    f_max = 0
+    def replenish(self):
+        self.current_fodder = self.f_max
 
     def __init__(self):  # vha. set_lanscape_parameters så skal vi få inn f_max.
         self.current_fodder = self.f_max
         self.carnivores = []
         self.herbivores = []
 
-    def replenish(self):
-        self.current_fodder = self.f_max
+    f_max = 0
 
     def append_population(self, ext_population=None):
         init_pop = [self.herbivores.append(Herbivores(animal)) if animal['species'] == 'Herbivore'
@@ -23,10 +23,6 @@ class Landscape:
 
     def sort_fitness(self):
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
-        # Vi sorterer kun herbivores ut ifra fitness
-
-    def sort_weight(self):
-        self.herbivores.sort(key=lambda animal: animal.weight, reverse=True)
         # Vi sorterer kun herbivores ut ifra fitness
 
     def feed(self):
@@ -55,9 +51,6 @@ class Landscape:
                     if random.random() < ((carnivore.fitness - herbivore.fitness) / delta_phi_max):
                         herbivore.alive = False
                         carnivore.eaten += herbivore.weight
-                elif carnivore.fitness - herbivore.fitness > delta_phi_max:
-                    herbivore.alive = False
-                    carnivore.eaten += herbivore.weight
 
                 if carnivore.eaten < carnivore.param['F'] or attempts < len(self.herbivores):
                     continue
