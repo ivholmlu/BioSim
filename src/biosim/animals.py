@@ -16,6 +16,7 @@ class Animals:
         self.fitness = 0
         self.alive = True
         self.baby = {'age': 0, 'weight': 0.0, 'species' : self.species}
+        self.migrant = False
 
     def fitness_flux(self):
         q_age = 1 / (1 + math.exp(self.param['phi_age'] *
@@ -45,7 +46,8 @@ class Animals:
         self.fitness_flux()
 
     def migration(self):
-        pass
+        if random.random() < self.fitness * self.param['mu']:
+            self.migrant = True
 
     def ages(self):
         self.age += 1
