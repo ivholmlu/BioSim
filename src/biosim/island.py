@@ -4,9 +4,11 @@ import itertools
 
 class Island():
     def __init__(self, geogr=None):
-        self.geogr = geogr.replace('\n', '')
+        self.geogr = geogr.splitlines()
+        x = len(self.geogr)
+        y = len(self.geogr[0])
         length = int(len(self.geogr)**0.5)
-        self.cells = {(x, y): None for x in range(1, length + 1) for y in range(1, length + 1)}
+        self.cells = {(row, column): None for row in range(1, x + 1) for column in range(1, y + 1)}
 
     def assign(self):
         for cell, geogr in zip(self.cells, self.geogr):
