@@ -26,6 +26,14 @@ class Island():
         pop = list_of_animals[0]['pop']
         self.cells[coord].append_population(pop)
 
+    def migrant_move(self):
+        for cell in self.cells.keys(): #Creates list over neighbour cells.
+            cell = list(cell)
+            neighbours = [(cell[0] + 1, cell[1]), (cell[0], cell[1] + 1),
+                            (cell[0] - 1, cell[1]), (cell[0], cell[1] - 1)]
+
+
+
     # Én syklus for ett landområde
     def cycle(self):
         # Kan videre forbedres ved å implementere .sort_fitness() i hver av funksjonene
