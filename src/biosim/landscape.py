@@ -74,6 +74,13 @@ class Landscape:
         baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(num_pop_carn))]
         self.carnivores += baby_carn
 
+    def emigrant(self):
+        for animal in self.herbivores + self.carnivores:
+            animal.migration()
+        emigrants = [animal for animal in self.herbivores + self.carnivores if animal.migration
+                     is True]
+        return emigrants
+
     def aging(self):
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.ages()
