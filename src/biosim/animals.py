@@ -26,7 +26,6 @@ class Animals:
 
     def weight_gain(self, gain=0):
         self.weight += self.param['beta'] * gain
-        self.fed = 0
         self.fitness_flux()
 
     def birth(self, N):
