@@ -1,6 +1,6 @@
 from .landscape import Lowland, Highland, Desert, Water
 import textwrap
-from math import sqrt
+import itertools
 
 class Island():
     def __init__(self, geogr=None):
@@ -23,14 +23,6 @@ class Island():
         coord = list_of_animals[0]['loc']
         pop = list_of_animals[0]['pop']
         self.cells[coord].append_population(pop)
-
-
-
-
-
-
-
-
 
     # Én syklus for ett landområde
     def cycle(self):
