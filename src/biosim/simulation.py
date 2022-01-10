@@ -12,6 +12,7 @@ class BioSim:
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
 
+
         """
         :param island_map: Multi-line string specifying island geography
         :param ini_pop: List of dictionaries specifying initial population
@@ -53,6 +54,7 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
+
 
     def set_landscape_parameters(self, landscape, params):
         """
