@@ -7,7 +7,7 @@ class Landscape:
     def replenish(self):
         self.current_fodder = self.f_max
 
-    def __init__(self):  # vha. set_lanscape_parameters så skal vi få inn f_max.
+    def __init__(self):
         self.current_fodder = self.f_max
         self.carnivores = []
         self.herbivores = []
@@ -17,11 +17,12 @@ class Landscape:
 
     def emigrants(self):
         emigrants = [animal for animal in self.herbivores + self.carnivores
-                  if animal.migration() is True]
+                     if animal.migration() is True]
+
         self.herbivores = [herb for herb in self.herbivores
-                        if herb not in emigrants]
+                           if herb not in emigrants]
         self.carnivores = [carn for carn in self.carnivores
-                        if carn not in emigrants]
+                           if carn not in emigrants]
         return emigrants
 
     def insert_migrant(self, animal):
@@ -41,7 +42,6 @@ class Landscape:
         else:
             self.carnivores.append(animal)
 
-
     def append_population(self, ext_population=None):
         init_pop = [self.herbivores.append(Herbivores(animal))
                     if (animal['species'] or animal.species) == 'Herbivore'
@@ -52,7 +52,7 @@ class Landscape:
 
     def sort_fitness(self):
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
-        # Vi sorterer kun herbivores ut ifra fitness
+
 
     def feed(self):
         for herbivore in self.herbivores:
