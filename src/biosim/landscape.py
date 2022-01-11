@@ -24,6 +24,9 @@ class Landscape:
                         if carn not in emigrants]
         return emigrants
 
+    def insert_migrant(self, animal):
+        self.m.append(animal)
+
     def append_population(self, ext_population=None):
         init_pop = [self.herbivores.append(Herbivores(animal))
                     if (animal['species'] or animal.species)== 'Herbivore'
