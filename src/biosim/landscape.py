@@ -11,6 +11,7 @@ class Landscape:
         self.current_fodder = self.f_max
         self.carnivores = []
         self.herbivores = []
+        self.m = None
 
     f_max = 0
 
@@ -20,8 +21,18 @@ class Landscape:
         elif animal.species == 'Carnivore':
             self.carnivores.append(animal)
 
+    def get_emigrants(self):
+        emigrants = [animal.migration() for animal in self.herbivores + self.carnivores
+                  if animal is True]
+        self.herbivores = [herb for herb in self.herbivores
+                        if herb not in emigrants]
+        self.carnivores = [carn for carn in self.carnivores
+                        if carn not in emigrants]
+        return emigrants
+
     def append_population(self, ext_population=None):
-        init_pop = [self.herbivores.append(Herbivores(animal)) if animal['species'] == 'Herbivore'
+        init_pop = [self.herbivores.append(Herbivores(animal))
+                    if (animal['species'] or animal.species)== 'Herbivore'
                     else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
 
     def init_fitness(self):
