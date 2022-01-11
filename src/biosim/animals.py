@@ -9,13 +9,13 @@ import random
 class Animals:
     param = None
 
-    def __init__(self, dict=None):
-        self.species = dict['species']
-        self.age = dict['age']
-        self.weight = dict['weight']
+    def __init__(self, attr=None):
+        self.species = attr['species']
+        self.age = attr['age']
+        self.weight = attr['weight']
         self.fitness = 0
         self.alive = True
-        self.baby = {'age': 0, 'weight': 0.0, 'species' : self.species}
+        self.baby = {'age': 0, 'weight': 0.0, 'species': self.species}
         self.migrant = False
 
     def fitness_flux(self):
@@ -35,7 +35,7 @@ class Animals:
         baby = random.gauss(self.param['w_birth'], self.param['sigma_birth'])
         zeta_lim = self.param['zeta'] * (self.param['w_birth'] + self.param['sigma_birth'])
 
-        if baby < zeta_lim < self.weight and random.random() < p: # La til zeta_lim! DET FIKSER ALT
+        if baby < zeta_lim < self.weight and random.random() < p:  # La til zeta_lim! DET FIKSER ALT
             self.weight -= baby * self.param['xi']
             if self.weight >= 0:
                 self.baby['weight'] = baby
