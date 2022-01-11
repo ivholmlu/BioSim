@@ -15,13 +15,7 @@ class Landscape:
 
     f_max = 0
 
-    def append_immigrant(self, animal):
-        if animal.species == 'Herbivore':
-            self.herbivores.append(animal)
-        elif animal.species == 'Carnivore':
-            self.carnivores.append(animal)
-
-    def get_emigrants(self):
+    def emigrants(self):
         emigrants = [animal for animal in self.herbivores + self.carnivores
                   if animal.migration() is True]
         self.herbivores = [herb for herb in self.herbivores
