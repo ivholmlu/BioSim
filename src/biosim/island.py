@@ -1,8 +1,7 @@
-import random
-
 from .landscape import Lowland, Highland, Desert, Water
 import textwrap
 import itertools
+import random
 
 class Island():
     def __init__(self, geogr=None):
@@ -32,7 +31,7 @@ class Island():
         for cell in self.cells.keys(): #Creates list over neighbour cells.
             cell = list(cell)
             neighbour_cell = [(cell[0] + 1, cell[1]), (cell[0], cell[1] + 1),
-                            (cell[0] - 1, cell[1]), (cell[0], cell[1] - 1)]
+                              (cell[0] - 1, cell[1]), (cell[0], cell[1] - 1)]
             cell = tuple(cell)
             emigrants = self.cells[cell].emigrants()
             for animal in emigrants:
@@ -43,21 +42,27 @@ class Island():
 
 
 
-
-
-
-
-
     # Én syklus for ett landområde
-    def cycle(self):
+    def cycle1(self, n=None):
         # Kan videre forbedres ved å implementere .sort_fitness() i hver av funksjonene
-        self.cells.replenish()
-        self.cells.init_fitness()
-        self.cells.sort_fitness()
-        self.cells.feed()
-        self.cells.procreate()
-        self.cells.aging()
-        self.cells.weight_cut()
-        self.cells.deceased()
+        for cell in self.cells.keys():
+            current_cell = self.cells[cell]
+
+            current_cell.replenish()
+            current_cell.init_fitness()
+            current_cell.sort_fitness()
+            current_cell.feed()
+            current_cell.procreate()
+            # current_cell.emigrate()
+
+    def cycle2(self, n=None):
+        # Kan videre forbedres ved å implementere .sort_fitness() i hver av funksjonene
+        for cell in self.cells.keys():
+            current_cell = self.cells[cell]
+
+            # current_cell.migrate()
+            current_cell.aging()
+            current_cell.weight_cut()
+            current_cell.deceased()
 
 
