@@ -65,9 +65,32 @@ class Animals:
             if random.random() < p:
                 self.alive = False
 
+    @classmethod
+    def set_params(cls, new_params):
+        pos_params = [key for key in cls.param.keys() if key != 'DeltaPhiMax']
+        for key in new_params:
+            if key not in new_params.keys():
+                raise KeyError(f'{key} is an invalid parameter.')
+
+            if key in pos_params:
+                if not 0 <= new_params[key]:
+                    raise ValueError(f'{key} greater than or equal to 0.')
+                cls.param[key] = new_params[key]
+
+            if 'DeltaPhiMax' in new_params:
+                if not new_params['DeltaPhiMax'] > 0:
+                    raise ValueError('DeltaPhiMax must be strictly greater than 0.')
+
+            if 'eta' in new_params:
+                if not new_params['eta'] <= 1:
+                    raise ValueError('eta must be less or equal to 1.')
+
+    @classmethod
+    def get_params(cls):
+        return cls.param
+
 
 class Herbivores(Animals):
-
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
              'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
              'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
@@ -82,14 +105,3 @@ class Carnivores(Animals):
              'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4,
              'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
              'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
-
-# Vi får bekymre oss for dette på et senere tidspunkt
-# @classmethod
-# def set_params(cls, new_params):
-#   for key in new_params.keys():
-#      if key not in new_params.keys():
-#         raise KeyError('Invalid parameter name: ' + key)
-#    else:
-#       cls.param[key] = new_params[key]
-
-# return cls.param
