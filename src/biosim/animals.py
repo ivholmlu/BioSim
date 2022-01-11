@@ -35,7 +35,7 @@ class Animals:
         baby = random.gauss(self.param['w_birth'], self.param['sigma_birth'])
         zeta_lim = self.param['zeta'] * (self.param['w_birth'] + self.param['sigma_birth'])
 
-        if self.weight > baby and random.random() < p and self.weight > zeta_lim: # La til zeta_lim! DET FIKSER ALT
+        if baby < zeta_lim < self.weight and random.random() < p: # La til zeta_lim! DET FIKSER ALT
             self.weight -= baby * self.param['xi']
             if self.weight >= 0:
                 self.baby['weight'] = baby
