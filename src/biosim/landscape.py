@@ -93,14 +93,10 @@ class Landscape:
             carnivore.eaten = 0
 
     def procreate(self):
-        num_pop_herb = len(self.herbivores)
-        num_pop_carn = len(self.carnivores)
-        # Herbivores
-        baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(num_pop_herb))]
+        baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))]
         self.herbivores += baby_herb
 
-        # Carnivores
-        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(num_pop_carn))]
+        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(len(self.carnivores)))]
         self.carnivores += baby_carn
 
     def emigrant(self):
