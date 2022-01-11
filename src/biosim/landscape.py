@@ -1,12 +1,10 @@
 from .animals import Herbivores, Carnivores
 import itertools
 import random
+# rydde opp i methods. Vi ser flere methods bruker samme 'teknikk', bruker samme list comprehension.
 
 
 class Landscape:
-    def replenish(self):
-        self.current_fodder = self.f_max
-
     def __init__(self):
         self.current_fodder = self.f_max
         self.carnivores = []
@@ -14,33 +12,10 @@ class Landscape:
         self.m = []
 
     f_max = 0
+    habitable = None
 
-    def emigrants(self):
-        emigrants = [animal for animal in self.herbivores + self.carnivores
-                     if animal.migration() is True]
-
-        self.herbivores = [herb for herb in self.herbivores
-                           if herb not in emigrants]
-        self.carnivores = [carn for carn in self.carnivores
-                           if carn not in emigrants]
-        return emigrants
-
-    def insert_migrant(self, animal):
-        self.m.append(animal)
-
-    def add_migrants(self):
-        for animal in self.m:
-            if animal.species == 'Herbivore':
-                self.herbivores.append(animal)
-            else:
-                self.carnivores.append(animal)
-        self.m = []
-
-    def stay(self, animal):
-        if animal.species == 'Herbivore':
-            self.herbivores.append(animal)
-        else:
-            self.carnivores.append(animal)
+    def replenish(self):
+        self.current_fodder = self.f_max
 
     def append_population(self, ext_population=None):
         init_pop = [self.herbivores.append(Herbivores(animal))
@@ -52,7 +27,6 @@ class Landscape:
 
     def sort_fitness(self):
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
-
 
     def feed(self):
         for herbivore in self.herbivores:
@@ -101,6 +75,33 @@ class Landscape:
                      is True]
         return emigrants
 
+    def emigrants(self):
+        emigrants = [animal for animal in self.herbivores + self.carnivores
+                     if animal.migration() is True]
+
+        self.herbivores = [herb for herb in self.herbivores
+                           if herb not in emigrants]
+        self.carnivores = [carn for carn in self.carnivores
+                           if carn not in emigrants]
+        return emigrants
+
+    def insert_migrant(self, animal):
+        self.m.append(animal)
+
+    def add_migrants(self):
+        for animal in self.m:
+            if animal.species == 'Herbivore':
+                self.herbivores.append(animal)
+            else:
+                self.carnivores.append(animal)
+        self.m = []
+
+    def stay(self, animal):
+        if animal.species == 'Herbivore':
+            self.herbivores.append(animal)
+        else:
+            self.carnivores.append(animal)
+
     def aging(self):
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.ages()
@@ -118,6 +119,26 @@ class Landscape:
 
     def get_population(self):
         return len(self.carnivores + self.herbivores)
+
+    @classmethod
+    def set_params(cls, new_params):
+        for key in new_params:
+            if key not in ['habitable', 'f_max']:
+                raise KeyError(f'{key} is an invalid parameter.')
+
+            if 'habitable' in new_params:
+                if not isinstance(new_params['key'], bool):
+                    raise ValueError('habitable must be a boolean (True or False).')
+                cls.habitable = new_params['habitable']
+
+            if 'f_max' in new_params:
+                if not 0 <= new_params['f_max']:
+                    raise ValueError('f_max must be greater than or equal to 0.')
+                cls.f_max = new_params['f_max']
+
+    @classmethod
+    def get_params(cls):
+        return {'habitable': cls.habitable, 'f_max': cls.f_max}
 
 
 class Lowland(Landscape):
