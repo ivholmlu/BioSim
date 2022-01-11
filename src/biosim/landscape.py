@@ -27,6 +27,14 @@ class Landscape:
     def insert_migrant(self, animal):
         self.m.append(animal)
 
+    def add_migrants(self):
+        for animal in self.m:
+            if animal.species == 'Herbivore':
+                self.herbivores.append(animal)
+            else:
+                self.carnivores.append(animal)
+
+
     def stay(self, animal):
         if animal.species == 'Herbivore':
             self.herbivores.append(animal)
