@@ -39,6 +39,13 @@ class Island():
                 new_loc = random.choice(neighbour_cell)
                 if self.cells[new_loc].habitable is True:
                     self.cells[new_loc].insert_migrant(animal)
+                else:
+                    self.cells[cell].stay(animal)
+
+
+
+
+
 
 
 
