@@ -1,3 +1,5 @@
+import random
+
 from .landscape import Lowland, Highland, Desert, Water
 import textwrap
 import itertools
@@ -29,8 +31,18 @@ class Island():
     def migrant_move(self):
         for cell in self.cells.keys(): #Creates list over neighbour cells.
             cell = list(cell)
-            neighbours = [(cell[0] + 1, cell[1]), (cell[0], cell[1] + 1),
+            neighbour_cell = [(cell[0] + 1, cell[1]), (cell[0], cell[1] + 1),
                             (cell[0] - 1, cell[1]), (cell[0], cell[1] - 1)]
+            cell = tuple(cell)
+            emigrants = self.cells[cell].emigrant()
+            for animal in emigrants:
+                new_loc = random.choice(neighbour_cell)
+                if self.cells[new_loc].habitable is True:
+                    animal.append_immigrant(animal)
+
+
+
+
 
 
 

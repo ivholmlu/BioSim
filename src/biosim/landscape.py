@@ -14,6 +14,12 @@ class Landscape:
 
     f_max = 0
 
+    def append_immigrant(self, animal):
+        if animal.species == 'Herbivore':
+            self.herbivores.append(animal)
+        elif animal.species == 'Carnivore':
+            self.carnivores.append(animal)
+
     def append_population(self, ext_population=None):
         init_pop = [self.herbivores.append(Herbivores(animal)) if animal['species'] == 'Herbivore'
                     else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
