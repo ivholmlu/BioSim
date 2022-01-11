@@ -27,9 +27,16 @@ class Landscape:
     def insert_migrant(self, animal):
         self.m.append(animal)
 
+    def stay(self, animal):
+        if animal.species == 'Herbivore':
+            self.herbivores.append(animal)
+        else:
+            self.carnivores.append(animal)
+
+
     def append_population(self, ext_population=None):
         init_pop = [self.herbivores.append(Herbivores(animal))
-                    if (animal['species'] or animal.species)== 'Herbivore'
+                    if (animal['species'] or animal.species) == 'Herbivore'
                     else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
 
     def init_fitness(self):
