@@ -11,7 +11,7 @@ class Landscape:
         self.current_fodder = self.f_max
         self.carnivores = []
         self.herbivores = []
-        self.m = None
+        self.m = []
 
     f_max = 0
 
@@ -22,8 +22,8 @@ class Landscape:
             self.carnivores.append(animal)
 
     def get_emigrants(self):
-        emigrants = [animal.migration() for animal in self.herbivores + self.carnivores
-                  if animal is True]
+        emigrants = [animal for animal in self.herbivores + self.carnivores
+                  if animal.migration() is True]
         self.herbivores = [herb for herb in self.herbivores
                         if herb not in emigrants]
         self.carnivores = [carn for carn in self.carnivores
