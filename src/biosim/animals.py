@@ -47,7 +47,7 @@ class Animals:
 
     def migration(self):
         if random.random() < self.fitness * self.param['mu']:
-            self.migrant = True
+            return True
 
     def ages(self):
         self.age += 1
