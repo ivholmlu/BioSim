@@ -34,11 +34,13 @@ class Island():
             neighbour_cell = [(cell[0] + 1, cell[1]), (cell[0], cell[1] + 1),
                             (cell[0] - 1, cell[1]), (cell[0], cell[1] - 1)]
             cell = tuple(cell)
-            emigrants = self.cells[cell].emigrant()
+            emigrants = self.cells[cell].emigrants()
             for animal in emigrants:
                 new_loc = random.choice(neighbour_cell)
                 if self.cells[new_loc].habitable is True:
-                    animal.append_immigrant(animal)
+                    self.cells[new_loc].m.append(animal)
+
+
 
 
 
