@@ -33,6 +33,7 @@ class Landscape:
                 self.herbivores.append(animal)
             else:
                 self.carnivores.append(animal)
+        self.m = []
 
 
     def stay(self, animal):
