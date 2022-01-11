@@ -1,4 +1,45 @@
-#%%
+from biosim.landscape import Lowland, Water
+import matplotlib.pyplot as plt
+from biosim.island import Island
+import textwrap
+
+ini_herbs = [{'loc': (2, 2),
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(50)]}]
+
+
+ini_carns = [{'loc': (2, 2),
+              'pop': [{'species': 'Carnivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(20)]}]
+a = [1, 2, 3]
+b = [4, 5, 6]
+c = [7, 8, 9]
+
+for i in zip(a, b, c):
+    print(i)
+
+geogr = """\
+           WWWW
+           WLLW
+           WWWW"""
+
+geogr = textwrap.dedent(geogr)
+
+oy = Island(geogr)
+
+oy.assign()
+oy.assign_animals(ini_herbs)
+oy.assign_animals(ini_carns)
+oy.migrant_move()
+
+
+
+
+"""
 import random
 from biosim.landscape import Lowland
 import matplotlib.pyplot as plt
@@ -36,3 +77,4 @@ plt.legend(['weight', 'birth'])
 plt.show()
 print(len(a.population))
 
+"""

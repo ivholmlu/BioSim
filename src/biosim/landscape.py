@@ -35,7 +35,6 @@ class Landscape:
                 self.carnivores.append(animal)
         self.m = []
 
-
     def stay(self, animal):
         if animal.species == 'Herbivore':
             self.herbivores.append(animal)
