@@ -25,7 +25,7 @@ class Animals:
                                      (self.weight - self.param['w_half'])))
         self.fitness = q_age * q_weight
 
-    def weight_gain(self, gain=0):
+    def weight_gain(self, gain=0.0):
         self.weight += self.param['beta'] * gain
         self.fitness_flux()
 
