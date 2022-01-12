@@ -46,9 +46,14 @@ class Test_creation:
         assert self.carn.weight == expected
 
     def test_weight_loss_herb(self):
-        expexted = self.herb.weight * self.herb.param['eta']
+        expected = self.herb.weight - self.herb.weight * self.herb.param['eta']
         self.herb.weight_loss()
-        self.herb.weight = expexted
+        assert self.herb.weight == expected
+
+    def test_weight_loss_carn(self):
+        expected = self.carn.weight - self.carn.weight * self.carn.param['eta']
+        self.carn.weight_loss()
+        assert self.carn.weight == expected
 
 
 
