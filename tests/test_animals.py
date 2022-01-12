@@ -64,6 +64,13 @@ class Test_Creation_And_Func:
             self.carn.death()
             assert not self.carn.alive
 
+    def test_zero_weigth_death(self):
+        self.carn.weight = 0
+        self.herb.weight = 0
+        (self.carn.death(), self.herb.death())
+        assert not self.herb.alive == True
+        assert not self.carn.alive == True
+
 
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
                                                              (0.250, {'age': 40, 'weight': 10}),
