@@ -6,7 +6,7 @@ import random
 
 class Landscape:
     def __init__(self):
-        self.current_fodder = self.f_max
+        self.current_fodder = 0
         self.carnivores = []
         self.herbivores = []
         self.m = []
@@ -46,20 +46,21 @@ class Landscape:
 
         for carnivore in self.carnivores:
             delta_phi_max = carnivore.param['DeltaPhiMax']
+            carnivore.eaten = 0
 
             for attempts, herbivore in enumerate(self.herbivores, 1):
-                p = (carnivore.fitness - herbivore.fitness) / delta_phi_max
-                if random.random() < p:
+                p = (carnivore.fitness - herbivore.fitness)/delta_phi_max
+                prev_eaten = carnivore.eaten
+                if random.random() < p and herbivore.alive is True:
                     herbivore.alive = False
                     carnivore.eaten += herbivore.weight
                     if carnivore.eaten > carnivore.param['F']:
-                        carnivore.weight_gain(carnivore.eaten - carnivore.param['F'])
+                        carnivore.weight_gain(carnivore.param['F'] - prev_eaten)
                         break
                     else:
                         carnivore.weight_gain(herbivore.weight)
                 if attempts == len(self.herbivores):
                     break
-            carnivore.eaten = 0
 
     def procreate(self):
         baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))]
@@ -108,7 +109,8 @@ class Landscape:
             animal.ages()
 
     def weight_cut(self):
-        new_weight = [animal.weight_loss() for animal in itertools.chain(self.carnivores, self.herbivores)]
+        for animal in itertools.chain(self.carnivores, self.herbivores):
+            animal.weight_loss()
 
     def deceased(self):
         for animal in itertools.chain(self.carnivores, self.herbivores):
@@ -119,7 +121,7 @@ class Landscape:
                            is True]
 
     def get_population(self):
-        return len(self.carnivores + self.herbivores)
+        return len(self.herbivores + self.carnivores)
 
     @classmethod
     def set_params(cls, new_params):
