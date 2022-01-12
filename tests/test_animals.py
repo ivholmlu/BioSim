@@ -4,18 +4,15 @@ from biosim.animals import Herbivores, Carnivores
 
 test_animal1 = {'age': 40, 'weight': 25}
 
-@pytest.mark.parametrize('a, b', [({'age': 10, 'weight' : 5}, {'age': 10, 'weight' : 31}),
-                                  ({'age': 0,  'weight' : 5}, {'age': 0, 'weight' : 31})])
+@pytest.mark.parametrize('a', [({'age': 0, 'weight' : 5})])
 class Test_creation:
     @pytest.fixture(autouse=True)
-    def create_objects(self, a, b):
-        a = Carnivores(a)
-        b = Herbivores(b)
-        self.a = a
-        self.b = b
+    def create_objects(self, a):
+        self.c = Carnivores(a)
+        self.e = Herbivores(a)
 
     def test_create_animal_age(self):
-        assert self.a.age == 0 and self.b.age == 0
+        assert self.c.age == 0 and self.e.age == 0
 
 
 """
