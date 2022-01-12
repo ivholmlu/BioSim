@@ -67,6 +67,7 @@ class Landscape:
 
         baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(len(self.carnivores)))]
         self.carnivores += baby_carn
+        # print(baby_carn)
 
     def emigrant(self):
         for animal in self.herbivores + self.carnivores:
