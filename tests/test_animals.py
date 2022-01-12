@@ -4,10 +4,11 @@ from biosim.animals import Herbivores, Carnivores
 
 test1 = [{'age': 0, 'weight': 5}, {'age': 0, 'weight': 5}]
 test2 = [{'age': 22, 'weight': 33}, {'age': 22, 'weight': 33}]
-test3 = [{'age': 3, 'weight' : 8}, {'age': 3, 'weight' : 8}]
+test3 = [{'age': 3, 'weight': 8}, {'age': 3, 'weight': 8}]
+
 
 @pytest.mark.parametrize('a, b', [test1, test2])
-class Test_creation:
+class Test_Creation_And_Func:
     @pytest.fixture(autouse=True)
     def create_objects(self, a, b):
         self.param = [a, b]
@@ -29,7 +30,6 @@ class Test_creation:
             self.herb.ages()
             self.carn.ages()
         assert self.herb.age and self.carn.age == expected
-                 #Dette bør kanskje skrives om?
 
     def test_weight_gain_herb(self):
         gain = 20
@@ -58,19 +58,20 @@ class Test_creation:
         self.herb.fitness = 0
         for _ in range(50):
             self.herb.death()
-            assert not(self.herb.alive)
+            assert not self.herb.alive
 
     def test_certain_death_carn(self):
         self.carn.param['omega'] = 1
         self.carn.fitness = 0
         for _ in range(50):
             self.carn.death()
-            assert not(self.carn.alive)
+            assert not self.carn.alive
 
-@pytest.mark.parametrize('expected_fitness, weigth_age_parameters'
-                                                            , [(0.250, {'age': 40, 'weight':10}),
-                                                               (0.165906, {'age': 40, 'weight':3}),
-                                                               (0.815553, {'age': 30, 'weight':25})])
+
+@pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
+                                                             (0.250, {'age': 40, 'weight': 10}),
+                                                             (0.165906, {'age': 40, 'weight': 3}),
+                                                             (0.815553, {'age': 30, 'weight': 25})])
 def test_fitness_flux(expected_fitness, weigth_age_parameters):
     """
     Tests if the fitness_flux function calculates right values.
@@ -81,6 +82,3 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
     herb = Herbivores(weigth_age_parameters)
     herb.fitness_flux()
     assert herb.fitness == pytest.approx(expected_fitness)
-
-
-
