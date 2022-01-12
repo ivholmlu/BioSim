@@ -40,6 +40,12 @@ class Test_creation:
         self.herb.weight_gain(gain)
         assert self.herb.weight == expected
 
+    def test_weight_gain_carn(self):
+        gain = 20
+        expected = gain*self.carn.param['beta'] + self.carn.weight
+        self.carn.weight_gain(gain)
+        assert self.carn.weight == expected
+
 
 
 
