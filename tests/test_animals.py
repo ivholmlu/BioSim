@@ -2,10 +2,6 @@ import pytest
 from biosim.animals import Herbivores, Carnivores
 
 
-test_animal1 = {'age': 40, 'weight': 25}
-
-#@pytest.mark.parametrize('a, b', [({'age': 0, 'weight' : 5}, {'age' : 22, 'weight':31})])
-
 test1 = [{'age': 0, 'weight': 5}, {'age': 0, 'weight': 5}]
 test2 = [{'age': 22, 'weight': 33}, {'age': 22, 'weight': 33}]
 test3 = [{'age': 3, 'weight' : 8}, {'age': 3, 'weight' : 8}]
