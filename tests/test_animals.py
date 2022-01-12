@@ -4,9 +4,9 @@ from biosim.animals import Herbivores, Carnivores
 
 test_animal1 = {'age': 40, 'weight': 25}
 
-@pytest.mark.parametrize('a, b', [({'age': 0, 'weight' : 5}, {'age': 0, 'weight' : 5}),
-                                  ({'age': 10, 'weight' : 31}, {'age': 10, 'weight' : 31})])
-class test_creation:
+@pytest.mark.parametrize('a, b', [({'age': 0, 'weight' : 5}, {'age': 10, 'weight' : 31}),
+                                  ({'age': 0, 'weight' : 5}, {'age': 10, 'weight' : 31})])
+class Test_creation:
     @pytest.fixture(autouse=True)
     def create_objects(self, a, b):
         a = Carnivores(a)
