@@ -7,13 +7,12 @@ test2 = {'age': 22, 'weight': 33}
 test3 = {'age': 3, 'weight': 8}
 
 
-@pytest.mark.parametrize('a', [test1, test2, test3])
+@pytest.mark.parametrize('parameters', [test1, test2, test3])
 class Test_Creation_And_Func:
     @pytest.fixture(autouse=True)
-    def create_objects(self, a):
-        self.param = a
-        self.herb = Herbivores(a)
-        self.carn = Carnivores(a)
+    def create_objects(self, parameters):
+        self.herb = Herbivores(parameters)
+        self.carn = Carnivores(parameters)
 
     def test_eq_age(self):
         assert self.carn.age == self.herb.age
@@ -25,10 +24,8 @@ class Test_Creation_And_Func:
 
     def test_ages(self):
         num_years = 5
-        expected = num_years + self.param['age']
-        for _ in range(num_years):
-            self.herb.ages()
-            self.carn.ages()
+        expected = num_years + self.herb.age
+        [(self.herb.ages(), self.carn.ages()) for _ in range(num_years)]
         assert self.herb.age and self.carn.age == expected
 
     def test_weight_gain_herb(self):
