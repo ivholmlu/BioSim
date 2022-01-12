@@ -24,14 +24,14 @@ geogr = textwrap.dedent(geogr)
 
 
 
-random.seed(911) # 123
+random.seed(89611) # 123, # 132456, # 89611
 
 oy = Island(geogr)
 oy.assign()
 oy.assign_animals(ini_herbs)
 oy.assign_animals(ini_carns)
 
-for _ in range(300):
+for _ in range(210):
     for cell in [(2,3), (2,2), (2,4)]:
         oy.cells[cell].replenish()
         oy.cells[cell].init_fitness()
