@@ -57,12 +57,9 @@ class Test_creation:
         assert self.carn.weight == expected
 
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters'
-                                                            , [(0.250,
-                                                                {'age': 40, 'weight':10}),
-                                                               (0.165906,
-                                                                {'age': 40, 'weight':3}),
-                                                               (0.815553,
-                                                                {'age': 30, 'weight':25})])
+                                                            , [(0.250, {'age': 40, 'weight':10}),
+                                                               (0.165906, {'age': 40, 'weight':3}),
+                                                               (0.815553, {'age': 30, 'weight':25})])
 def test_fitness_flux(expected_fitness, weigth_age_parameters):
     """
     Tests if the fitness_flux function calculates right values.
