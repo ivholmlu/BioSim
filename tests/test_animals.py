@@ -8,16 +8,30 @@ test_animal1 = {'age': 40, 'weight': 25}
 
 test1 = [{'age': 0, 'weight': 5}, {'age': 0, 'weight': 5}]
 test2 = [{'age': 22, 'weight': 33}, {'age': 22, 'weight': 33}]
-@pytest.mark.parametrize('a, b', [test1, (test2_herb, test2_carn)])
+@pytest.mark.parametrize('a, b', [test1, test2])
 class Test_creation:
     @pytest.fixture(autouse=True)
     def create_objects(self, a, b):
+        self.param = [a, b]
         self.herb = Herbivores(a)
         self.carn = Carnivores(b)
 
 
-    def test_create_animal_age(self):
+    def test_eq_age(self):
         assert self.carn.age == self.herb.age
+
+    def test_eq_aging(self):
+        self.herb.ages()
+        self.carn.ages()
+        assert self.herb.age == self.carn.age
+
+    def test_age(self):
+        num_years = 10
+        for _ in range(num_years):
+            self.herb.ages()
+            self.carn.ages()
+        assert self.herb.age == self.param[0]['age'] + num_years #Dette bør kanskje skrives om?
+
 
 
 """
