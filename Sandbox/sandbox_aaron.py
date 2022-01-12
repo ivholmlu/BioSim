@@ -111,29 +111,29 @@ for _ in range(50,210):
         oy.cells[(2, 4)].add_migrants()
 
 #%%
+# %%
 from biosim.landscape import Lowland
 import random
+
 ini_herbs = [{'loc': (2, 2),
-                  'pop': [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(50)]}]
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(50)]}]
 
 ini_carns = [{'loc': (2, 2),
-                  'pop': [{'species': 'Carnivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(20)]}]
+              'pop': [{'species': 'Carnivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(20)]}]
 
-
-
+a = Lowland()
 for seed in range(230, 251):
     random.seed(seed)
-    a = Lowland()
-    a.append_population(ini_herbs[0]['pop'])
-    a.append_population(ini_carns[0]['pop'])
 
-    for i in range(1, 201):
+    a.append_population(ini_herbs[0]['pop'])
+
+    for i in range(1, 50):
         a.replenish()
         a.init_fitness()
         a.sort_fitness()
@@ -144,5 +144,16 @@ for seed in range(230, 251):
         a.deceased()
         print(i, len(a.herbivores), len(a.carnivores))
 
+        a.append_population(ini_carns[0]['pop'])
 
+    for i in range(50, 301):
+        a.replenish()
+        a.init_fitness()
+        a.sort_fitness()
+        a.feed()
+        a.procreate()
+        a.aging()
+        a.weight_cut()
+        a.deceased()
+        print(i, len(a.herbivores), len(a.carnivores))
 
