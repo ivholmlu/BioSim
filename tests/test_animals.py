@@ -9,6 +9,7 @@ test_animal1 = {'age': 40, 'weight': 25}
 test1 = [{'age': 0, 'weight': 5}, {'age': 0, 'weight': 5}]
 test2 = [{'age': 22, 'weight': 33}, {'age': 22, 'weight': 33}]
 test3 = [{'age': 3, 'weight' : 8}, {'age': 3, 'weight' : 8}]
+
 @pytest.mark.parametrize('a, b', [test1, test2])
 class Test_creation:
     @pytest.fixture(autouse=True)
@@ -56,6 +57,14 @@ class Test_creation:
         self.carn.weight_loss()
         assert self.carn.weight == expected
 
+    def test_certain_death_herb(self):
+        self.herb.param['omega'] = 1
+        self.herb.fitness = 0
+        self.herb.death()
+        assert not(self.herb.alive)
+
+
+
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters'
                                                             , [(0.250, {'age': 40, 'weight':10}),
                                                                (0.165906, {'age': 40, 'weight':3}),
@@ -71,17 +80,5 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
     herb.fitness_flux()
     assert herb.fitness == pytest.approx(expected_fitness)
 
-"""
 
 
-def test_certain_death():
-    
-    test_certain_death has omega=1 creating certain death for the herbivores
-    since the fitness = 0 at creation
-    
-    herb = Herbivores(test_animal)
-    herb.death(omega=1)
-    herb.fitness = 0
-    assert herb.alive is False
-
-"""
