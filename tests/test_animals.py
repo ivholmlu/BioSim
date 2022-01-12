@@ -8,6 +8,7 @@ test_animal1 = {'age': 40, 'weight': 25}
 
 test1 = [{'age': 0, 'weight': 5}, {'age': 0, 'weight': 5}]
 test2 = [{'age': 22, 'weight': 33}, {'age': 22, 'weight': 33}]
+test3 = [{'age': 3, 'weight' : 8}, {'age': 3, 'weight' : 8}]
 @pytest.mark.parametrize('a, b', [test1, test2])
 class Test_creation:
     @pytest.fixture(autouse=True)
@@ -55,10 +56,6 @@ class Test_creation:
         self.carn.weight_loss()
         assert self.carn.weight == expected
 
-
-
-
-"""
 @pytest.mark.parametrize('age_p, weight_p, expected_fitness', [(40.0, 10.0, 0.250),
                                                                (40.0, 3, 0.165906),
                                                                (30, 25, 0.815553)])
@@ -70,7 +67,7 @@ def test_fitness_flux(age_p, weight_p, expected_fitness):
     herb.fitness_flux()
     assert herb.fitness == pytest.approx(expected_fitness)
 
-
+"""
 @pytest.mark.parametrize("weight, gain",
                         [(0, 10),
                          (20, 50),
