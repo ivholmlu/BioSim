@@ -35,15 +35,12 @@ class TestPopulation:
         self.lowland.append_population(self.herbivores[0]['pop'])
         self.lowland.append_population(self.carnivores[0]['pop'])
 
-    def test_insert_animals(self):
-        self.lowland.append_population(self.herbivores[0]['pop'])
-        self.lowland.append_population(self.carnivores[0]['pop'])
-
+    def test_insert_animals(self, insert_animals):
         assert len(self.lowland.herbivores) == n and len(self.lowland.carnivores) == m
 
     def test_fitness_calculation(self, insert_animals):
         self.lowland.init_fitness()
-        carn_fitness = [True for carnivore in self.lowland.carnivores if carnivore.fitness > 0]
-        herb_fitness = [True for herbivore in self.lowland.herbivores if herbivore.fitness > 0]
+        carn_fitness = [carnivore.fitness for carnivore in self.lowland.carnivores]
+        herb_fitness = [herbivore.fitness for herbivore in self.lowland.herbivores]
 
-        assert True in carn_fitness and herb_fitness
+        assert all(np.array(herb_fitness) > 0) and all(np.array(carn_fitness) > 0)
