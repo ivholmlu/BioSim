@@ -60,10 +60,16 @@ class Test_creation:
     def test_certain_death_herb(self):
         self.herb.param['omega'] = 1
         self.herb.fitness = 0
-        self.herb.death()
-        assert not(self.herb.alive)
+        for _ in range(50):
+            self.herb.death()
+            assert not(self.herb.alive)
 
-
+    def test_certain_death_carn(self):
+        self.carn.param['omega'] = 1
+        self.carn.fitness = 0
+        for _ in range(50):
+            self.carn.death()
+            assert not(self.carn.alive)
 
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters'
                                                             , [(0.250, {'age': 40, 'weight':10}),
