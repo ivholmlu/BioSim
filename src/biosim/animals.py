@@ -8,9 +8,8 @@ import random
 
 class Animals:
     param = None
-
+    species = None
     def __init__(self, attr=None):
-        self.species = attr['species']
         self.age = attr['age']
         self.weight = attr['weight']
         self.fitness = 0
@@ -69,7 +68,7 @@ class Animals:
     def set_params(cls, new_params):
         pos_params = [key for key in cls.param.keys() if key != 'DeltaPhiMax']
         for key in new_params:
-            if key not in cls.param.keys():
+            if key not in new_params.keys():
                 raise KeyError(f'{key} is an invalid parameter.')
 
             if key in pos_params:
@@ -91,6 +90,7 @@ class Animals:
 
 
 class Herbivores(Animals):
+    species = 'Herbivore'
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
              'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
              'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
@@ -99,6 +99,7 @@ class Herbivores(Animals):
 
 
 class Carnivores(Animals):
+    species = 'Carnivore'
     eaten = 0
     param = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
              'eta': 0.125, 'a_half': 40.0, 'phi_age': 0.3,
