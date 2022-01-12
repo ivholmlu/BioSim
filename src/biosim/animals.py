@@ -10,6 +10,7 @@ class Animals:
     param = None
     species = None
     def __init__(self, attr=None):
+        self.age = attr['age']
         self.weight = attr['weight']
         self.fitness = 0
         self.alive = True
