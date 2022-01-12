@@ -30,9 +30,11 @@ class Test_Creation_And_Func:
 
     def test_weight_gain_herb(self):
         gain = 20
-        expected = gain*self.herb.param['beta'] + self.herb.weight
-        self.herb.weight_gain(gain)
-        assert self.herb.weight == expected
+        animals = [self.herb, self.carn]
+        for animal in animals:
+            expected = gain*animal.param['beta'] + animal.weight
+            animal.weight_gain(gain)
+            assert animal.weight == expected
 
     def test_weight_gain_carn(self):
         gain = 20
