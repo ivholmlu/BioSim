@@ -34,6 +34,12 @@ class Test_creation:
         assert self.herb.age and self.carn.age == expected
                  #Dette bør kanskje skrives om?
 
+    def test_weight_gain_herb(self):
+        gain = 20
+        expected = gain*self.herb.param['beta'] + self.herb.weight
+        self.herb.weight_gain(gain)
+        assert self.herb.weight == expected
+
 
 
 
