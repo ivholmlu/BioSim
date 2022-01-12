@@ -25,8 +25,8 @@ class Test_creation:
         self.carn.ages()
         assert self.herb.age == self.carn.age
 
-    def test_age(self):
-        num_years = 10
+    def test_ages(self):
+        num_years = 5
         for _ in range(num_years):
             self.herb.ages()
             self.carn.ages()
