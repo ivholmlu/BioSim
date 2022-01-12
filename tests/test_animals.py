@@ -2,9 +2,33 @@ import pytest
 from biosim.animals import Herbivores, Carnivores
 
 
-test_animal1 = {'age': 40, 'weight': 25, 'species' : 'Herbivore'}
+test_animal1 = {'age': 40, 'weight': 25}
+
+@pytest.mark.parametrize('a, b', [({'age': 0, 'weight' : 5}, {'age': 0, 'weight' : 5}),
+                                  ({'age': 10, 'weight' : 31}, {'age': 10, 'weight' : 31})])
+class test_creation:
+    @pytest.fixture(autouse=True)
+    def create_objects(self, a, b):
+        a = Carnivores(a)
+        b = Herbivores(b)
+        self.a = a
+        self.b = b
+
+    def test_create_animal_age(self):
+        assert self.a.age == 0 and self.b.age == 0
 
 
+"""
+@pytest.mark.parametrize('age_p, weight_p, expected_fitness', [(40.0, 10.0, 0.250),
+                                                               (40.0, 3, 0.165906),
+                                                               (30, 25, 0.815553)])
+def test_fitness_flux(age_p, weight_p, expected_fitness):
+
+    herb = Herbivores(test_animal1)
+    herb.age = age_p
+    herb.weight = weight_p
+    herb.fitness_flux()
+    assert herb.fitness == pytest.approx(expected_fitness)
 
 
 @pytest.mark.parametrize("weight, gain",
@@ -56,7 +80,7 @@ def test_aging(age, num_years, expected_age):
 
 
 
-"""
+
 @pytest.mark.parametrize('test_animal, num_years, expected',
                         [('test_animal1', 10, 50),
                         ('test_animal2', 3, 3),
@@ -67,8 +91,7 @@ def test_aging(test_animal, num_years, expected):
     for _ in range(num_years):
         animal.ages()
     assert animal.age == expected
-"""
-"""
+
 def test_herbivores_creation():
     
     Creation has age set to 0
