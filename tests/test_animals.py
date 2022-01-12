@@ -27,10 +27,13 @@ class Test_creation:
 
     def test_ages(self):
         num_years = 5
+        expected = num_years + self.param[0]['age']
         for _ in range(num_years):
             self.herb.ages()
             self.carn.ages()
-        assert self.herb.age == self.param[0]['age'] + num_years #Dette bør kanskje skrives om?
+        assert self.herb.age and self.carn.age == expected
+                 #Dette bør kanskje skrives om?
+
 
 
 
