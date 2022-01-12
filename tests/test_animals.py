@@ -16,7 +16,6 @@ class Test_creation:
         self.herb = Herbivores(a)
         self.carn = Carnivores(b)
 
-
     def test_eq_age(self):
         assert self.carn.age == self.herb.age
 
@@ -45,6 +44,11 @@ class Test_creation:
         expected = gain*self.carn.param['beta'] + self.carn.weight
         self.carn.weight_gain(gain)
         assert self.carn.weight == expected
+
+    def test_weight_loss_herb(self):
+        expexted = self.herb.weight * self.herb.param['eta']
+        self.herb.weight_loss()
+        self.herb.weight = expexted
 
 
 
