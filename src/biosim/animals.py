@@ -57,12 +57,13 @@ class Animals:
         self.fitness_flux()
 
     def death(self):
-        if self.weight <= 0:
-            self.alive = False
-        else:
-            p = self.param['omega'] * (1 - self.fitness)
-            if random.random() < p:
+        if self.alive is True:
+            if self.weight <= 0:
                 self.alive = False
+            else:
+                p = self.param['omega'] * (1 - self.fitness)
+                if random.random() < p:
+                    self.alive = False
 
     @classmethod
     def set_params(cls, new_params):
