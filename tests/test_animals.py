@@ -73,15 +73,28 @@ class Test_Creation_And_Func:
         assert not self.herb.alive == True
         assert not self.carn.alive == True
 
-    def test_birth_babies(self):
+
+    def test_birth_herbivores(self):
         """
         Setting parameter to ensure 100% chance for birth
-        Ensure weight above 33 OG ETT ELLER ANNET.
+        Test if baby has weight above zero which means that the animal object
+        has given birth
         """
-        self.herb.weight =  2000
-        self.herb.birth(1000)
+        self.herb.fitness = 1
+        self.herb.weight = 100
+        self.herb.param['gamma'] = 1
+        self.herb.birth(100)
 
-        assert  self.herb.baby['weight'] > 0
+        assert self.herb.baby['weight'] > 0.0
+
+    def test_birth_carnivores(self):
+
+        self.carn.fitness = 1
+        self.carn.weight = 100
+        self.carn.param['gamma'] = 1
+        self.carn.birth(100)
+
+        assert self.carn.baby['weight'] > 0.0
 
 
 
