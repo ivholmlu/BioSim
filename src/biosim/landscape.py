@@ -18,14 +18,13 @@ class Landscape:
         self.current_fodder = self.f_max
 
     def append_population(self, ext_population=None):
-        init_pop = [self.herbivores.append(Herbivores(animal))
-                    if (animal['species'] or animal.species) == 'Herbivore'
-                    else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
+        [self.herbivores.append(Herbivores(animal))
+         if (animal['species'] or animal.species) == 'Herbivore'
+         else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
 
     def calculate_fitness(self):
         for animal in itertools.chain(self.herbivores, self.carnivores):
             animal.fitness_flux()
-
 
     def sort_fitness(self):
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
@@ -75,18 +74,13 @@ class Landscape:
                      and parent.alive is True]
         self.carnivores += baby_carn
 
-
     def emigrants(self):
-        for animal in itertools.chain(self.herbivores, self.carnivores):
-            animal.migration()
-
-        emigrants = [animal for animal in self.herbivores + self.carnivores
+        emigrants = [animal for animal in itertools.chain(self.herbivores, self.carnivores)
                      if animal.migration() is True]
-
-        self.herbivores = [herb for herb in self.herbivores
-                           if herb not in emigrants]
-        self.carnivores = [carn for carn in self.carnivores
-                           if carn not in emigrants]
+        self.herbivores = [herbivore for herbivore in self.herbivores
+                           if herbivore not in emigrants]
+        self.carnivores = [carnivore for carnivore in self.carnivores
+                           if carnivore not in emigrants]
         return emigrants
 
     def insert_migrant(self, animal):
