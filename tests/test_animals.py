@@ -87,14 +87,26 @@ class Test_Creation_And_Func:
 
         assert self.herb.baby['weight'] > 0.0
 
-    def test_birth_carnivores(self):
 
-        self.carn.fitness = 1
-        self.carn.weight = 100
-        self.carn.param['gamma'] = 1
-        self.carn.birth(100)
+def test_birth_carnivores():
 
-        assert self.carn.baby['weight'] > 0.0
+    self.carn.fitness = 1
+    self.carn.weight = 100
+    self.carn.param['gamma'] = 1
+    self.carn.birth(100)
+
+    assert self.carn.baby['weight'] > 0.0
+
+def test_birth_distribution():
+    """
+    The weight for newborn babies should fall within the bell curve for the
+    normal distribution. This test checks with alpha certainty that it does.
+    """
+
+
+
+
+
 
 
 
