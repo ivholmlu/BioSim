@@ -32,8 +32,8 @@ class TestCreationAndFunc:
 
     def test_ages(self):
         num_years = 5
-        expected = num_years + self.herb.age
-        [(self.herb.ages(), self.carn.ages()) for _ in range(num_years)]
+        expected = num_years + self.obj1.age
+        [(self.obj1.ages(), self.obj2.ages()) for _ in range(num_years)]
         assert self.herb.age and self.carn.age == expected
 
     def test_weight_gain_herb(self):
