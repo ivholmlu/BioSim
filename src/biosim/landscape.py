@@ -22,8 +22,10 @@ class Landscape:
                     if (animal['species'] or animal.species) == 'Herbivore'
                     else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
 
-    def init_fitness(self):
-        fitness0 = [animal.fitness_flux() for animal in self.carnivores + self.herbivores]
+    def calculate_fitness(self):
+        for animal in itertools.chain(self.herbivores, self.carnivores):
+            animal.fitness_flux()
+
 
     def sort_fitness(self):
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
@@ -59,16 +61,19 @@ class Landscape:
                         break
                     else:
                         carnivore.weight_gain(herbivore.weight)
-                if attempts == len(self.herbivores):
+                elif attempts == len(self.herbivores):
                     break
 
+        self.herbivores = [herbivore for herbivore in self.herbivores if herbivore.alive is True]
+
     def procreate(self):
-        baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))]
+        baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))
+                     and parent.alive is True]
         self.herbivores += baby_herb
 
-        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(len(self.carnivores)))]
+        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(len(self.carnivores)))
+                     and parent.alive is True]
         self.carnivores += baby_carn
-        # print(baby_carn)
 
 
     def emigrants(self):
@@ -101,12 +106,9 @@ class Landscape:
         else:
             self.carnivores.append(animal)
 
-    def aging(self):
+    def aging_and_weight_loss(self):
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.ages()
-
-    def weight_cut(self):
-        for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.weight_loss()
 
     def deceased(self):
