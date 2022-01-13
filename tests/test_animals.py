@@ -1,6 +1,10 @@
 import pytest
 from biosim.animals import Herbivores, Carnivores
+import math
+from scipy import stats
 
+seed = 44
+ALPHA = 0.01
 
 test1 = {'age': 0, 'weight': 5}
 test2 = {'age': 22, 'weight': 33}
@@ -115,6 +119,32 @@ class Test_Creation_And_Func:
         lower_limit = mean - 2*std
         upper_limit = mean + 2*std
         assert weight < upper_limit and weight > lower_limit
+
+    def test_birth_distr(self):
+        """
+        Test is inspired from Hans Plessers bacteria death distribution test
+        """
+        #Seed øverst i syntaksen
+        num, N = 100000, 10000
+        self.carn.fitness = 1
+        self.carn.weight = 100
+        self.carn.param['gamma'] = 1
+        weight = self.carn.baby['weight']
+        mean = self.carn.param['w_birth']
+        std = self.carn.param['sigma_birth']
+        for _ in range(num):
+            self.carn.birth(N)
+            weight = self.carn.baby['weight']
+            Z = (weight - mean) / math.sqrt(std)
+            Z_value_prob = 2* stats.norm.cdf((-abs(Z))) #Tosidig test
+            assert Z_value_prob > ALPHA
+
+
+
+
+
+
+
 
 
 
