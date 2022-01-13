@@ -9,6 +9,7 @@ import random
 class Animals:
     param = None
     species = None
+
     def __init__(self, attr=None):
         self.age = attr['age']
         self.weight = attr['weight']
@@ -28,9 +29,9 @@ class Animals:
         self.weight += self.param['beta'] * gain
         self.fitness_flux()
 
-    def birth(self, N):
+    def birth(self, n=0):
         phi = self.fitness
-        p = min(1, self.param['gamma'] * phi * (N - 1))
+        p = min(1, self.param['gamma'] * phi * (n - 1))
         baby = random.gauss(self.param['w_birth'], self.param['sigma_birth'])
         zeta_lim = self.param['zeta'] * (self.param['w_birth'] + self.param['sigma_birth'])
 
@@ -100,8 +101,8 @@ class Herbivores(Animals):
 
 
 class Carnivores(Animals):
-    species = 'Carnivore'
     eaten = 0
+    species = 'Carnivore'
     param = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
              'eta': 0.125, 'a_half': 40.0, 'phi_age': 0.3,
              'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4,
