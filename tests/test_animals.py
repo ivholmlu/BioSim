@@ -10,20 +10,21 @@ test1 = {'age': 0, 'weight': 5}
 test2 = {'age': 22, 'weight': 33}
 test3 = {'age': 3, 'weight': 8}
 
-
-@pytest.mark.parametrize('species', [Herbivores, Carnivores])
-class TestCreationAndFunc:
-    @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
+@pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
                                              {'age': 22, 'weight': 33},
                                              {'age': 3, 'weight': 8}])
-    def create_objects(self, species, test_animal):
-        self.obj1 = species(test_animal)
-        self.obj2 = species(test_animal)
+@pytest.mark.parametrize('species', [Herbivores, Carnivores])
+class TestCreationAndFunc:
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
+
 
     def test_eq_age_creation(self):
+        obj1 = species(test_animal)
+        obj2 = species(test_animal)
+
         assert self.obj1.age == self.obj2.age
 
-    def test_eq_aging(self, species, test_animal):
+    def test_eq_aging(self, test_animal):
         num_years = 10
         for _ in range(num_years):
             self.obj1.ages(test_animal)
@@ -37,11 +38,11 @@ class TestCreationAndFunc:
         assert self.obj1.age and self.obj2.age == expected
 
 
-    def test_weight_gain_carn(self):
+    def test_weight_gain(self):
         gain = 20
-        expected = gain*self.carn.param['beta'] + self.carn.weight
-        self.carn.weight_gain(gain)
-        assert self.carn.weight == expected
+        expected = gain*self.obj1.param['beta'] + self.obj1.weight
+        self.obj1.weight_gain(gain)
+        assert self.obj1.weight == expected
 
     def test_weight_loss_herb(self):
         expected = self.herb.weight - self.herb.weight * self.herb.param['eta']
