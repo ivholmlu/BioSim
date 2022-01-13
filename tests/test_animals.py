@@ -17,28 +17,33 @@ test3 = {'age': 3, 'weight': 8}
 class TestCreationAndFunc:
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
 
-
-    def test_eq_age_creation(self):
+    def test_eq_age_creation(self, test_animal, species):
         obj1 = species(test_animal)
         obj2 = species(test_animal)
 
-        assert self.obj1.age == self.obj2.age
+        assert obj1.age == obj2.age
 
-    def test_eq_aging(self, test_animal):
+    def test_eq_aging(self, species, test_animal):
+        obj1 = species(test_animal)
+        obj2 = species(test_animal)
         num_years = 10
         for _ in range(num_years):
-            self.obj1.ages(test_animal)
-            self.obj2.ages(test_animal)
-        assert self.obj1.age == self.obj2.age
+            obj1.ages(test_animal)
+            obj2.ages(test_animal)
+        assert obj1.age == obj2.age
 
-    def test_ages(self):
+    def test_ages(self, species, test_animal):
+        obj1 = species(test_animal)
+        obj2 = species(test_animal)
         num_years = 5
-        expected = num_years + self.obj1.age
-        [(self.obj1.ages(), self.obj2.ages()) for _ in range(num_years)]
-        assert self.obj1.age and self.obj2.age == expected
+        expected = num_years + obj1.age
+        [(obj1.ages(), obj2.ages()) for _ in range(num_years)]
+        assert obj1.age and obj2.age == expected
 
 
-    def test_weight_gain(self):
+    def test_weight_gain(self, species, test_animal):
+        obj1 = species(test_animal)
+        obj2 = species(test_animal)
         gain = 20
         expected = gain*self.obj1.param['beta'] + self.obj1.weight
         self.obj1.weight_gain(gain)
