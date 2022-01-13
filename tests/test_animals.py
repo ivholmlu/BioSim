@@ -3,20 +3,16 @@ from biosim.animals import Herbivores, Carnivores
 import math
 from scipy import stats
 
-seed = 44
+seed = 41
 ALPHA = 0.01
-
-test1 = {'age': 0, 'weight': 5}
-test2 = {'age': 22, 'weight': 33}
-test3 = {'age': 3, 'weight': 8}
 
 @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
                                              {'age': 22, 'weight': 33},
                                              {'age': 3, 'weight': 8}])
 
 class TestCreationAndFunc:
-    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
 
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_eq_age_creation(self, test_animal, species):
         obj1 = species(test_animal)
         obj2 = species(test_animal)
@@ -33,6 +29,7 @@ class TestCreationAndFunc:
             obj2.ages()
         assert obj1.age == obj2.age
 
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_ages(self, species, test_animal):
         obj1 = species(test_animal)
         obj2 = species(test_animal)
@@ -69,6 +66,8 @@ class TestCreationAndFunc:
     def test_zero_weigth_death(self, species, test_animal):
         obj1 = species(test_animal)
         obj2 = species(test_animal)
+        obj1.weight = 0
+        obj2.weight = 0
         for _ in range(50):
             (obj1.death(), obj2.death())
             assert obj1.alive is False
@@ -84,11 +83,18 @@ class TestCreationAndFunc:
         obj1 = species(test_animal)
         obj2 = species(test_animal)
         obj1.fitness = 1
-        obj1.herb.weight = 100
+        obj1.weight = 100
         obj1.param['gamma'] = 1
         obj1.birth(100)
 
         assert obj1.baby['weight'] > 0.0
+
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
+    def test_migration(self, species, test_animal):
+        obj1 = species()
+        obj1.fitness = 1
+        obj1.param['mu'] = 1
+        assert obj1.migration() is True
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_birth_distr(self, species, test_animal):
@@ -130,6 +136,7 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
 
 
 """
+
     def test_birth_distribution(self):
         """"""
         The weight for newborn babies should fall within the bell curve for the
