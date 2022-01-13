@@ -55,6 +55,8 @@ class BioSim:
         :param params: Dict with valid parameter specification for species
         """
 
+        # Kaller først fra animals
+
 
     def set_landscape_parameters(self, landscape, params):
         """
