@@ -73,6 +73,22 @@ class Test_Creation_And_Func:
         assert not self.herb.alive == True
         assert not self.carn.alive == True
 
+    def test_birth_babies(self):
+        """
+        Setting parameter to ensure 100% chance for birth
+        Ensure weight above 33 OG ETT ELLER ANNET.
+        """
+        self.herb.weight =  2000
+        self.herb.birth(1000)
+
+        assert  self.herb.baby['weight'] > 0
+
+
+
+
+
+
+
 
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
                                                              (0.250, {'age': 40, 'weight': 10}),

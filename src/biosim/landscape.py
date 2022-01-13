@@ -70,14 +70,11 @@ class Landscape:
         self.carnivores += baby_carn
         # print(baby_carn)
 
-    def emigrant(self):
-        for animal in self.herbivores + self.carnivores:
-            animal.migration()
-        emigrants = [animal for animal in self.herbivores + self.carnivores if animal.migration
-                     is True]
-        return emigrants
 
     def emigrants(self):
+        for animal in itertools.chain(self.herbivores, self.carnivores):
+            animal.migration()
+
         emigrants = [animal for animal in self.herbivores + self.carnivores
                      if animal.migration() is True]
 

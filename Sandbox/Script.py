@@ -54,3 +54,10 @@ for _ in range(301):
 #%%
 for i, j in enumerate(nu_herbs, 1):
     print(i, j.age, j.weight, j.fitness)
+
+
+
+#%%
+
+a = list(range(1, 1000))
+b = list(range(1000, 4000))
