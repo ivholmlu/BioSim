@@ -27,32 +27,30 @@ class Island():
         pop = list_of_animals[0]['pop']
         self.cells[coord].append_population(pop)
 
-    def migrant_move(self):
-        # Idé: Kanskje framfor å gå gjennom keys, heller gå gjennom .items slik at vi får ut både koordinat
-        # og landtype!
-        for coord, land in self.cells.items(): # Creates list over neighbour cells.
-            current_cord = list(coord)
-            neighbour_cell = [(current_cord[0] + 1, current_cord[1]), (current_cord[0], current_cord[1] + 1),
-                              (current_cord[0] - 1, current_cord[1]), (current_cord[0], current_cord[1] - 1)]
-            emigrants = land.emigrants()
-            for animal in emigrants:
-                new_loc = random.choice(neighbour_cell)
-                if self.cells[new_loc].habitable is True:
-                    self.cells[new_loc].insert_migrant(animal)
-                else:
-                    self.cells[coord].stay(animal)
-
     def cycle(self, n=1):
-        for _ in range(n):
-            for land in self.cells.values():
-                land.replenish()
-                land.calculate_fitness()
-                land.sort_fitness()
-                land.feed()
-                land.procreate()
-                land.migrant_move()
-                land.aging_and_weight_loss()
-                land.deceased()
+        for _ in range(1, n+1):
+            for coord in self.cells.keys():
+                if self.cells[coord].habitable is True:
+                    self.cells[coord].replenish()
+                    self.cells[coord].calculate_fitness()
+                    self.cells[coord].sort_fitness()
+                    self.cells[coord].feed()
+                    self.cells[coord].procreate()
 
-            for land in self.cells.values():
-                land.add_migrants()
+                    coord_now = list(coord)
+                    neighbour_cell = [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
+                                      (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
+                    emigrants = self.cells[coord].emigrants()
+                    for animal in emigrants:
+                        new_loc = random.choice(neighbour_cell)
+                        if self.cells[new_loc].habitable is True:
+                            self.cells[new_loc].insert_migrant(animal)
+                        else:
+                            self.cells[coord].stay_in_cell(animal)
+
+            for coord in self.cells.keys():
+                if self.cells[coord].habitable is True:
+                    self.cells[coord].add_migrants()
+                    self.cells[coord].aging_and_weight_loss()
+                    self.cells[coord].deceased()
+
