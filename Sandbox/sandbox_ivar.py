@@ -11,100 +11,72 @@ ini_herbs = [{'loc': (2, 2),
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
-                      for _ in range(1000)]}]
+                      for _ in range(50)]}]
 
 ini_carns = [{'loc': (2, 2),
               'pop': [{'species': 'Carnivore',
                        'age': 5,
                        'weight': 20}
-                      for _ in range(200)]}]
+                      for _ in range(20)]}]
 
 
 geogr = """\
-           WWWW
-           WLLW
-           WWWW"""
+           WWW
+           WLW
+           WWW"""
 
 geogr = textwrap.dedent(geogr)
 
 oy = Island(geogr)
 oy.assign()
-oy.assign_animals(ini_herbs)
-oy.assign_animals(ini_carns)
-for _ in range (1):
-    for cell in [(2, 2), (2, 3)]:
-        oy.cells[cell].init_fitness()
-        oy.cells[cell].sort_fitness()
+carnivore_dead = 0
+herbivore_dead = 0
 
-        oy.migrant_move()
-        d = len(oy.cells[cell].herbivores)
-        e = len(oy.cells[cell].carnivores)
-        print(d, e)
-        oy.cells[cell].add_migrants()
+for seed in range(0, 1001):
+    oy = Island(geogr)
+    oy.assign()
 
-        b = len(oy.cells[cell].herbivores)
-        c = len(oy.cells[cell].carnivores)
-        print(b, c)
+    oy.assign_animals(ini_herbs)
+    random.seed(seed)
+    for year in range (1, 51):
+        for cell in [(2,2)]:
+            oy.cells[cell].init_fitness()
+            oy.cells[cell].sort_fitness()
+            oy.cycle1()
+            oy.migrant_move()
+            oy.cycle2()
+        for cell in [(2, 2)]:
+            oy.cells[cell].add_migrants()
 
+        print(year, len(oy.cells[(2,2)].herbivores), len(oy.cells[(2,2)].carnivores),':',
+                len(oy.cells[(2,3)].herbivores), len(oy.cells[(2,3)].carnivores))
 
+    oy.assign_animals(ini_carns)
+    for year in range (51, 300):
+        for cell in [(2,2)]:
+            oy.cells[cell].init_fitness()
+            oy.cells[cell].sort_fitness()
+            oy.cycle1()
+            oy.migrant_move()
+            oy.cycle2()
+        for cell in [(2, 2)]:
+            oy.cells[cell].add_migrants()
 
-
-
-
-
-
-
-#%%
-"""
-random.seed(123)
-
-ini_herbs = [{'pop': [{'species': 'Herbivore',
-                       'age': 5,
-                       'weight': 20}
-                      for _ in range(50)]}]
-
-ini_carn = [{'pop': [{'species': 'Carnivore',
-                       'age': 5,
-                       'weight': 20}
-                      for _ in range(50)]}]
-
-lh = Lowland(ini_herbs)
-num_years = 100
-lh.append_population(ini_herbs)
-lh.init_fitness()
-for _ in range(10):
-    lh.replenish()
-    lh.feed()
-    lh.procreate()
-    lh.aging()
-    lh.weight_cut()
-    lh.deceased()
-
-lh.append_population(ini_carn)
-
-for x, _  in enumerate(range(10)):
-    lh.replenish()
-    lh.feed()
-    lh.procreate()
-    lh.aging()
-    lh.weight_cut()
-    lh.deceased()
-    print(lh.get_population())
-    try:
-        print(x, lh.herbivores[0].fitness)
-        print(x, lh.carnivores[0].fitness)
-    except:
-        pass
+        print(year, len(oy.cells[(2, 2)].herbivores), len(oy.cells[(2, 2)].carnivores), ':',
+              len(oy.cells[(2, 3)].herbivores), len(oy.cells[(2, 3)].carnivores))
+    herbivore_alive = len(oy.cells[(2, 2)].herbivores) + len(oy.cells[(2, 3)].herbivores)
+    carnivore_alive = len(oy.cells[(2, 3)].carnivores) + len(oy.cells[(2, 2)].carnivores)
 
 
-"""
-"""
-for _ in range(num_years):
-    lh.replenish()
-    lh.feed()
-    lh.procreate()
-    lh.weight_cut()
-    lh.deceased()
+    if herbivore_alive == 0:
+        herbivore_dead += 1
+    if carnivore_alive == 0:
+        carnivore_dead += 1
 
-lh.get_population()
-"""
+print(herbivore_dead, carnivore_dead)
+
+
+
+
+
+

@@ -9,34 +9,35 @@ ALPHA = 0.01
 @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
                                              {'age': 22, 'weight': 33},
                                              {'age': 3, 'weight': 8}])
-
 class TestCreationAndFunc:
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_eq_age_creation(self, test_animal, species):
+        """
+        Test if 2 objects with same parameters have the same weight and age
+        after creation.
+        """
         obj1 = species(test_animal)
         obj2 = species(test_animal)
 
-        assert obj1.age == obj2.age
+        assert obj1.age == obj2.age and obj1.weight == obj2.weight
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_eq_aging(self, test_animal, species):
+        """
+        Test if two objects have increased the same after num_years
+        and have gained the expected age
+        """
         obj1 = species(test_animal)
         obj2 = species(test_animal)
+        start_age = obj1.age
         num_years = 10
+        expected = start_age + num_years
         for _ in range(num_years):
             obj1.ages()
             obj2.ages()
-        assert obj1.age == obj2.age
+        assert obj1.age == obj2.age and (obj1.age and obj2.age) == expected
 
-    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
-    def test_ages(self, species, test_animal):
-        obj1 = species(test_animal)
-        obj2 = species(test_animal)
-        num_years = 5
-        expected = num_years + obj1.age
-        [(obj1.ages(), obj2.ages()) for _ in range(num_years)]
-        assert obj1.age and obj2.age == expected
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_weight_gain(self, species, test_animal):
@@ -155,4 +156,15 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
         lower_limit = mean - 2*std
         upper_limit = mean + 2*std
         assert weight < upper_limit and weight > lower_limit
+        
+        
+        @pytest.mark.parametrize('species', [Herbivores, Carnivores])
+    def test_ages(self, species, test_animal):
+        
+        obj1 = species(test_animal)
+        obj2 = species(test_animal)
+        num_years = 5
+        expected = num_years + obj1.age
+        [(obj1.ages(), obj2.ages()) for _ in range(num_years)]
+        assert obj1.age and obj2.age == expected
 """
