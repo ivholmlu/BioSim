@@ -41,6 +41,9 @@ class TestCreationAndFunc:
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_weight_gain(self, species, test_animal):
+        """
+        Test if the weight is gained as intended. Food eaten multiplied with parameter beta
+        """
         obj1 = species(test_animal)
         gain = 20
         expected = gain*obj1.param['beta'] + obj1.weight
@@ -49,6 +52,10 @@ class TestCreationAndFunc:
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_weight_loss(self, species, test_animal):
+        """
+        Test if weight loss every year is lost with the formula:
+        new body weight =current body weight - (current body weight * eta)
+        """
         obj1 = species(test_animal)
         expected = obj1.weight - obj1.weight * obj1.param['eta']
         obj1.weight_loss()
@@ -56,15 +63,23 @@ class TestCreationAndFunc:
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_certain_death(self, species, test_animal):
+        """
+        Creates a certain death scenario for all N animals. Checks if all objects alive attributes
+        have been set to False
+        """
+        N = 50
         obj1 = species(test_animal)
         obj1.param['omega'] = 1
         obj1.fitness = 0
-        for _ in range(50):
+        for _ in range(N):
             obj1.death()
             assert not obj1.alive
 
-    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores]) # MULIGENS KOMBINERE DENNE OG DEN OVENFOR?
     def test_zero_weigth_death(self, species, test_animal):
+        """
+        Test if animals attribute alive attribute is set to zero when weight = 0
+        """
         obj1 = species(test_animal)
         obj2 = species(test_animal)
         obj1.weight = 0
@@ -92,6 +107,10 @@ class TestCreationAndFunc:
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_migration(self, species, test_animal):
+        """
+        Setting parameters to ensure migration for all cases. Checks if the migration attribute
+        is changed to True.
+        """
         obj1 = species()
         obj1.fitness = 1
         obj1.param['mu'] = 1
@@ -101,6 +120,7 @@ class TestCreationAndFunc:
     def test_birth_distr(self, species, test_animal):
         """
         Test is inspired from Hans Plessers bacteria death distribution test
+        The test checks if the Z-value from the birth disstribution is lower than the ALPHA value.
         """
         obj1 = species(test_animal)
 
