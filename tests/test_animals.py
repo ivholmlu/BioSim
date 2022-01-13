@@ -88,20 +88,38 @@ class Test_Creation_And_Func:
         assert self.herb.baby['weight'] > 0.0
 
 
-def test_birth_carnivores():
+    def test_birth_carnivores(self):
 
-    self.carn.fitness = 1
-    self.carn.weight = 100
-    self.carn.param['gamma'] = 1
-    self.carn.birth(100)
+        self.carn.fitness = 1
+        self.carn.weight = 100
+        self.carn.param['gamma'] = 1
+        self.carn.birth(100)
 
-    assert self.carn.baby['weight'] > 0.0
+        assert self.carn.baby['weight'] > 0
 
-def test_birth_distribution():
-    """
-    The weight for newborn babies should fall within the bell curve for the
-    normal distribution. This test checks with alpha certainty that it does.
-    """
+    def test_birth_distribution(self):
+        """
+        The weight for newborn babies should fall within the bell curve for the
+        normal distribution. This test checks with alpha certainty that it does.
+        Add parameters to ensure 100% birth rate
+        This test only check if the baby is within 2 STD from the mean weight
+        It will fail about 1/20 times
+        """
+        self.carn.fitness = 1
+        self.carn.weight = 100
+        self.carn.param['gamma'] = 1
+        self.carn.birth(100)
+        weight = self.carn.baby['weight']
+        mean = self.carn.param['w_birth']
+        std = self.carn.param['sigma_birth']
+        lower_limit = mean - 2*std
+        upper_limit = mean + 2*std
+        assert weight < upper_limit and weight > lower_limit
+
+
+
+
+
 
 
 
