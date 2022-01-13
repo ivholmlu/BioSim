@@ -9,7 +9,7 @@ class Landscape:
         self.current_fodder = 0
         self.carnivores = []
         self.herbivores = []
-        self.m = []
+        self.migrants = []
 
     f_max = 0
     habitable = None
@@ -85,15 +85,15 @@ class Landscape:
         return emigrants
 
     def insert_migrant(self, animal):
-        self.m.append(animal)
+        self.migrants.append(animal)
 
     def add_migrants(self):
-        for animal in self.m:
+        for animal in self.migrants:
             if animal.species == 'Herbivore':
                 self.herbivores.append(animal)
             else:
                 self.carnivores.append(animal)
-        self.m = []
+        self.migrants = []
 
     def stay(self, animal):
         if animal.species == 'Herbivore':
