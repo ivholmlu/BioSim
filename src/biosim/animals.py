@@ -11,12 +11,14 @@ class Animals:
     species = None
 
     def __init__(self, attr=None):
-        self.age = attr['age']
-        self.weight = attr['weight']
         self.fitness = 0
         self.alive = True
         self.baby = {'age': 0, 'weight': 0.0, 'species': self.species}
         self.migrant = False
+
+        if attr is not None:
+            self.age = attr['age']
+            self.weight = attr['weight']
 
     def fitness_flux(self):
         q_age = 1 / (1 + math.exp(self.param['phi_age'] *
