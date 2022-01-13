@@ -13,23 +13,21 @@ test3 = {'age': 3, 'weight': 8}
 
 @pytest.mark.parametrize('species', [Herbivores, Carnivores])
 class TestCreationAndFunc:
+    @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
+                                             {'age': 22, 'weight': 33},
+                                             {'age': 3, 'weight': 8}])
+    def create_objects(self, species, test_animal):
+        self.obj1 = species(test_animal)
+        self.obj2 = species(test_animal)
 
-    def create_objects(self, species):
-        self.obj1 = species()
-        self.obj2 = species()
-
-
-    def test_eq_age_creation(self, species):
-        self.obj1 = species.ages()
-        self.obj2 = species.ages()
+    def test_eq_age_creation(self):
         assert self.obj1.age == self.obj2.age
 
-    @pytest.mark.parametrize('test_animal')
-    def test_eq_aging(self, species):
+    def test_eq_aging(self, species, test_animal):
         num_years = 10
-        for _ in range(num_years)
-            self.obj1.ages()
-            self.obj2.ages()
+        for _ in range(num_years):
+            self.obj1.ages(test_animal)
+            self.obj2.ages(test_animal)
         assert self.obj1.age == self.obj2.age
 
     def test_ages(self):
