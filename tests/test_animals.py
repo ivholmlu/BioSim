@@ -11,12 +11,11 @@ test2 = {'age': 22, 'weight': 33}
 test3 = {'age': 3, 'weight': 8}
 
 
-@pytest.mark.parametrize('parameters', [test1, test2, test3])
-class Test_Creation_And_Func:
-    @pytest.fixture(autouse=True)
-    def create_objects(self, parameters):
-        self.herb = Herbivores(parameters)
-        self.carn = Carnivores(parameters)
+@pytest.mark.parametrize('parameters', [Herbivores, Carnivores])
+class TestCreationAndFunc:
+    @pytest.fixture(autouse = True)
+
+
 
     def test_eq_age(self):
         assert self.carn.age == self.herb.age
@@ -125,7 +124,7 @@ class Test_Creation_And_Func:
         Test is inspired from Hans Plessers bacteria death distribution test
         """
         #Seed øverst i syntaksen
-        num, N = 100000, 10000
+        num, N = 10, 10000
         self.carn.fitness = 1
         self.carn.weight = 100
         self.carn.param['gamma'] = 1
@@ -138,30 +137,6 @@ class Test_Creation_And_Func:
             Z = (weight - mean) / math.sqrt(std)
             Z_value_prob = 2* stats.norm.cdf((-abs(Z))) #Tosidig test
             assert Z_value_prob > ALPHA
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
                                                              (0.250, {'age': 40, 'weight': 10}),

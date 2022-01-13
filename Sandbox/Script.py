@@ -59,5 +59,4 @@ for i, j in enumerate(nu_herbs, 1):
 
 #%%
 
-a = list(range(1, 1000))
-b = list(range(1000, 4000))
+
