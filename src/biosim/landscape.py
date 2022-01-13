@@ -100,7 +100,7 @@ class Landscape:
                 self.carnivores.append(animal)
         self.migrants = []
 
-    def stay(self, animal):
+    def stay_in_cell(self, animal):
         if animal.species == 'Herbivore':
             self.herbivores.append(animal)
         else:

@@ -39,7 +39,7 @@ class Island():
                 if self.cells[new_loc].habitable is True:
                     self.cells[new_loc].insert_migrant(animal)
                 else:
-                    self.cells[coord].stay(animal)
+                    self.cells[coord].stay_in_cell(animal)
 
     # Én syklus for ett landområde
     def cycle1(self, n=1):
@@ -56,5 +56,3 @@ class Island():
             current_cell.aging()
             current_cell.weight_cut()
             current_cell.deceased()
-
-
