@@ -11,19 +11,26 @@ test2 = {'age': 22, 'weight': 33}
 test3 = {'age': 3, 'weight': 8}
 
 
-@pytest.mark.parametrize('parameters', [Herbivores, Carnivores])
+@pytest.mark.parametrize('species', [Herbivores, Carnivores])
 class TestCreationAndFunc:
-    @pytest.fixture(autouse = True)
+
+    def create_objects(self, species):
+        self.obj1 = species()
+        self.obj2 = species()
 
 
+    def test_eq_age_creation(self, species):
+        self.obj1 = species.ages()
+        self.obj2 = species.ages()
+        assert self.obj1.age == self.obj2.age
 
-    def test_eq_age(self):
-        assert self.carn.age == self.herb.age
-
-    def test_eq_aging(self):
-        self.herb.ages()
-        self.carn.ages()
-        assert self.herb.age == self.carn.age
+    @pytest.mark.parametrize('test_animal')
+    def test_eq_aging(self, species):
+        num_years = 10
+        for _ in range(num_years)
+            self.obj1.ages()
+            self.obj2.ages()
+        assert self.obj1.age == self.obj2.age
 
     def test_ages(self):
         num_years = 5
