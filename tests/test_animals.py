@@ -43,16 +43,10 @@ class TestCreationAndFunc:
 
     def test_weight_gain(self, species, test_animal):
         obj1 = species(test_animal)
-        obj2 = species(test_animal)
         gain = 20
-        expected = gain*self.obj1.param['beta'] + self.obj1.weight
-        self.obj1.weight_gain(gain)
-        assert self.obj1.weight == expected
-
-    def test_weight_loss_herb(self):
-        expected = self.herb.weight - self.herb.weight * self.herb.param['eta']
-        self.herb.weight_loss()
-        assert self.herb.weight == expected
+        expected = gain*obj1.param['beta'] + obj1.weight
+        obj1.weight_gain(gain)
+        assert obj1.weight == expected
 
     def test_weight_loss_carn(self):
         expected = self.carn.weight - self.carn.weight * self.carn.param['eta']
