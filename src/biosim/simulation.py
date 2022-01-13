@@ -5,6 +5,8 @@ Template for BioSim class.
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
 # (C) Copyright 2021 Hans Ekkehard Plesser / NMBU
+from biosim.animals import Carnivores, Herbivores
+from biosim.landscape import Lowland, Highland, Desert, Water
 
 class BioSim:
     def __init__(self, island_map, ini_pop, seed,
@@ -47,6 +49,9 @@ class BioSim:
         img_dir and img_base must either be both None or both strings.
         """
 
+    def create_island(self, island_map):
+        pass
+
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -55,7 +60,6 @@ class BioSim:
         :param params: Dict with valid parameter specification for species
         """
 
-        # Kaller først fra animals
 
 
     def set_landscape_parameters(self, landscape, params):
