@@ -13,7 +13,7 @@ test3 = {'age': 3, 'weight': 8}
 @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
                                              {'age': 22, 'weight': 33},
                                              {'age': 3, 'weight': 8}])
-@pytest.mark.parametrize('species', [Herbivores, Carnivores])
+
 class TestCreationAndFunc:
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
 
@@ -53,50 +53,37 @@ class TestCreationAndFunc:
         obj1.weight_loss()
         assert obj1.weight == expected
 
-    def test_certain_death_herb(self):
-        self.herb.param['omega'] = 1
-        self.herb.fitness = 0
+    def test_certain_death(self, species, test_animal):
+        obj1 = species(test_animal)
+        obj1.param['omega'] = 1
+        obj1.fitness = 0
         for _ in range(50):
-            self.herb.death()
-            assert not self.herb.alive
+            obj1.death()
+            assert not obj1.alive
 
-    def test_certain_death_carn(self):
-        self.carn.param['omega'] = 1
-        self.carn.fitness = 0
+    def test_zero_weigth_death(self, species, test_animal):
+        obj1 = species(test_animal)
+        obj2 = species(test_animal)
         for _ in range(50):
-            self.carn.death()
-            assert not self.carn.alive
-
-    def test_zero_weigth_death(self):
-        self.carn.weight = 0
-        self.herb.weight = 0
-        (self.carn.death(), self.herb.death())
-        assert not self.herb.alive == True
-        assert not self.carn.alive == True
+            (obj1.death(), obj2.death())
+            assert obj1.alive is False
+            assert obj2.alive is False
 
 
-    def test_birth_herbivores(self):
+    def test_birth_herbivores(self, species, test_animal):
         """
         Setting parameter to ensure 100% chance for birth
         Test if baby has weight above zero which means that the animal object
         has given birth
         """
-        self.herb.fitness = 1
-        self.herb.weight = 100
-        self.herb.param['gamma'] = 1
-        self.herb.birth(100)
+        obj1 = species(test_animal)
+        obj2 = species(test_animal)
+        obj1.fitness = 1
+        obj1.herb.weight = 100
+        obj1.param['gamma'] = 1
+        obj1.birth(100)
 
-        assert self.herb.baby['weight'] > 0.0
-
-
-    def test_birth_carnivores(self):
-
-        self.carn.fitness = 1
-        self.carn.weight = 100
-        self.carn.param['gamma'] = 1
-        self.carn.birth(100)
-
-        assert self.carn.baby['weight'] > 0
+        assert obj1.baby['weight'] > 0.0
 
     def test_birth_distribution(self):
         """
