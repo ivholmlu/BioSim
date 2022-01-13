@@ -40,7 +40,6 @@ class TestCreationAndFunc:
         [(obj1.ages(), obj2.ages()) for _ in range(num_years)]
         assert obj1.age and obj2.age == expected
 
-
     def test_weight_gain(self, species, test_animal):
         obj1 = species(test_animal)
         gain = 20
@@ -48,10 +47,11 @@ class TestCreationAndFunc:
         obj1.weight_gain(gain)
         assert obj1.weight == expected
 
-    def test_weight_loss_carn(self):
-        expected = self.carn.weight - self.carn.weight * self.carn.param['eta']
-        self.carn.weight_loss()
-        assert self.carn.weight == expected
+    def test_weight_loss(self, species, test_animal):
+        obj1 = species(test_animal)
+        expected = obj1.weight - obj1.weight * obj1.param['eta']
+        obj1.weight_loss()
+        assert obj1.weight == expected
 
     def test_certain_death_herb(self):
         self.herb.param['omega'] = 1
