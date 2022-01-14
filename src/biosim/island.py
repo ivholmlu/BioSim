@@ -1,3 +1,4 @@
+import numpy as np
 from .landscape import Lowland, Highland, Desert, Water
 import random
 
@@ -54,6 +55,24 @@ class Island():
                 self.cells[coord].add_migrants()
                 self.cells[coord].aging_and_weight_loss()
                 self.cells[coord].deceased()
+
+    def get_animals_per_species(self):
+        dict_animals = {'Herbivore': 0, 'Carnivore': 0}
+        for cell in self.cells:
+            if self.cells[cell].habitable is True:
+                dict_animals['Herbivore'] += len(self.cells[cell].herbivores)
+                dict_animals['Carnivore'] += len(self.cells[cell].carnivores)
+        return dict_animals
+
+    def get_animals_per_year(self):
+        herbivores = []
+        carnivores = []
+        for cell in self.cells:
+            if self.cells[cell].habitable is True:
+                herbivores.append(len(self.cells[cell].herbivores))
+                carnivores.append(len(self.cells[cell].carnivores))
+
+        return np.array(herbivores), np.array(carnivores)
 
     @staticmethod
     def get_neighbours(coord_now):
