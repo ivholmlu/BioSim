@@ -8,8 +8,9 @@ Template for BioSim class.
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
 from biosim.island import Island
-from biosim.Histogram import update
-from matplotlib.pyplot import as plt
+from biosim.Histogram import Histogram
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class BioSim:
@@ -100,13 +101,31 @@ class BioSim:
         self.island.assign()
         self.island.assign_animals(self.ini_pop)
 
-        for year in range(num_years+1):
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_xlim(0, num_years)
+        ax.set_ylim(0, 10000)
+
+        line = ax.plot(np.arange(num_years),
+                       np.full(num_years, np.nan), 'b-')[0]
+
+        line2 = ax.plot(np.arange(num_years),
+                       np.full(num_years, np.nan), 'r-')[0]
+
+
+        for year in range(num_years):
             self.island.cycle()
             tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
             tot_herbivores = self.num_animals_per_species['Herbivore']
-            print(tot_animals, tot_carnivores, tot_herbivores)
-            update(num_years, year)
+
+            ydata = line.get_ydata()
+            ydata2 = line2.get_ydata()
+            ydata[year] = tot_herbivores
+            ydata2[year] = tot_carnivores
+            line.set_ydata(ydata)
+            line2.set_ydata(ydata2)
+            plt.pause(1e-6)
 
             # et eller annet plotting skjer under her
         plt.show()
