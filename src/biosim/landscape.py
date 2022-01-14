@@ -1,33 +1,33 @@
 from .animals import Herbivores, Carnivores
 import itertools
 import random
+# rydde opp i methods. Vi ser flere methods bruker samme 'teknikk', bruker samme list comprehension.
 
 
 class Landscape:
-    f_max = 0
-
-    def __init__(self):  # vha. set_lanscape_parameters så skal vi få inn f_max.
-        self.current_fodder = self.f_max
+    def __init__(self):
+        self.current_fodder = 0
         self.carnivores = []
         self.herbivores = []
+        self.migrants = []
+
+    f_max = 0
+    habitable = None
 
     def replenish(self):
         self.current_fodder = self.f_max
 
     def append_population(self, ext_population=None):
-        init_pop = [self.herbivores.append(Herbivores(animal)) if animal['species'] == 'Herbivore'
-                    else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
+        [self.herbivores.append(Herbivores(animal))
+         if (animal['species'] or animal.species) == 'Herbivore'
+         else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
 
-    def init_fitness(self):
-        fitness0 = [animal.fitness_flux() for animal in self.carnivores + self.herbivores]
+    def calculate_fitness(self):
+        for animal in itertools.chain(self.herbivores, self.carnivores):
+            animal.fitness_flux()
 
     def sort_fitness(self):
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
-        # Vi sorterer kun herbivores ut ifra fitness
-
-    def sort_weight(self):
-        self.herbivores.sort(key=lambda animal: animal.weight, reverse=True)
-        # Vi sorterer kun herbivores ut ifra fitness
 
     def feed(self):
         for herbivore in self.herbivores:
@@ -47,46 +47,66 @@ class Landscape:
 
         for carnivore in self.carnivores:
             delta_phi_max = carnivore.param['DeltaPhiMax']
-            attempts = 0
-
-            for i, herbivore in enumerate(self.herbivores, 1):
-                attempts = i
-                if 0 < carnivore.fitness - herbivore.fitness < delta_phi_max:
-                    if random.random() < ((carnivore.fitness - herbivore.fitness) / delta_phi_max):
-                        herbivore.alive = False
-                        carnivore.eaten += herbivore.weight
-                elif carnivore.fitness - herbivore.fitness > delta_phi_max:
-                    herbivore.alive = False
-                    carnivore.eaten += herbivore.weight
-
-                if carnivore.eaten < carnivore.param['F'] or attempts < len(self.herbivores):
-                    continue
-                else:
-                    if carnivore.eaten >= carnivore.param['F']:
-                        carnivore.weight_gain(carnivore.param['F'])
-                    else:
-                        carnivore.weight_gain(carnivore.eaten)
-                    break
-
             carnivore.eaten = 0
 
+            for attempts, herbivore in enumerate(self.herbivores, 1):
+                p = (carnivore.fitness - herbivore.fitness)/delta_phi_max
+                prev_eaten = carnivore.eaten
+                if random.random() < p and herbivore.alive is True:
+                    herbivore.alive = False
+                    carnivore.eaten += herbivore.weight
+                    if carnivore.eaten > carnivore.param['F']:
+                        carnivore.weight_gain(carnivore.param['F'] - prev_eaten)
+                        break
+                    else:
+                        carnivore.weight_gain(herbivore.weight)
+                elif attempts == len(self.herbivores):
+                    break
+
+        self.herbivores = [herbivore for herbivore in self.herbivores if herbivore.alive is True]
+
     def procreate(self):
-        num_pop_herb = len(self.herbivores)
-        num_pop_carn = len(self.carnivores)
-        # Herbivores
-        baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(num_pop_herb))]
+        baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))
+                     and parent.alive is True]
         self.herbivores += baby_herb
 
-        # Carnivores
-        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(num_pop_carn))]
+        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(len(self.carnivores)))
+                     and parent.alive is True]
         self.carnivores += baby_carn
 
-    def aging(self):
+    def emigrants(self):
+        emigrants = [animal for animal in itertools.chain(self.herbivores, self.carnivores)
+                     if animal.migration() is True]
+        self.herbivores = [herbivore for herbivore in self.herbivores
+                           if herbivore not in emigrants]
+        self.carnivores = [carnivore for carnivore in self.carnivores
+                           if carnivore not in emigrants]
+        return emigrants
+
+    def insert_migrant(self, animal):
+        self.migrants.append(animal)
+
+    def add_migrants(self):
+        # for animal in self.migrants:
+        #     if animal.species == 'Herbivore':
+        #         self.herbivores.append(animal)
+        #     else:
+        #         self.carnivores.append(animal)
+        #
+        [self.herbivores.append(migrant) if migrant.species == 'Herbivore' else self.carnivores.append(migrant)
+         for migrant in self.migrants]
+        self.migrants = []
+
+    def stay_in_cell(self, animal):
+        if animal.species == 'Herbivore':
+            self.herbivores.append(animal)
+        else:
+            self.carnivores.append(animal)
+
+    def aging_and_weight_loss(self):
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.ages()
-
-    def weight_cut(self):
-        new_weight = [animal.weight_loss() for animal in itertools.chain(self.carnivores, self.herbivores)]
+            animal.weight_loss()
 
     def deceased(self):
         for animal in itertools.chain(self.carnivores, self.herbivores):
@@ -97,7 +117,27 @@ class Landscape:
                            is True]
 
     def get_population(self):
-        return len(self.carnivores + self.herbivores)
+        return len(self.herbivores + self.carnivores)
+
+    @classmethod
+    def set_params(cls, new_params):
+        for key in new_params:
+            if key not in ['habitable', 'f_max']:
+                raise KeyError(f'{key} is an invalid parameter.')
+
+            if 'habitable' in new_params:
+                if not isinstance(new_params['key'], bool):
+                    raise ValueError('habitable must be a boolean (True or False).')
+                cls.habitable = new_params['habitable']
+
+            if 'f_max' in new_params:
+                if not 0 <= new_params['f_max']:
+                    raise ValueError('f_max must be greater than or equal to 0.')
+                cls.f_max = new_params['f_max']
+
+    @classmethod
+    def get_params(cls):
+        return {'habitable': cls.habitable, 'f_max': cls.f_max}
 
 
 class Lowland(Landscape):

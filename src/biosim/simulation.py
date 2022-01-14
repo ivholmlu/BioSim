@@ -5,12 +5,20 @@ Template for BioSim class.
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
 # (C) Copyright 2021 Hans Ekkehard Plesser / NMBU
+from biosim.animals import Carnivores, Herbivores
+from biosim.landscape import Lowland, Highland, Desert, Water
+
+from biosim.island import Island
+
 
 class BioSim:
     def __init__(self, island_map, ini_pop, seed,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
+        self.island_map = island_map
+        self.ini_pop = ini_pop
+        self.island = Island(self.island_map)
 
 
         """
@@ -46,7 +54,6 @@ class BioSim:
 
         img_dir and img_base must either be both None or both strings.
         """
-
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -54,6 +61,13 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
+        if species == 'Herbivores':
+            Herbivores.set_params(params)
+        elif species == 'Carnivores':
+            Carnivores.set_params(params)
+        else:
+            raise ValueError('The island only has two species: '
+                  'Herbivores and Carnivores')
 
 
     def set_landscape_parameters(self, landscape, params):
@@ -63,6 +77,18 @@ class BioSim:
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape
         """
+        if landscape == 'W':
+            Water.set_params(params)
+        elif landscape == 'D':
+            Desert.set_params((params))
+        elif landscape == 'L':
+            Lowland.set_params(params)
+        elif landscape == 'H':
+            Highland.set_params(params)
+        else:
+            raise ValueError('Code letter for landscape must be\n'
+                  'either W, D, L or H')
+
 
     def simulate(self, num_years):
         """
@@ -70,6 +96,17 @@ class BioSim:
 
         :param num_years: number of years to simulate
         """
+        island = Island(self.island_map)
+        island.assign()
+        for init_pop in self.ini_pop:
+            island.assign_animals(init_pop)
+        island.cycle(num_years)
+        animals = BioSim.num_animals
+        print(animals)
+
+        
+
+
 
     def add_population(self, population):
         """
@@ -82,13 +119,23 @@ class BioSim:
     def year(self):
         """Last year simulated."""
 
+
     @property
     def num_animals(self):
         """Total number of animals on island."""
+        num_animals = 0
+        for cell in self.island.cells:
+            num_animals += len(cell.Herbivores) + len(cell.Carnivores)
+        return num_animals
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
+        dict_animals = {'Herbiore': 0, 'Carnivore': 0}
+        for cell in self.island.cells:
+            dict_animals['Herbivores'] += len(cell.Herbivores)
+            dict_animals['Carnivore'] += len(cell.Carnivores)
+        return dict_animals
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
