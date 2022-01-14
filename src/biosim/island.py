@@ -21,9 +21,9 @@ class Island():
                 self.cells[coord] = Water()
 
     def assign_animals(self, list_of_animals=None):
-        for init_pop in list_of_animals:
-            coord = init_pop['loc']
-            pop = init_pop['pop']
+        for ani_list in list_of_animals:
+            coord = ani_list['loc']
+            pop = ani_list['pop']
             self.cells[coord].append_population(pop)
 
 
