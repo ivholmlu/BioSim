@@ -60,3 +60,4 @@ class Island():
         coord_now = list(coord_now)
         return [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
                 (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
+
