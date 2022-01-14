@@ -46,11 +46,12 @@ oy = Island(geogr)
 oy.assign()
 oy.assign_animals(ini_herbs)
 
-oy.cycle(50)
+for _ in range(50):
+    oy.cycle()
 
 oy.assign_animals(ini_carns)
-
-oy.cycle(250)
+for _ in range(250):
+    oy.cycle()
 
 for coord, land in oy.cells.items():
     if land.habitable is True:
