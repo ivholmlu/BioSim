@@ -7,8 +7,9 @@ Template for BioSim class.
 # (C) Copyright 2021 Hans Ekkehard Plesser / NMBU
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
-
 from biosim.island import Island
+from biosim.Histogram import update
+from matplotlib.pyplot import as plt
 
 
 class BioSim:
@@ -99,12 +100,16 @@ class BioSim:
         self.island.assign()
         self.island.assign_animals(self.ini_pop)
 
-        for year in range(num_years):
+        for year in range(num_years+1):
             self.island.cycle()
+            tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
             tot_herbivores = self.num_animals_per_species['Herbivore']
+            print(tot_animals, tot_carnivores, tot_herbivores)
+            update(num_years, year)
 
-
+            # et eller annet plotting skjer under her
+        plt.show()
 
 
     def add_population(self, population):
@@ -128,24 +133,14 @@ class BioSim:
                 num_animals += len(self.island.cells[cell].herbivores) + len(self.island.cells[cell].carnivores)
         return num_animals
 
-    # @property
-    # def num_animals_per_species(self):
-    #     """Number of animals per species in island, as dictionary."""
-    #     dict_animals = {'Herbivore': 0, 'Carnivore': 0}
-    #     for cell in self.island.cells:
-    #         if self.island.cells[cell].habitable is True:
-    #             dict_animals['Herbivore'] += len(self.island.cells[cell].herbivores)
-    #             dict_animals['Carnivore'] += len(self.island.cells[cell].carnivores)
-    #     return dict_animals
-
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
         dict_animals = {'Herbivore': 0, 'Carnivore': 0}
-        for cell, land in self.island.cells.items():
-            if land.habitable is True:
-                dict_animals['Herbivore'] += len(land.herbivores)
-                dict_animals['Carnivore'] += len(land.carnivores)
+        for cell in self.island.cells:
+            if self.island.cells[cell].habitable is True:
+                dict_animals['Herbivore'] += len(self.island.cells[cell].herbivores)
+                dict_animals['Carnivore'] += len(self.island.cells[cell].carnivores)
         return dict_animals
 
     def make_movie(self):
