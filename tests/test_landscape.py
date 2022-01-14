@@ -39,7 +39,7 @@ class TestPopulation:
         assert len(self.lowland.herbivores) == n and len(self.lowland.carnivores) == m
 
     def test_fitness_calculation(self, insert_animals):
-        self.lowland.init_fitness()
+        self.lowland.calculate_fitness()
         carn_fitness = [carnivore.fitness for carnivore in self.lowland.carnivores]
         herb_fitness = [herbivore.fitness for herbivore in self.lowland.herbivores]
 
