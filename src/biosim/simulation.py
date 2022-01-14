@@ -146,21 +146,15 @@ class BioSim:
     @property
     def num_animals(self):
         """Total number of animals on island."""
-        num_animals = 0
-        for cell in self.island.cells:
-            if self.island.cells[cell].habitable is True:
-                num_animals += len(self.island.cells[cell].herbivores) + len(self.island.cells[cell].carnivores)
-        return num_animals
+        ani_dict = self.island.get_animals_per_species()
+        return ani_dict['Herbivore'] + ani_dict['Carnivore']
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
-        dict_animals = {'Herbivore': 0, 'Carnivore': 0}
-        for cell in self.island.cells:
-            if self.island.cells[cell].habitable is True:
-                dict_animals['Herbivore'] += len(self.island.cells[cell].herbivores)
-                dict_animals['Carnivore'] += len(self.island.cells[cell].carnivores)
-        return dict_animals
+        return self.island.get_animals_per_species()
+
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
+        pass
