@@ -8,11 +8,16 @@ Template for BioSim class.
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
 
+from biosim.island import Island
+
+
 class BioSim:
     def __init__(self, island_map, ini_pop, seed,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
+        self.island_map = island_map
+        self.ini_pop = ini_pop
 
 
         """
@@ -48,10 +53,6 @@ class BioSim:
 
         img_dir and img_base must either be both None or both strings.
         """
-
-    def create_island(self, island_map):
-        pass
-
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -64,9 +65,8 @@ class BioSim:
         elif species == 'Carnivores':
             Carnivores.set_params(params)
         else:
-            raise ValueError ('The island only has two species: '
+            raise ValueError('The island only has two species: '
                   'Herbivores and Carnivores')
-
 
 
     def set_landscape_parameters(self, landscape, params):
@@ -85,7 +85,7 @@ class BioSim:
         elif landscape == 'H':
             Highland.set_params(params)
         else:
-            raise ValueError ('Code letter for landscape must be\n'
+            raise ValueError('Code letter for landscape must be\n'
                   'either W, D, L or H')
 
 
@@ -95,6 +95,13 @@ class BioSim:
 
         :param num_years: number of years to simulate
         """
+        island = Island(self.island_map)
+        island.assign()
+        for init_pop in self.ini_pop:
+            island.assign_animals(init_pop)
+
+        island.cycle(num_years)
+
 
 
     def add_population(self, population):
