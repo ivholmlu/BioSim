@@ -126,7 +126,7 @@ class TestCreationAndFunc:
 
         #Seed øverst i syntaksen
         num = 10
-        N = 100
+        N = 10
         obj1.fitness = 1
         obj1.weight = 100
         obj1.param['gamma'] = 1
@@ -155,6 +155,13 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
     herb.fitness_flux()
     assert herb.fitness == pytest.approx(expected_fitness)
 
+
+class TestSetWrongParameters:
+
+    def test_invalid_key(self):
+        Herb = Herbivores()
+        Herb.set_params({'not_a_key': 0})
+        self.assertRaises(KeyError, lambda: my_dict['some_key'])
 
 """
 

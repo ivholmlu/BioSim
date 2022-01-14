@@ -99,8 +99,8 @@ class BioSim:
         island.assign()
         for init_pop in self.ini_pop:
             island.assign_animals(init_pop)
-
         island.cycle(num_years)
+        
 
 
 

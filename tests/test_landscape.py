@@ -44,3 +44,4 @@ class TestPopulation:
         herb_fitness = [herbivore.fitness for herbivore in self.lowland.herbivores]
 
         assert all(np.array(herb_fitness) > 0) and all(np.array(carn_fitness) > 0)
+

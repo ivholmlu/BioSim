@@ -2,6 +2,8 @@
 from biosim.island import Island
 import textwrap
 import random
+import time
+start_time = time.time()
 
 geogr = """\
            WWWWWWWWWWWWWWWWWWWWWWWWW
@@ -55,3 +57,7 @@ for coord, land in oy.cells.items():
         herbivores = len(land.herbivores)
         carnivores = len(land.carnivores)
         print(coord, herbivores, carnivores)
+time = time.time()
+time_spent = time - start_time
+print(time_spent)
+
