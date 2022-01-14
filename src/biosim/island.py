@@ -26,6 +26,7 @@ class Island():
             pop = init_pop['pop']
             self.cells[coord].append_population(pop)
 
+
     def cycle(self, n=1):
         for _ in range(n):
             for coord in self.cells.keys():
