@@ -27,34 +27,33 @@ class Island():
             self.cells[coord].append_population(pop)
 
 
-    def cycle(self, n=1):
-        for _ in range(n):
-            for coord in self.cells.keys():
-                if self.cells[coord].habitable is True:
-                    self.cells[coord].replenish()
-                    self.cells[coord].calculate_fitness()
-                    self.cells[coord].sort_fitness()
-                    self.cells[coord].feed()
-                    self.cells[coord].procreate()
+    def cycle(self):
+        for coord in self.cells.keys():
+            if self.cells[coord].habitable is True:
+                self.cells[coord].replenish()
+                self.cells[coord].calculate_fitness()
+                self.cells[coord].sort_fitness()
+                self.cells[coord].feed()
+                self.cells[coord].procreate()
 
-                    # coord_now = list(coord)
-                    # neighbour_cell = [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
-                    #                   (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
+                # coord_now = list(coord)
+                # neighbour_cell = [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
+                #                   (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
 
-                    neighbour_cell = self.get_neighbours(coord)
-                    emigrants = self.cells[coord].emigrants()
-                    for animal in emigrants:
-                        new_loc = random.choice(neighbour_cell)
-                        if self.cells[new_loc].habitable is True:
-                            self.cells[new_loc].insert_migrant(animal)
-                        else:
-                            self.cells[coord].stay_in_cell(animal)
+                neighbour_cell = self.get_neighbours(coord)
+                emigrants = self.cells[coord].emigrants()
+                for animal in emigrants:
+                    new_loc = random.choice(neighbour_cell)
+                    if self.cells[new_loc].habitable is True:
+                        self.cells[new_loc].insert_migrant(animal)
+                    else:
+                        self.cells[coord].stay_in_cell(animal)
 
-            for coord in self.cells.keys():
-                if self.cells[coord].habitable is True:
-                    self.cells[coord].add_migrants()
-                    self.cells[coord].aging_and_weight_loss()
-                    self.cells[coord].deceased()
+        for coord in self.cells.keys():
+            if self.cells[coord].habitable is True:
+                self.cells[coord].add_migrants()
+                self.cells[coord].aging_and_weight_loss()
+                self.cells[coord].deceased()
 
     @staticmethod
     def get_neighbours(coord_now):
