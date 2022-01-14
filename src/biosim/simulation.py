@@ -59,6 +59,13 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
+        if species == 'Herbivores':
+            Herbivores.set_params(params)
+        elif species == 'Carnivores':
+            Carnivores.set_params(params)
+        else:
+            raise ValueError ('The island only has two species: '
+                  'Herbivores and Carnivores')
 
 
 
@@ -69,6 +76,18 @@ class BioSim:
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape
         """
+        if landscape == 'W':
+            Water.set_params(params)
+        elif landscape == 'D':
+            Desert.set_params((params))
+        elif landscape == 'L':
+            Lowland.set_params(params)
+        elif landscape == 'H':
+            Highland.set_params(params)
+        else:
+            raise ValueError ('Code letter for landscape must be\n'
+                  'either W, D, L or H')
+
 
     def simulate(self, num_years):
         """
@@ -76,6 +95,7 @@ class BioSim:
 
         :param num_years: number of years to simulate
         """
+
 
     def add_population(self, population):
         """
@@ -87,6 +107,7 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
+
 
     @property
     def num_animals(self):
