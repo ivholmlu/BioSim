@@ -1,6 +1,4 @@
 from .landscape import Lowland, Highland, Desert, Water
-import textwrap
-import itertools
 import random
 
 class Island():
@@ -23,12 +21,13 @@ class Island():
                 self.cells[coord] = Water()
 
     def assign_animals(self, list_of_animals=None):
-        coord = list_of_animals[0]['loc']
-        pop = list_of_animals[0]['pop']
-        self.cells[coord].append_population(pop)
+        for init_pop in list_of_animals:
+            coord = init_pop['loc']
+            pop = init_pop['pop']
+            self.cells[coord].append_population(pop)
 
     def cycle(self, n=1):
-        for _ in range(1, n+1):
+        for _ in range(n):
             for coord in self.cells.keys():
                 if self.cells[coord].habitable is True:
                     self.cells[coord].replenish()
@@ -37,9 +36,11 @@ class Island():
                     self.cells[coord].feed()
                     self.cells[coord].procreate()
 
-                    coord_now = list(coord)
-                    neighbour_cell = [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
-                                      (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
+                    # coord_now = list(coord)
+                    # neighbour_cell = [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
+                    #                   (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
+
+                    neighbour_cell = self.get_neighbours(coord)
                     emigrants = self.cells[coord].emigrants()
                     for animal in emigrants:
                         new_loc = random.choice(neighbour_cell)
@@ -54,3 +55,8 @@ class Island():
                     self.cells[coord].aging_and_weight_loss()
                     self.cells[coord].deceased()
 
+    @staticmethod
+    def get_neighbours(coord_now):
+        coord_now = list(coord_now)
+        return [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
+                (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
