@@ -18,6 +18,7 @@ class BioSim:
                  log_file=None):
         self.island_map = island_map
         self.ini_pop = ini_pop
+        self.island = Island(self.island_map)
 
 
         """
@@ -100,6 +101,9 @@ class BioSim:
         for init_pop in self.ini_pop:
             island.assign_animals(init_pop)
         island.cycle(num_years)
+        animals = BioSim.num_animals
+        print(animals)
+
         
 
 
@@ -119,10 +123,19 @@ class BioSim:
     @property
     def num_animals(self):
         """Total number of animals on island."""
+        num_animals = 0
+        for cell in self.island.cells:
+            num_animals += len(cell.Herbivores) + len(cell.Carnivores)
+        return num_animals
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
+        dict_animals = {'Herbiore': 0, 'Carnivore': 0}
+        for cell in self.island.cells:
+            dict_animals['Herbivores'] += len(cell.Herbivores)
+            dict_animals['Carnivore'] += len(cell.Carnivores)
+        return dict_animals
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
