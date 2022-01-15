@@ -36,9 +36,15 @@ class TestPopulation:
         self.lowland.append_population(self.carnivores[0]['pop'])
 
     def test_insert_animals(self, insert_animals):
+        """
+        Test if the amount of inserted animals are as expected with input amount.
+        """
         assert len(self.lowland.herbivores) == n and len(self.lowland.carnivores) == m
 
     def test_fitness_calculation(self, insert_animals):
+        """
+        Test if every animals fitness get calculated after iteration.
+        """
         self.lowland.calculate_fitness()
         carn_fitness = [carnivore.fitness for carnivore in self.lowland.carnivores]
         herb_fitness = [herbivore.fitness for herbivore in self.lowland.herbivores]
