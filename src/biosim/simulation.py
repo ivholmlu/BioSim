@@ -219,6 +219,10 @@ class BioSim:
     def get_animals_age(self):
         return self.island.get_age()
 
+    @property
+    def get_animals_weight(self):
+        return self.island.get_weight()
+
 
 
     @property
