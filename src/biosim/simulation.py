@@ -195,6 +195,7 @@ class BioSim:
             x4.hist(histogram_dict['Herbivores']['age'], bins_x4, color='b', histtype='step', density='False')
             x4.hist(histogram_dict['Carnivores']['age'], bins_x4, color='r', histtype='step', density='False')
             x5.hist(histogram_dict['Herbivores']['weight'], bins_x4, color='r', histtype='step', density='False')
+            x5.hist(histogram_dict['Carnivores']['weight'], bins_x4, color = 'b', histtype='step', density='False')
 
             #Animal graph
             ydata = line.get_ydata()
