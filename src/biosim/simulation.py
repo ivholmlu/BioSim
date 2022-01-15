@@ -5,6 +5,7 @@ Template for BioSim class.
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
 # (C) Copyright 2021 Hans Ekkehard Plesser / NMBU
+
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
 from biosim.island import Island
@@ -181,10 +182,12 @@ class BioSim:
             tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
             tot_herbivores = self.num_animals_per_species['Herbivore']
-
+            histogram_dict = self.get_attributes
             #Histogram
-            x3.hist(self.get_animals_fitness,bins_x3, color='r', histtype='step', density='False')
-            x4.hist(self.get_animals_age, bins_x4, color='r', histtype='step', density='False')
+            x3.hist(self.get_attributes['Herbivores']['fitness'],bins_x3, color='b', histtype='step', density='False')
+            x3.hist(self.get_attributes['Carnivores']['fitness'], bins_x3, color='r', histtype='step', density='False')
+            x4.hist(self.get_attributes['Herbivores']['age'], bins_x4, color='b', histtype='step', density='False')
+            x4.hist(self.get_attributes['Carnivores']['age'], bins_x4, color='r', histtype='step', density='False')
             x5.hist(self.get_animals_weight, bins_x4, color='r', histtype='step', density='False')
 
             #Animal graph
@@ -205,8 +208,6 @@ class BioSim:
                 heat_map[x, y] = n_animals['Herbivores']
             x6.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
 
-
-
             plt.pause(0.001)
             # et eller annet plotting skjer under her
 
@@ -225,6 +226,10 @@ class BioSim:
         """Last year simulated."""
 
     @property
+    def get_attributes(self):
+        return self.island.get_attributes()
+
+    @property
     def get_animals_fitness(self):
         return self.island.get_fitness()
 
@@ -235,8 +240,6 @@ class BioSim:
     @property
     def get_animals_weight(self):
         return self.island.get_weight()
-
-
 
     @property
     def num_animals(self):
