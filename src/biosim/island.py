@@ -64,6 +64,14 @@ class Island():
                 dict_animals['Carnivore'] += len(self.cells[cell].carnivores)
         return dict_animals
 
+    def get_fitness(self):
+        list_fitness = []
+        for cell in self.cells:
+            if self.cells[cell].habitable is True:
+                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
+                    list_fitness.append(animal.fitness)
+        return list_fitness
+
     def get_animals_per_year(self):
         herbivores = []
         carnivores = []
