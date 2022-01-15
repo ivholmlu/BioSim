@@ -186,9 +186,11 @@ class BioSim:
             x3.set_title('Fitness')
             self.island.cycle()
             tot_animals = self.num_animals
-            tot_carnivores = self.num_animals_per_species['Carnivore']
-            tot_herbivores = self.num_animals_per_species['Herbivore']
             histogram_dict = self.get_attributes
+            #tot_carnivores = self.num_animals_per_species['Carnivore']
+            #tot_herbivores = self.num_animals_per_species['Herbivore']
+            total_herbivores = len(histogram_dict['Herbivores']['age'])
+            total_carnivores = len(histogram_dict['Carnivores']['age'])
             #Histogram
             x3.hist(histogram_dict['Herbivores']['fitness'],bins_x3, color='b', histtype='step', density='False')
             x3.hist(histogram_dict['Carnivores']['fitness'], bins_x3, color='r', histtype='step', density='False')
@@ -200,8 +202,8 @@ class BioSim:
             #Animal graph
             ydata = line.get_ydata()
             ydata2 = line2.get_ydata()
-            ydata[year] = tot_herbivores
-            ydata2[year] = tot_carnivores
+            ydata[year] = total_herbivores
+            ydata2[year] = total_carnivores
             line.set_ydata(ydata)
             line2.set_ydata(ydata2)
 
