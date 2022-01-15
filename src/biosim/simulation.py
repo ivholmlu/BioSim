@@ -167,14 +167,14 @@ class BioSim:
         # Heatmap #1 - Herbivores
         x6 = f1.add_subplot(3, 3, 5)
         heat_map1 = np.zeros((self.island.rows+1, self.island.columns+1))
-        heat_im1 = x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=175)
-        plt.colorbar(heat_im1, ax=x6, orientation='vertical')
+        heat_im1 = x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=175, cmap='plasma')
+        plt.colorbar(heat_im1, ax=x6, orientation='vertical', cmap='plasma')
 
         # Heatmap #2 - Carnivores
-        x7 = f1.add_subplot(3, 3, 10)
+        x7 = f1.add_subplot(5, 6, 10)
         heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
-        heat_im2 = x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50)
-        plt.colorbar(heat_im2, ax=x7, orientation='vertical')
+        heat_im2 = x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
+        plt.colorbar(heat_im2, ax=x7, orientation='vertical', cmap='plasma')
 
 
         for year in range(0, num_years):
@@ -213,8 +213,8 @@ class BioSim:
                 y = list(coord)[1]
                 heat_map1[x, y] = n_animals['Herbivores']
                 heat_map2[x, y] = n_animals['Carnivores']
-            x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=200)
-            x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50)
+            x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=200, cmap='plasma')
+            x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
 
             plt.pause(0.001)
             # et eller annet plotting skjer under her
