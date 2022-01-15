@@ -159,6 +159,7 @@ class BioSim:
 
         x4 = f1.add_subplot(5, 3, 14)
         x4.set_title('Age')
+        bins_x4 = np.linspace(0, 60, num=30)
 
 
 
@@ -174,7 +175,7 @@ class BioSim:
             #Histogram
             x3.hist(self.get_animals_fitness,bins_x3, color='r', histtype='step', density='False')
 
-            x4.hist(self.get_animals_fitness,bins_x3, color='r', histtype='step', density='False')
+            x4.hist(self.get_animals_age, bins_x4, color='r', histtype='step', density='False')
             #Animal graph
             ydata = line.get_ydata()
             ydata2 = line2.get_ydata()
