@@ -165,12 +165,10 @@ class BioSim:
         x5.set_title('Weight')
 
         # Heatmap #1 - Herbivores
-        x4 = f1.add_subplot(2, 3, 5)
+        x6 = f1.add_subplot(3, 3, 5)
         heat_map = np.zeros((self.island.rows+1, self.island.columns+1))
-        heat_im = x4.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
-        plt.colorbar(heat_im, ax=x4, orientation='vertical')
-
-
+        heat_im = x6.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
+        plt.colorbar(heat_im, ax=x6, orientation='vertical')
 
         for year in range(0, num_years):
             x3.cla()
@@ -205,7 +203,7 @@ class BioSim:
                 x = list(coord)[0]
                 y = list(coord)[1]
                 heat_map[x, y] = n_animals['Herbivores']
-            x4.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
+            x6.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
 
 
 
