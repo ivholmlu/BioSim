@@ -1,18 +1,3 @@
-"""
-:mod:`randvis.graphics` provides graphics support for RandVis.
-
-.. note::
-   * This module requires the program ``ffmpeg`` or ``convert``
-     available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
-   * You can also install ``ffmpeg`` using ``conda install ffmpeg``
-   * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
-     constants below to the command required to invoke the programs
-   * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
-     directory and file-name start you want to use for the graphics output
-     files.
-
-"""
-
 import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
@@ -33,6 +18,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 
 
 class Graphics:
+    """Provides graphics support for RandVis."""
 
     def __init__(self, img_dir=None, img_name=None, img_fmt=None):
         """
@@ -59,26 +45,80 @@ class Graphics:
 
         # the following will be initialized by _setup_graphics
         self._fig = None
-        self._map_ax = None
+        self._map1_ax = None
+        self._map2_ax = None
         self._img_axis = None
-        self._mean_ax = None
-        self._mean_line = None
+        self._img2_axis = None
+        self._pop_ax = None
+        self._pop_line1 = None
+        self._pop_line2 = None
+        # self._histogram1 = None
+        # self._histogram2 = None
+        # self._histogram3 = None
 
-    def update(self, step, sys_map, sys_mean):
+    def setup(self, final_step, img_step):
         """
-        Updates graphics with current data and save to file if necessary.
+        Prepare graphics.
 
-        :param step: current time step
-        :param sys_map: current system status (2d array)
-        :param sys_mean: current mean value of system
+        Call this before calling :meth:`update()` for the first time after
+        the final time step has changed.
+
+        :param final_step: last time step to be visualised (upper limit of x-axis)
+        :param img_step: interval between saving image to file
         """
 
-        self._update_system_map(sys_map)
-        self._update_mean_graph(step, sys_mean)
-        self._fig.canvas.flush_events()  # ensure every thing is drawn
-        plt.pause(1e-6)  # pause required to pass control to GUI
+        self._img_step = img_step
 
-        self._save_graphics(step)
+        # create new figure window
+        if self._fig is None:
+            self._fig = plt.figure()
+
+        # Add left subplot for images created with imshow().
+        # We cannot create the actual ImageAxis object before we know
+        # the size of the image, so we delay its creation.
+        # HEATMAP 1
+        if self._map1_ax is None:
+            self._map1_ax = self._fig.add_subplot(1, 2, 1)
+            self._img_axis = None
+
+        # Add right subplot for line graph of mean.
+        # POPULASJONSPLOT
+        if self._pop_ax is None:
+            self._pop_ax = self._fig.add_subplot(1, 2, 2)
+            self._pop_ax.set_ylim(0, 10**4)
+
+        # needs updating on subsequent calls to simulate()
+        # add 1 so we can show values for time zero and time final_step
+        self._pop_ax.set_xlim(0, final_step + 1)
+
+        if (self._pop_line1 and self._pop_line2) is None:
+            line_plot1 = self._pop_ax.plot(np.arange(0, final_step + 1),
+                                           np.full(final_step + 1, np.nan))
+            self._pop_line1 = line_plot1[0]
+
+            line_plot2 = self._pop_ax.plot(np.arange(0, final_step + 1),
+                                           np.full(final_step + 1, np.nan))
+            self._pop_line2 = line_plot2[0]
+
+        else:
+            x_data, y_data1 = self._pop_line1.get_data()
+            _, y_data2 = self._pop_line2.get_data()
+            x_new = np.arange(x_data[-1] + 1, final_step + 1)
+            if len(x_new) > 0:
+                y_new = np.full(x_new.shape, np.nan)
+                self._pop_line1.set_data(np.hstack((x_data, x_new)),
+                                         np.hstack((y_data1, y_new)))
+                self._pop_line2.set_data(np.hstack((x_data, x_new)),
+                                         np.hstack((y_data2, y_new)))
+
+    def _update_line_graph(self, year, n_herbivores, n_carnivores):
+        y_data1 = self._pop_line1.get_ydata()
+        y_data2 = self._pop_line2.get_ydata()
+        y_data1[year] = n_herbivores
+        y_data2[year] = n_carnivores
+
+        self._pop_line1.set_ydata(y_data1)
+        self._pop_line2.set_ydata(y_data2)
 
     def make_movie(self, movie_fmt=None):
         """
@@ -121,75 +161,3 @@ class Graphics:
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
 
-    def setup(self, final_step, img_step):
-        """
-        Prepare graphics.
-
-        Call this before calling :meth:`update()` for the first time after
-        the final time step has changed.
-
-        :param final_step: last time step to be visualised (upper limit of x-axis)
-        :param img_step: interval between saving image to file
-        """
-
-        self._img_step = img_step
-
-        # create new figure window
-        if self._fig is None:
-            self._fig = plt.figure()
-
-        # Add left subplot for images created with imshow().
-        # We cannot create the actual ImageAxis object before we know
-        # the size of the image, so we delay its creation.
-        if self._map_ax is None:
-            self._map_ax = self._fig.add_subplot(1, 2, 1)
-            self._img_axis = None
-
-        # Add right subplot for line graph of mean.
-        if self._mean_ax is None:
-            self._mean_ax = self._fig.add_subplot(1, 2, 2)
-            self._mean_ax.set_ylim(-0.05, 0.05)
-
-        # needs updating on subsequent calls to simulate()
-        # add 1 so we can show values for time zero and time final_step
-        self._mean_ax.set_xlim(0, final_step+1)
-
-        if self._mean_line is None:
-            mean_plot = self._mean_ax.plot(np.arange(0, final_step+1),
-                                           np.full(final_step+1, np.nan))
-            self._mean_line = mean_plot[0]
-        else:
-            x_data, y_data = self._mean_line.get_data()
-            x_new = np.arange(x_data[-1] + 1, final_step+1)
-            if len(x_new) > 0:
-                y_new = np.full(x_new.shape, np.nan)
-                self._mean_line.set_data(np.hstack((x_data, x_new)),
-                                         np.hstack((y_data, y_new)))
-
-    def _update_system_map(self, sys_map):
-        """Update the 2D-view of the system."""
-
-        if self._img_axis is not None:
-            self._img_axis.set_data(sys_map)
-        else:
-            self._img_axis = self._map_ax.imshow(sys_map,
-                                                 interpolation='nearest',
-                                                 vmin=-0.25, vmax=0.25)
-            plt.colorbar(self._img_axis, ax=self._map_ax,
-                         orientation='horizontal')
-
-    def _update_mean_graph(self, step, mean):
-        y_data = self._mean_line.get_ydata()
-        y_data[step] = mean
-        self._mean_line.set_ydata(y_data)
-
-    def _save_graphics(self, step):
-        """Saves graphics to file if file name given."""
-
-        if self._img_base is None or step % self._img_step != 0:
-            return
-
-        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
-                                                     num=self._img_ctr,
-                                                     type=self._img_fmt))
-        self._img_ctr += 1
