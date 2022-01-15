@@ -161,12 +161,18 @@ class BioSim:
         x4.set_title('Age')
         bins_x4 = np.linspace(0, 60, num=30)
 
+        x5 = f1.add_subplot(5, 3, 15)
+        x5.set_title('Weight')
 
 
 
         for year in range(0, num_years):
             x3.cla()
             x4.cla()
+            x5.cla()
+            x5.set_title('Weight')
+            x4.set_title('Age')
+            x3.set_title('Fitness')
             self.island.cycle()
             tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
@@ -174,8 +180,9 @@ class BioSim:
 
             #Histogram
             x3.hist(self.get_animals_fitness,bins_x3, color='r', histtype='step', density='False')
-
             x4.hist(self.get_animals_age, bins_x4, color='r', histtype='step', density='False')
+            x5.hist(self.get_animals_weight, bins_x4, color='r', histtype='step', density='False')
+
             #Animal graph
             ydata = line.get_ydata()
             ydata2 = line2.get_ydata()
@@ -194,7 +201,7 @@ class BioSim:
 
 
 
-            plt.pause(1e-6)
+            plt.pause(0.001)
             # et eller annet plotting skjer under her
 
 
