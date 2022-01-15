@@ -71,12 +71,12 @@ class Island():
         for cell in self.cells:
             if self.cells[cell].habitable is True:
                 for herb in self.cells[cell].herbivores:
-                    dict_attributes['Herbivores']['fitness'].append(round(herb.fitness, 2)
+                    dict_attributes['Herbivores']['fitness'].append(round(herb.fitness, 2))
                     dict_attributes['Herbivores']['weight'].append(herb.weight)
                     dict_attributes['Herbivores']['age'].append(herb.age)
 
                 for carn in self.cells[cell].carnivores:
-                    dict_attributes['Carnivores']['fitness'].append(round(carn.fitness, 2)
+                    dict_attributes['Carnivores']['fitness'].append(round(carn.fitness, 2))
                     dict_attributes['Carnivores']['weight'].append(carn.weight)
                     dict_attributes['Carnivores']['age'].append(carn.age)
         return dict_attributes
