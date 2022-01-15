@@ -152,7 +152,7 @@ class BioSim:
                        verticalalignment='center',
                        transform=axt.transAxes)  # relative coordinates
 
-        for year in range(num_years):
+        for year in range(num_years+1):
             self.island.cycle()
             tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
