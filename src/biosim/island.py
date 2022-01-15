@@ -77,7 +77,7 @@ class Island():
         for cell in self.cells:
             if self.cells[cell].habitable is True:
                 for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
-                    list_age.appendround(animal.age)
+                    list_age.append(animal.age)
         return list_age
 
     def get_weight(self):
@@ -85,7 +85,7 @@ class Island():
         for cell in self.cells:
             if self.cells[cell].habitable is True:
                 for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
-                    list_weight.appendround(animal.age)
+                    list_weight.append(animal.age)
         return list_weight
 
 
