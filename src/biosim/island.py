@@ -65,6 +65,15 @@ class Island():
                 dict_animals['Carnivore'] += len(self.cells[cell].carnivores)
         return dict_animals
 
+    def get_attributes(self):
+        list_attributes = []
+        for cell in self.cells:
+            if self.cells[cell].habitable is True:
+                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
+                    list_attributes.append([round(animal.fitness, 2),
+                                            animal.age,
+                                            animal.weight])
+
     def get_fitness(self):
         list_fitness = []
         for cell in self.cells:
