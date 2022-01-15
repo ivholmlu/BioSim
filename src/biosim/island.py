@@ -72,6 +72,16 @@ class Island():
                     list_fitness.append(round(animal.fitness, 2))
         return list_fitness
 
+    def get_age(self):
+        list_age = []
+        for cell in self.cells:
+            if self.cells[cell].habitable is True:
+                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
+                    list_age.appendround(animal.age)
+        return list_age
+
+
+
     def get_animals_per_year(self):
         herbivores = []
         carnivores = []
