@@ -9,10 +9,9 @@ Template for BioSim class.
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
 from biosim.island import Island
-
-from biosim.Histogram import Histogram
 import textwrap
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 import numpy as np
 
 
@@ -167,9 +166,16 @@ class BioSim:
 
         # Heatmap #1 - Herbivores
         x6 = f1.add_subplot(3, 3, 5)
-        heat_map = np.zeros((self.island.rows+1, self.island.columns+1))
-        heat_im = x6.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
-        plt.colorbar(heat_im, ax=x6, orientation='vertical')
+        heat_map1 = np.zeros((self.island.rows+1, self.island.columns+1))
+        heat_im1 = x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=175)
+        plt.colorbar(heat_im1, ax=x6, orientation='vertical')
+
+        # Heatmap #2 - Carnivores
+        x7 = f1.add_subplot(3, 3, 10)
+        heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
+        heat_im2 = x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50)
+        plt.colorbar(heat_im2, ax=x7, orientation='vertical')
+
 
         for year in range(0, num_years):
             x3.cla()
@@ -205,8 +211,10 @@ class BioSim:
             for coord, n_animals in animal_coords.items():
                 x = list(coord)[0]
                 y = list(coord)[1]
-                heat_map[x, y] = n_animals['Herbivores']
-            x6.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
+                heat_map1[x, y] = n_animals['Herbivores']
+                heat_map2[x, y] = n_animals['Carnivores']
+            x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=200)
+            x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50)
 
             plt.pause(0.001)
             # et eller annet plotting skjer under her
