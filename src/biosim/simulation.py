@@ -164,6 +164,12 @@ class BioSim:
         x5 = f1.add_subplot(5, 3, 15)
         x5.set_title('Weight')
 
+        # Heatmap #1 - Herbivores
+        x4 = f1.add_subplot(2, 3, 5)
+        heat_map = np.zeros((self.island.rows+1, self.island.columns+1))
+        heat_im = x4.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
+        plt.colorbar(heat_im, ax=x4, orientation='vertical')
+
 
 
         for year in range(0, num_years):
@@ -194,16 +200,17 @@ class BioSim:
             #Counter
             txt.set_text(template.format(year))
 
-
-
-
-
+            animal_coords = self.island.get_coord_animals()
+            for coord, n_animals in animal_coords.items():
+                x = list(coord)[0]
+                y = list(coord)[1]
+                heat_map[x, y] = n_animals['Herbivores']
+            x4.imshow(heat_map, interpolation='nearest', vmin=0, vmax=300)
 
 
 
             plt.pause(0.001)
             # et eller annet plotting skjer under her
-
 
         plt.show()
 
@@ -244,6 +251,9 @@ class BioSim:
         """Number of animals per species in island, as dictionary."""
         return self.island.get_animals_per_species()
 
+    @property
+    def coord_animals(self):
+        return self.island.get_coord_animals()
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
