@@ -153,22 +153,28 @@ class BioSim:
                        transform=axt.transAxes)  # relative coordinates
 
         #HISTOGRAM
-        x3 = f1.add_subplot(2, 3, 4)
+        x3 = f1.add_subplot(3, 4, 9)
         bins_ax3 = np.linspace(0, 1, num=100)
+        x3.set_ylim(0, 2000)
 
 
-        for year in range(0, num_years+1):
+
+        for year in range(0, num_years):
+            x3.cla()
             self.island.cycle()
             tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
             tot_herbivores = self.num_animals_per_species['Herbivore']
-            x3.hist(self.get_animals_fitness, bins_ax3, color='r', histtype='step', density='True')
+            #Histogram
+            x3.hist(self.get_animals_fitness, bins_ax3, color='r', histtype='step', density='True', lw = 3)
+            #Animal graph
             ydata = line.get_ydata()
             ydata2 = line2.get_ydata()
             ydata[year] = tot_herbivores
             ydata2[year] = tot_carnivores
             line.set_ydata(ydata)
             line2.set_ydata(ydata2)
+            #Counter
             txt.set_text(template.format(year))
 
 
