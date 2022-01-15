@@ -85,9 +85,8 @@ class Island():
         for cell in self.cells:
             if self.cells[cell].habitable is True:
                 for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
-                    list_weight.append(animal.age)
+                    list_weight.append(animal.weight)
         return list_weight
-
 
     def get_animals_per_year(self):
         herbivores = []
