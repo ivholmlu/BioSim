@@ -80,6 +80,13 @@ class Island():
                     list_age.appendround(animal.age)
         return list_age
 
+    def get_weight(self):
+        list_weight = []
+        for cell in self.cells:
+            if self.cells[cell].habitable is True:
+                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
+                    list_weight.appendround(animal.age)
+        return list_weight
 
 
     def get_animals_per_year(self):
