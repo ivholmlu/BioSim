@@ -152,12 +152,17 @@ class BioSim:
                        verticalalignment='center',
                        transform=axt.transAxes)  # relative coordinates
 
-        for year in range(num_years+1):
+        #HISTOGRAM
+        x3 = f1.add_subplot(2, 3, 4)
+        bins_ax3 = np.linspace(0, 1, num=10)
+
+
+        for year in range(0, num_years+1):
             self.island.cycle()
             tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
             tot_herbivores = self.num_animals_per_species['Herbivore']
-
+            x3.hist(self.get_animals_fitness, bins_ax3, color = 'r', )
             ydata = line.get_ydata()
             ydata2 = line2.get_ydata()
             ydata[year] = tot_herbivores
@@ -175,6 +180,8 @@ class BioSim:
 
             plt.pause(1e-6)
             # et eller annet plotting skjer under her
+
+
         plt.show()
 
 
@@ -188,6 +195,12 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
+
+    @property
+    def get_animals_fitness(self):
+        list_of_fitness = self.island.get_fitness()
+        list_of_fitness = [round(fitness, 2) for fitness in list_of_fitness]
+        return list_of_fitness
 
 
     @property
