@@ -79,6 +79,7 @@ class Island():
                     dict_attributes['Carnivores']['fitness'].append(round(carn.fitness, 2)
                     dict_attributes['Carnivores']['weight'].append(carn.weight)
                     dict_attributes['Carnivores']['age'].append(carn.age)
+        return dict_attributes
 
 
     def get_fitness(self):
