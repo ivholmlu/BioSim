@@ -82,29 +82,6 @@ class Island():
         return dict_attributes
 
 
-    def get_fitness(self):
-        list_fitness = []
-        for cell in self.cells:
-            if self.cells[cell].habitable is True:
-                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
-                    list_fitness.append(round(animal.fitness, 2))
-        return list_fitness
-
-    def get_age(self):
-        list_age = []
-        for cell in self.cells:
-            if self.cells[cell].habitable is True:
-                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
-                    list_age.append(animal.age)
-        return list_age
-
-    def get_weight(self):
-        list_weight = []
-        for cell in self.cells:
-            if self.cells[cell].habitable is True:
-                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
-                    list_weight.append(animal.weight)
-        return list_weight
 
     def get_coord_animals(self):
         coord_animals = {}
