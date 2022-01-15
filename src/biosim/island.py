@@ -6,9 +6,10 @@ class Island():
     def __init__(self, geogr=None):
         self.geogr = geogr.splitlines()
         self.t_geogr = geogr.replace('\n', '')
-        n_rows = len(self.geogr)
-        m_columns = len(self.geogr[0])
-        self.cells = {(row, column): None for row in range(1, n_rows + 1) for column in range(1, m_columns + 1)}
+        self.rows = len(self.geogr)
+        self.columns = len(self.geogr[0])
+        self.cells = {(row, column): None for row in range(1, self.rows + 1)
+                      for column in range(1, self.columns + 1)}
 
     def assign(self):
         for coord, landscape in zip(self.cells, self.t_geogr):
@@ -88,15 +89,13 @@ class Island():
                     list_weight.append(animal.weight)
         return list_weight
 
-    def get_animals_per_year(self):
-        herbivores = []
-        carnivores = []
-        for cell in self.cells:
-            if self.cells[cell].habitable is True:
-                herbivores.append(len(self.cells[cell].herbivores))
-                carnivores.append(len(self.cells[cell].carnivores))
+    def get_coord_animals(self):
+        coord_animals = {}
+        for coord, land in self.cells.items():
+            coord_animals[coord] = {'Herbivores': len(land.herbivores),
+                                    'Carnivores': len(land.carnivores)}
 
-        return np.array(herbivores), np.array(carnivores)
+        return coord_animals
 
     @staticmethod
     def get_neighbours(coord_now):
