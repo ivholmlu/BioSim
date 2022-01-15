@@ -190,11 +190,11 @@ class BioSim:
             tot_herbivores = self.num_animals_per_species['Herbivore']
             histogram_dict = self.get_attributes
             #Histogram
-            x3.hist(self.get_attributes['Herbivores']['fitness'],bins_x3, color='b', histtype='step', density='False')
-            x3.hist(self.get_attributes['Carnivores']['fitness'], bins_x3, color='r', histtype='step', density='False')
-            x4.hist(self.get_attributes['Herbivores']['age'], bins_x4, color='b', histtype='step', density='False')
-            x4.hist(self.get_attributes['Carnivores']['age'], bins_x4, color='r', histtype='step', density='False')
-            x5.hist(self.get_animals_weight, bins_x4, color='r', histtype='step', density='False')
+            x3.hist(histogram_dict['Herbivores']['fitness'],bins_x3, color='b', histtype='step', density='False')
+            x3.hist(histogram_dict['Carnivores']['fitness'], bins_x3, color='r', histtype='step', density='False')
+            x4.hist(histogram_dict['Herbivores']['age'], bins_x4, color='b', histtype='step', density='False')
+            x4.hist(histogram_dict['Carnivores']['age'], bins_x4, color='r', histtype='step', density='False')
+            x5.hist(histogram_dict['Herbivores']['weight'], bins_x4, color='r', histtype='step', density='False')
 
             #Animal graph
             ydata = line.get_ydata()
