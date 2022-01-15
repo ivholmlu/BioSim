@@ -154,7 +154,7 @@ class BioSim:
 
         #HISTOGRAM
         x3 = f1.add_subplot(2, 3, 4)
-        bins_ax3 = np.linspace(0, 1, num=10)
+        bins_ax3 = np.linspace(0, 1, num=100)
 
 
         for year in range(0, num_years+1):
@@ -162,7 +162,7 @@ class BioSim:
             tot_animals = self.num_animals
             tot_carnivores = self.num_animals_per_species['Carnivore']
             tot_herbivores = self.num_animals_per_species['Herbivore']
-            x3.hist(self.get_animals_fitness, bins_ax3, color = 'r', )
+            x3.hist(self.get_animals_fitness, bins_ax3, color='r', histtype='step', density='True')
             ydata = line.get_ydata()
             ydata2 = line2.get_ydata()
             ydata[year] = tot_herbivores
@@ -198,9 +198,7 @@ class BioSim:
 
     @property
     def get_animals_fitness(self):
-        list_of_fitness = self.island.get_fitness()
-        list_of_fitness = [round(fitness, 2) for fitness in list_of_fitness]
-        return list_of_fitness
+        return self.island.get_fitness()
 
 
     @property
