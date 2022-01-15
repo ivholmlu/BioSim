@@ -117,7 +117,7 @@ class BioSim:
         f1 = plt.figure()
 
 
-        ax1 = f1.add_subplot(2, 3, 1)
+        ax1 = f1.add_subplot(3, 3, 1)
 
         ax1.imshow(map_rgb)
         ax1.set_xticks(range(len(map_rgb[0])))
@@ -134,7 +134,7 @@ class BioSim:
                                           facecolor=rgb_value[name[0]]))
 
 
-        ax2 = f1.add_subplot(2, 3, 3)
+        ax2 = f1.add_subplot(3, 3, 3)
         ax2.set_xlim(0, num_years)
         ax2.set_ylim(0, 10000)
         ax2.set_title('Number of each species')
@@ -165,13 +165,13 @@ class BioSim:
         x5.set_title('Weight')
 
         # Heatmap #1 - Herbivores
-        x6 = f1.add_subplot(3, 3, 5)
+        x6 = f1.add_subplot(3, 2, 3)
         heat_map1 = np.zeros((self.island.rows+1, self.island.columns+1))
         heat_im1 = x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=175, cmap='plasma')
         plt.colorbar(heat_im1, ax=x6, orientation='vertical', cmap='plasma')
 
         # Heatmap #2 - Carnivores
-        x7 = f1.add_subplot(5, 6, 10)
+        x7 = f1.add_subplot(3, 2, 4)
         heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
         heat_im2 = x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
         plt.colorbar(heat_im2, ax=x7, orientation='vertical', cmap='plasma')
