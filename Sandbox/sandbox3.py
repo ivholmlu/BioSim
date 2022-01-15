@@ -2,6 +2,8 @@
 from biosim.simulation import BioSim
 import textwrap
 import random
+import matplotlib.pyplot as plt
+
 random.seed(15838511)
 
 geogr = """\
@@ -27,7 +29,8 @@ geogr = """\
            WWWHHHHLLLLLLLWWWWWWW
            WWWHHHHHHWWWWWWWWWWWW
            WWWWWWWWWWWWWWWWWWWWW"""
-geogr = textwrap.dedent(geogr)
+
+island_map = textwrap.dedent(geogr)
 
 ini_herbs = [{'loc': (2, 7),
               'pop': [{'species': 'Herbivore',
@@ -40,8 +43,9 @@ ini_carns = [{'loc': (2, 7),
                        'weight': 20}
                       for _ in range(50)]}]
 
-sim = BioSim(geogr, ini_herbs+ini_carns, seed=1336163161)
-sim.simulate(300)
+sim = BioSim(island_map, ini_herbs+ini_carns, seed=1336163161)
+sim.simulate(300, geogr)
+
 #sim.add_population(ini_carns)
 
 
