@@ -66,13 +66,20 @@ class Island():
         return dict_animals
 
     def get_attributes(self):
-        list_attributes = []
+        dict_attributes = {'Herbivores' : {'age' : [], 'weight' : [], 'fitness' : []},
+                           'Carnivores' : {'age' : [], 'weight' : [], 'fitness' : []}}
         for cell in self.cells:
             if self.cells[cell].habitable is True:
-                for animal in self.cells[cell].carnivores + self.cells[cell].herbivores:
-                    list_attributes.append([round(animal.fitness, 2),
-                                            animal.age,
-                                            animal.weight])
+                for herb in self.cells[cell].herbivores:
+                    dict_attributes['Herbivores']['fitness'].append(round(herb.fitness, 2)
+                    dict_attributes['Herbivores']['weight'].append(herb.weight)
+                    dict_attributes['Herbivores']['age'].append(herb.age)
+
+                for carn in self.cells[cell].carnivores:
+                    dict_attributes['Carnivores']['fitness'].append(round(carn.fitness, 2)
+                    dict_attributes['Carnivores']['weight'].append(carn.weight)
+                    dict_attributes['Carnivores']['age'].append(carn.age)
+
 
     def get_fitness(self):
         list_fitness = []
