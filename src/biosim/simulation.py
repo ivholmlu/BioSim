@@ -8,7 +8,9 @@ Template for BioSim class.
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
 from biosim.island import Island
+
 from biosim.Histogram import Histogram
+import textwrap
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -92,26 +94,63 @@ class BioSim:
                   'either W, D, L or H')
 
 
-    def simulate(self, num_years):
+    def simulate(self, num_years, island_map):
         """
         Run simulation while visualizing the result.
 
         :param num_years: number of years to simulate
         """
+        island_map = textwrap.dedent(island_map)
+
+        #                   R    G    B
+        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                     'L': (0.0, 0.6, 0.0),  # dark green
+                     'H': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
+
+        map_rgb = [[rgb_value[column] for column in row]
+                   for row in island_map.splitlines()]
+
+
         self.island.assign()
         self.island.assign_animals(self.ini_pop)
+        f1 = plt.figure()
 
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_xlim(0, num_years)
-        ax.set_ylim(0, 10000)
 
-        line = ax.plot(np.arange(num_years),
-                       np.full(num_years, np.nan), 'b-')[0]
+        ax1 = f1.add_subplot(2, 3, 1)
 
-        line2 = ax.plot(np.arange(num_years),
-                       np.full(num_years, np.nan), 'r-')[0]
+        ax1.imshow(map_rgb)
+        ax1.set_xticks(range(len(map_rgb[0])))
+        ax1.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+        ax1.set_yticks(range(len(map_rgb)))
+        ax1.set_yticklabels(range(1, 1 + len(map_rgb)))
+        ax1.set_title('Map of Rossumoya')
+        ax1.axis('off')
 
+        for ix, name in enumerate(('Water', 'Lowland',
+                                   'Highland', 'Desert')):
+            ax1.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
+                                          edgecolor='none',
+                                          facecolor=rgb_value[name[0]]))
+
+
+        ax2 = f1.add_subplot(2, 3, 3)
+        ax2.set_xlim(0, num_years)
+        ax2.set_ylim(0, 10000)
+        ax2.set_title('Number of each species')
+        line = ax2.plot(np.arange(num_years),
+                        np.full(num_years, np.nan), 'b-')[0]
+
+        line2 = ax2.plot(np.arange(num_years),
+                         np.full(num_years, np.nan), 'r-')[0]
+
+        axt = f1.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
+        axt.axis('off')  # turn off coordinate system
+        template = 'Count: {:5d}'
+        txt = axt.text(0.5, 0.5, template.format(0),
+                       horizontalalignment='center',
+                       verticalalignment='center',
+                       transform=axt.transAxes)  # relative coordinates
 
         for year in range(num_years):
             self.island.cycle()
@@ -125,8 +164,16 @@ class BioSim:
             ydata2[year] = tot_carnivores
             line.set_ydata(ydata)
             line2.set_ydata(ydata2)
-            plt.pause(1e-6)
+            txt.set_text(template.format(year))
 
+
+
+
+
+
+
+
+            plt.pause(1e-6)
             # et eller annet plotting skjer under her
         plt.show()
 
