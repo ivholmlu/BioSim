@@ -14,9 +14,19 @@ class Landscape:
     habitable = None
 
     def replenish(self):
+        """
+        Refills landscapes fodder
+        """
         self.current_fodder = self.f_max
 
     def append_population(self, ext_population=None):
+        """
+        Adds a population to the landscape class
+        Parameters
+        ----------
+        ext_population : list
+            list of animal objects or dictionaries with animal object parameters
+        """
         for animal in ext_population:
             if type(animal) is Herbivores or animal['species'] == 'Herbivore':
                 self.herbivores.append(Herbivores(animal))
@@ -24,13 +34,26 @@ class Landscape:
                 self.carnivores.append(Carnivores(animal))
 
     def calculate_fitness(self):
+        """
+        Initialise fitness calculation for all animals in landscape object.
+        """
         for animal in itertools.chain(self.herbivores, self.carnivores):
             animal.fitness_flux()
 
     def sort_fitness(self):
+        """
+        Sort the herbivores after fitness. Highest fitness first
+        """
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
 
     def feed(self):
+        """
+        Herbivores are fed first until there are no food left.
+        Carnivores eat the herbivores starting with the least fit.
+        Each carnivore tries to eat each herbivore once
+        At the end, the dead herbivores are removed from list of herbivores
+
+        """
         for herbivore in self.herbivores:
             if self.current_fodder >= herbivore.param['F']:
                 herbivore.weight_gain(herbivore.param['F'])
@@ -67,6 +90,13 @@ class Landscape:
         self.herbivores = [herbivore for herbivore in self.herbivores if herbivore.alive is True]
 
     def procreate(self):
+        """
+        Functions that checks if all herbivores and carnivores have given birth or not.
+        If a paren has given birth, the baby attribute is added to baby_herb.
+        Returns
+        -------
+
+        """
         baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))
                      and parent.alive is True]
         self.herbivores += baby_herb
@@ -76,6 +106,12 @@ class Landscape:
         self.carnivores += baby_carn
 
     def emigrants(self):
+        """
+
+        Returns
+        -------
+
+        """
         emigrants = [animal for animal in itertools.chain(self.herbivores, self.carnivores)
                      if animal.migration() is True]
         self.herbivores = [herbivore for herbivore in self.herbivores
