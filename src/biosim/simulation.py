@@ -156,7 +156,8 @@ class BioSim:
         x3 = f1.add_subplot(5, 3, 13)
         bins_x3 = np.linspace(0, 1, num=20)
         x3.set_title('Fitness')
-
+        ax = plt.gca()
+        ax.set_ylim([0, 2000])
         x4 = f1.add_subplot(5, 3, 14)
         x4.set_title('Age')
         bins_x4 = np.linspace(0, 60, num=30)

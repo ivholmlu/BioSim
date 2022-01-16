@@ -1,10 +1,12 @@
+import random
+
 import pytest
 from biosim.animals import Herbivores, Carnivores
 import math
 from scipy import stats
 import unittest
 SEED = 41
-ALPHA = 0.01
+ALPHA = 0.001
 
 @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
                                              {'age': 22, 'weight': 33},
@@ -90,7 +92,7 @@ class TestCreationAndFunc:
             assert obj2.alive is False
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
-    def test_birth_herbivores(self, species, test_animal):
+    def test_birth(self, species, test_animal):
         """
         Setting parameter to ensure 100% chance for birth
         Test if baby has weight above zero which means that the animal object
@@ -140,6 +142,28 @@ class TestCreationAndFunc:
             assert Z_value_prob > ALPHA
 
 
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
+    def test_parent_weight(self, species, test_animal, mocker):
+        """
+        Test to ensure that parents weight are regained parents weight are to low
+        to give birth
+        Using mock to ensure a very unlikely baby weight to happen
+        """
+
+        parent = species(test_animal)
+        parent.weight = 34
+        initial_weight = parent.weight
+        mocker.patch('random.random', return_value=-1)
+        mocker.patch('random.gauss', return_value=33)
+        parent.birth()
+
+        assert parent.weight == initial_weight
+
+
+
+
+
+
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
                                                              (0.250, {'age': 40, 'weight': 10}),
                                                              (0.165906, {'age': 40, 'weight': 3}),
@@ -162,6 +186,28 @@ class TestSetWrongParameters(unittest.TestCase):
         Herbi = Herbivores()
         with self.assertRaises(KeyError):
             Herbi.set_params({'not_a_key' : 0})
+
+    def test_ValueError_keys(self):
+        Carni = Carnivores()
+        with self.assertRaises(ValueError):
+            Carni.set_params({'w_half' : -3})
+
+    def test_special_values_DeltaPhiMax(self):
+        Herbi = Herbivores()
+        with self.assertRaises(ValueError):
+            Herbi.set_params({'DeltaPhiMax' : -1})
+
+    def test_special_values_eta(self):
+        Herbi = Herbivores()
+        with self.assertRaises(ValueError):
+            Herbi.set_params({'eta' : 2})
+
+def test_get_values():
+    Herb = Herbivores()
+    assert Herb.param == Herb.get_params()
+
+
+
 
 
 
