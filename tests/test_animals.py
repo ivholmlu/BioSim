@@ -4,7 +4,7 @@ import math
 from scipy import stats
 import unittest
 SEED = 41
-ALPHA = 0.01
+ALPHA = 0.001
 
 @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
                                              {'age': 22, 'weight': 33},
@@ -177,6 +177,10 @@ class TestSetWrongParameters(unittest.TestCase):
         Herbi = Herbivores()
         with self.assertRaises(ValueError):
             Herbi.set_params({'eta' : 2})
+
+def test_get_values():
+    Herb = Herbivores()
+    assert Herb.param == Herb.get_params()
 
 
 
