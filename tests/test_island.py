@@ -73,13 +73,10 @@ class Test_island_creation:
         dict_animals = self.island.get_animals_per_species()
         assert dict_animals['Herbivore'] == m
 
-def test_get_coord_animals():
-    island = Island(Island1)
-    island.assign()
-    island.assign_animals(ini_herbs)
+    def test_get_coord_animals(self):
 
-    coord_animals = island.get_coord_animals()
-    assert coord_animals[(2, 2)]['Herbivores'] == m
+        coord_animals = self.island.get_coord_animals()
+        assert coord_animals[(herb_loc)]['Herbivores'] == m
 
 def test_get_neighbours():
     assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
