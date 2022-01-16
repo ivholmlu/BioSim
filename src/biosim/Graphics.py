@@ -35,7 +35,8 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 class Graphics:
     """Provides graphics support for RandVis."""
 
-    def __init__(self, img_dir=None, img_name=None, img_fmt=None, rows=0, columns=0, island_map=None):
+    def __init__(self, img_dir=None, img_name=None, img_fmt=None, island_map=None,
+                 heat_map1=None, heat_map2=None):
         """
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
@@ -60,8 +61,6 @@ class Graphics:
 
         # the following will be initialized by _setup_graphics
         self.island_map = island_map
-        self.rows = rows
-        self.columns = columns
         self._img_axis = None
         self._time_ax = None
         self._fig = None
@@ -73,16 +72,17 @@ class Graphics:
         self._line2 = None
         self._heat1_ax = None
         self._heat1_img = None
-        self._heat1_map = None
+        self._heat1_map = heat_map1
         self._heat2_ax = None
         self._heat2_img = None
-        self._heat2_map = None
+        self._heat2_map = heat_map2
         self._hist1_ax = None
         self._hist1_bins = None
         self._hist2_ax = None
         self._hist2_bins = None
         self._hist3_ax = None
         self._hist3_bins = None
+        self.txt = None
 
     def set_bins(self, bins):
         pass
@@ -141,18 +141,21 @@ class Graphics:
         if self._time_ax is None:
             self._time_ax = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
             self._time_ax.axis('off')
+            template = 'Count: {:5d}'
+            self.txt = self._time_ax.text(0.5, 0.5, template.format(0),
+                           horizontalalignment='center',
+                           verticalalignment='center',
+                           transform=self._time_ax.transAxes)
 
         if self._heat1_ax is None:
             self._heat1_ax = self._fig.add_subplot(3, 3, 4)
-            self._heat1_map = np.zeros(self.rows + 1, self.columns + 1)
-            self._heat1_img = self._heat1_ax.imshow(self._heat1_map, ax=self._heat1_ax,
+            self._heat1_img = self._heat1_ax.imshow(self._heat1_map,
                                                     interpolation='nearest', vmin=0, vmax=200, cmap='plasma')
             plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
 
         if self._heat2_ax is None:
             self._heat2_ax = self._fig.add_subplot(3, 3, 6)
-            self._heat2_map = np.zeros(self.rows + 1, self.columns + 1)
-            self._heat2_img = self._heat2_ax.imshow(self._heat2_map, ax=self._heat1_ax,
+            self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
                                                     interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
             plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
@@ -164,40 +167,40 @@ class Graphics:
             _ax.set_ylim([0, 2000])
 
         if self._hist2_ax is None:
-            self._hist2_ax = self._fig.add_subplot(5, 3, 13)
+            self._hist2_ax = self._fig.add_subplot(5, 3, 14)
             self._hist2_ax.set_title('Age')
             self._hist2_bins = np.linspace(0, 60, num=30)
 
         if self._hist3_ax is None:
-            self._hist3_ax = self._fig.add_subplot(5, 3, 13)
+            self._hist3_ax = self._fig.add_subplot(5, 3, 15)
             self._hist3_ax.set_title('Weight')
             self._hist3_bins = np.linspace(0, 60, num=20)
 
         # needs updating on subsequent calls to simulate()
         # add 1 so we can show values for time zero and time final_step
         self._line_ax.set_xlim(0, final_step + 1)
+        self._line_ax.set_xlim(0, final_step + 1)
 
-        if self._line1 and self._line2 is None:
+        if self._line1 is None and self._line2 is None:
             self._line1 = self._line_ax.plot(np.arange(final_step),
                                              np.full(final_step, np.nan), 'b-')[0]
             self._line2 = self._line_ax.plot(np.arange(final_step),
-                                             np.full(final_step, np.nan), 'b-')[0]
+                                             np.full(final_step, np.nan), 'r-')[0]
 
     def _update_system_map(self, herbivores_arr, carnivores_arr):
         """Update the 2D-view of the system.
             :param herbivores_arr: numpy array containing the amount of herbivores in each cell
             :param carnivores_arr: numpy array containing the amount of carnivores in each cell
         """
-
         if self._img_axis1 and self._img_axis2 is not None:
-            self._heat1_map = herbivores_arr
-            self._heat2_map = carnivores_arr
+            self._heat1_map = self._img_axis1.set_data(herbivores_arr)
+            self._heat2_map = self._img_axis2.set_data(carnivores_arr)
         else:
             self._img_axis1 = self._heat1_ax.imshow(self._heat1_map, interpolation='nearest',
                                                     vmin=0, vmax=200, cmap='plasma')
+            plt.colorbar(self._img_axis1, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
             self._img_axis2 = self._heat2_ax.imshow(self._heat2_map, interpolation='nearest',
                                                     vmin=0, vmax=50, cmap='plasma')
-            plt.colorbar(self._img_axis1, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
             plt.colorbar(self._img_axis2, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
     def _update_line_graph(self, year, total_herbivores, total_carnivores):
@@ -218,13 +221,12 @@ class Graphics:
         self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step', density='False')
 
 
-    def update(self, step, herbivores_arr, carnivores_arr):
+    def update(self, step, herbivores_arr, carnivores_arr, n_herbivores, n_carnivores):
         """
         Updates graphics with current data and save to file if necessary.
 
         :param step: current time step
         """
-
         self._hist1_ax.cla()
         self._hist2_ax.cla()
         self._hist3_ax.cla()
@@ -232,14 +234,9 @@ class Graphics:
         self._hist2_ax.set_title('Age')
         self._hist3_ax.set_title('Fitness')
         template = 'Count: {:5d}'
-        txt = self._time_ax.text(0.5, 0.5, template.format(0),
-                                 horizontalalignment='center',
-                                 verticalalignment='center',
-                                 transform=self._time_ax.transAxes)
-        txt.set_text(template.format(step))
-
+        self.txt.set_text(template.format(step))
         self._update_system_map(herbivores_arr, carnivores_arr)
-        self._update_line_graph(step, np.sum(herbivores_arr), np.sum(carnivores_arr))
+        self._update_line_graph(step, n_herbivores, n_carnivores)
 
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
