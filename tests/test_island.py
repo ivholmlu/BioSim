@@ -62,10 +62,17 @@ class Test_island_creation:
         assert len(self.island.cells[loc].herbivores) == amount_herbivores
 
     def test_assign(self):
+        """
+        Test assign function. Checks if island.assign in create_map has
+        assigned loc = (2,2) to its correct object.
+        """
 
         assert type(self.island.cells[(2, 2)]) == type(Desert())
 
     def test_get_animals_per_species(self):
+        """
+
+        """
 
         dict_animals = self.island.get_animals_per_species()
         assert dict_animals['Herbivore'] == amount_herbivores
@@ -75,9 +82,27 @@ class Test_island_creation:
         coord_animals = self.island.get_coord_animals()
         assert coord_animals[(loc)]['Herbivores'] == amount_herbivores
 
+
 def test_get_neighbours():
     assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
 
 
+def test_migration(mocker):
+    """
+    T
+    """
+    island = Island(Island1)
+    island.assign()
+    island.assign_animals([{'loc': (3, 3),
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(1000)]}]) #Vanskelig å implementere med mocker ettersom
+    #cycle er avhengig av flere ledd med random.random()?
+
+    island.cycle()
+    neighbour_cells = island.get_neighbours((3, 3))
+    for cell in neighbour_cells:
+        assert island.cells[cell].get_population() > 0
 
 
