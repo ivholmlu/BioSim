@@ -43,8 +43,12 @@ Island3 = """\
 Island3 = textwrap.dedent(Island3)
 
 class Test_island_creation:
+    #No animals can be assigned to a cell with water object
     @pytest.fixture(autouse = True)
     def create_island(self):
+        """
+        Create an island to be used in Test_island_creation Test class
+        """
         self.island = Island(Island2)
         self.island.assign()
         self.island.assign_animals([{'loc': herb_loc,
@@ -53,8 +57,10 @@ class Test_island_creation:
                        'weight': 20}
                       for _ in range(m)]}])
 
-
     def test_assign_animals(self):
+        """
+        Test if assign animals have been assigned to their respective cell
+        """
 
         assert len(self.island.cells[herb_loc].herbivores) == m
 
