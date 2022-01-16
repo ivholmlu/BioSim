@@ -64,17 +64,14 @@ class Test_island_creation:
 
         assert len(self.island.cells[herb_loc].herbivores) == m
 
-def test_assign():
-    island = Island(Island3)
-    island.assign()
-    assert type(island.cells[(2, 2)]) == type(Desert())
+    def test_assign(self):
 
-def test_get_animals_per_species():
-    island = Island(Island1)
-    island.assign()
-    island.assign_animals(ini_herbs)
-    dict_animals = island.get_animals_per_species()
-    assert dict_animals['Herbivore'] == m
+        assert type(self.island.cells[(2, 2)]) == type(Desert())
+
+    def test_get_animals_per_species(self):
+
+        dict_animals = self.island.get_animals_per_species()
+        assert dict_animals['Herbivore'] == m
 
 def test_get_coord_animals():
     island = Island(Island1)
