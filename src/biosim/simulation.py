@@ -11,7 +11,6 @@ from biosim.landscape import Lowland, Highland, Desert, Water
 from biosim.island import Island
 import textwrap
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
 import numpy as np
 
 
@@ -20,9 +19,6 @@ class BioSim:
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
-        self.island_map = island_map
-        self.ini_pop = ini_pop
-        self.island = Island(island_map)
 
 
         """
@@ -58,6 +54,10 @@ class BioSim:
 
         img_dir and img_base must either be both None or both strings.
         """
+        self.island_map = island_map
+        self.ini_pop = ini_pop
+        self.island = Island(island_map)
+
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -133,14 +133,12 @@ class BioSim:
                                           edgecolor='none',
                                           facecolor=rgb_value[name[0]]))
 
-
         ax2 = f1.add_subplot(3, 3, 3)
         ax2.set_xlim(0, num_years)
         ax2.set_ylim(0, 10000)
         ax2.set_title('Number of each species')
         line = ax2.plot(np.arange(num_years),
                         np.full(num_years, np.nan), 'b-')[0]
-
         line2 = ax2.plot(np.arange(num_years),
                          np.full(num_years, np.nan), 'r-')[0]
 
@@ -158,6 +156,7 @@ class BioSim:
         x3.set_title('Fitness')
         ax = plt.gca()
         ax.set_ylim([0, 2000])
+
         x4 = f1.add_subplot(5, 3, 14)
         x4.set_title('Age')
         bins_x4 = np.linspace(0, 60, num=30)
@@ -166,16 +165,17 @@ class BioSim:
         x5.set_title('Weight')
 
         # Heatmap #1 - Herbivores
-        x6 = f1.add_subplot(3, 2, 3)
+        x6 = f1.add_subplot(3, 3, 4)
         heat_map1 = np.zeros((self.island.rows+1, self.island.columns+1))
         heat_im1 = x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=175, cmap='plasma')
         plt.colorbar(heat_im1, ax=x6, orientation='vertical', cmap='plasma')
 
         # Heatmap #2 - Carnivores
-        x7 = f1.add_subplot(3, 2, 4)
+        x7 = f1.add_subplot(3, 3, 6)
         heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
         heat_im2 = x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
         plt.colorbar(heat_im2, ax=x7, orientation='vertical', cmap='plasma')
+        # Fix colorbar values!
 
 
         for year in range(0, num_years):
@@ -188,8 +188,6 @@ class BioSim:
             self.island.cycle()
             tot_animals = self.num_animals
             histogram_dict = self.get_attributes
-            #tot_carnivores = self.num_animals_per_species['Carnivore']
-            #tot_herbivores = self.num_animals_per_species['Herbivore']
             total_herbivores = len(histogram_dict['Herbivores']['age'])
             total_carnivores = len(histogram_dict['Carnivores']['age'])
             #Histogram
@@ -217,11 +215,10 @@ class BioSim:
                 y = list(coord)[1]
                 heat_map1[x, y] = n_animals['Herbivores']
                 heat_map2[x, y] = n_animals['Carnivores']
-            x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=200, cmap='plasma')
-            x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
+            heat_im1.set_data(heat_map1)
+            heat_im2.set_data(heat_map2)
 
             plt.pause(0.001)
-            # et eller annet plotting skjer under her
 
         plt.show()
 
@@ -229,9 +226,9 @@ class BioSim:
     def add_population(self, population):
         """
         Add a population to the island
-
         :param population: List of dictionaries specifying population
         """
+        self.island.assign_animals(population)
 
     @property
     def year(self):
@@ -264,7 +261,7 @@ class BioSim:
         """Number of animals per species in island, as dictionary."""
         return self.island.get_animals_per_species()
 
-    @property
+    @staticmethod
     def coord_animals(self):
         return self.island.get_coord_animals()
 
