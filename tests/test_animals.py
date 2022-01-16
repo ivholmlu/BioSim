@@ -163,6 +163,24 @@ class TestSetWrongParameters(unittest.TestCase):
         with self.assertRaises(KeyError):
             Herbi.set_params({'not_a_key' : 0})
 
+    def test_ValueError_keys(self):
+        Carni = Carnivores()
+        with self.assertRaises(ValueError):
+            Carni.set_params({'w_half' : -3})
+
+    def test_special_values_DeltaPhiMax(self):
+        Herbi = Herbivores()
+        with self.assertRaises(ValueError):
+            Herbi.set_params({'DeltaPhiMax' : -1})
+
+    def test_special_values_eta(self):
+        Herbi = Herbivores()
+        with self.assertRaises(ValueError):
+            Herbi.set_params({'eta' : 2})
+
+
+
+
 
 
 """
