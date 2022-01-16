@@ -53,6 +53,17 @@ class Test_island_creation:
         self.island.assign()
         self.island.assign_animals(ini_herbs)
 
+    def test_island_cycle_call(self, mocker):
+
+        num_years = 10
+
+
+        mocker.spy(self.island, "cycle")
+        for _ in range(num_years):
+            self.island.cycle()
+
+        assert self.island.cycle.call_count == num_years
+
     def test_assign_animals(self):
         """
         Test if assign animals have been assigned to their respective cell and correct
@@ -84,12 +95,16 @@ class Test_island_creation:
 
 
 def test_get_neighbours():
+    """
+    Test if get neighbour function returns the correct coordinates for a
+    specific cells neighbour
+    """
     assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
 
 
 def test_migration(mocker):
     """
-    T
+    Test if all neighbour cell are migrated to after one cycle.
     """
     island = Island(Island1)
     island.assign()
