@@ -2,8 +2,8 @@ import pytest
 from biosim.animals import Herbivores, Carnivores
 import math
 from scipy import stats
-
-seed = 41
+import unittest
+SEED = 41
 ALPHA = 0.01
 
 @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
@@ -125,7 +125,7 @@ class TestCreationAndFunc:
         obj1 = species(test_animal)
 
         #Seed øverst i syntaksen
-        num = 10
+        num = 3
         N = 10
         obj1.fitness = 1
         obj1.weight = 100
@@ -156,12 +156,14 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
     assert herb.fitness == pytest.approx(expected_fitness)
 
 
-class TestSetWrongParameters:
+class TestSetWrongParameters(unittest.TestCase):
 
     def test_invalid_key(self):
-        Herb = Herbivores()
-        Herb.set_params({'not_a_key': 0})
-        self.assertRaises(KeyError, lambda: my_dict['some_key'])
+        Herbi = Herbivores()
+        with self.assertRaises(KeyError):
+            Herbi.set_params({'not_a_key' : 0})
+
+
 
 """
 
