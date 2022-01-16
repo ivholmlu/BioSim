@@ -23,11 +23,10 @@ class Island():
                 self.cells[coord] = Water()
 
     def assign_animals(self, list_of_animals=None):
-        for ani_list in list_of_animals:
-            coord = ani_list['loc']
-            pop = ani_list['pop']
+        for animals in list_of_animals:
+            coord = animals['loc']
+            pop = animals['pop']
             self.cells[coord].append_population(pop)
-
 
     def cycle(self):
         for coord in self.cells.keys():
@@ -81,14 +80,11 @@ class Island():
                     dict_attributes['Carnivores']['age'].append(carn.age)
         return dict_attributes
 
-
-
     def get_coord_animals(self):
         coord_animals = {}
         for coord, land in self.cells.items():
             coord_animals[coord] = {'Herbivores': len(land.herbivores),
                                     'Carnivores': len(land.carnivores)}
-
         return coord_animals
 
     @staticmethod
