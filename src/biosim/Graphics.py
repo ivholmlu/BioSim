@@ -1,3 +1,18 @@
+"""
+:mod:`randvis.graphics` provides graphics support for RandVis.
+
+.. note::
+   * This module requires the program ``ffmpeg`` or ``convert``
+     available from `<https://ffmpeg.org>` and `<https://imagemagick.org>`.
+   * You can also install ``ffmpeg`` using ``conda install ffmpeg``
+   * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
+     constants below to the command required to invoke the programs
+   * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
+     directory and file-name start you want to use for the graphics output
+     files.
+
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
@@ -20,7 +35,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 class Graphics:
     """Provides graphics support for RandVis."""
 
-    def __init__(self, img_dir=None, img_name=None, img_fmt=None):
+    def __init__(self, img_dir=None, img_name=None, img_fmt=None, rows=0, columns=0, island_map=None):
         """
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
@@ -44,17 +59,33 @@ class Graphics:
         self._img_step = 1
 
         # the following will be initialized by _setup_graphics
-        self._fig = None
-        self._map1_ax = None
-        self._map2_ax = None
+        self.island_map = island_map
+        self.rows = rows
+        self.columns = columns
         self._img_axis = None
-        self._img2_axis = None
-        self._pop_ax = None
-        self._pop_line1 = None
-        self._pop_line2 = None
-        # self._histogram1 = None
-        # self._histogram2 = None
-        # self._histogram3 = None
+        self._time_ax = None
+        self._fig = None
+        self._map_ax = None
+        self._img_axis1 = None
+        self._img_axis2 = None
+        self._line_ax = None
+        self._line1 = None
+        self._line2 = None
+        self._heat1_ax = None
+        self._heat1_img = None
+        self._heat1_map = None
+        self._heat2_ax = None
+        self._heat2_img = None
+        self._heat2_map = None
+        self._hist1_ax = None
+        self._hist1_bins = None
+        self._hist2_ax = None
+        self._hist2_bins = None
+        self._hist3_ax = None
+        self._hist3_bins = None
+
+    def set_bins(self, bins):
+        pass
 
     def setup(self, final_step, img_step):
         """
@@ -76,49 +107,156 @@ class Graphics:
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
-        # HEATMAP 1
-        if self._map1_ax is None:
-            self._map1_ax = self._fig.add_subplot(1, 2, 1)
-            self._img_axis = None
+        if self._map_ax is None:
+            self._map_ax = self._fig.add_subplot(3, 3, 1)
+            rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                         'L': (0.0, 0.6, 0.0),  # dark green
+                         'H': (0.5, 1.0, 0.5),  # light green
+                         'D': (1.0, 1.0, 0.5)}  # light yellow
 
-        # Add right subplot for line graph of mean.
-        # POPULASJONSPLOT
-        if self._pop_ax is None:
-            self._pop_ax = self._fig.add_subplot(1, 2, 2)
-            self._pop_ax.set_ylim(0, 10**4)
+            map_rgb = [[rgb_value[column] for column in row]
+                       for row in self.island_map.splitlines()]
+
+            self._map_ax = self._fig.add_subplot(3, 3, 1)
+            self._map_ax.imshow(map_rgb)
+            self._map_ax.set_xticks(range(len(map_rgb[0])))
+            self._map_ax.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+            self._map_ax.set_yticks(range(len(map_rgb)))
+            self._map_ax.set_yticklabels(range(1, 1 + len(map_rgb)))
+            self._map_ax.set_title('Map of Rossumoya')
+            self._map_ax.axis('off')
+
+            for ix, name in enumerate(('Water', 'Lowland',
+                                       'Highland', 'Desert')):
+                self._map_ax.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
+                                                      edgecolor='none',
+                                                      facecolor=rgb_value[name[0]]))
+
+        if self._line_ax is None:
+            self._line_ax = self._fig.add_subplot(3, 3, 3)
+            self._line_ax.set_xlim(0, 300)
+            self._line_ax.set_ylim(0, 10000)
+            self._line_ax.set_title('Number of each species')
+
+        if self._time_ax is None:
+            self._time_ax = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
+            self._time_ax.axis('off')
+
+        if self._heat1_ax is None:
+            self._heat1_ax = self._fig.add_subplot(3, 3, 4)
+            self._heat1_map = np.zeros(self.rows + 1, self.columns + 1)
+            self._heat1_img = self._heat1_ax.imshow(self._heat1_map, ax=self._heat1_ax,
+                                                    interpolation='nearest', vmin=0, vmax=200, cmap='plasma')
+            plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
+
+        if self._heat2_ax is None:
+            self._heat2_ax = self._fig.add_subplot(3, 3, 6)
+            self._heat2_map = np.zeros(self.rows + 1, self.columns + 1)
+            self._heat2_img = self._heat2_ax.imshow(self._heat2_map, ax=self._heat1_ax,
+                                                    interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
+            plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
+
+        if self._hist1_ax is None:
+            self._hist1_ax = self._fig.add_subplot(5, 3, 13)
+            self._hist1_ax.set_title('Fitness')
+            self._hist1_bins = np.linspace(0, 1, num=20)
+            _ax = plt.gca()
+            _ax.set_ylim([0, 2000])
+
+        if self._hist2_ax is None:
+            self._hist2_ax = self._fig.add_subplot(5, 3, 13)
+            self._hist2_ax.set_title('Age')
+            self._hist2_bins = np.linspace(0, 60, num=30)
+
+        if self._hist3_ax is None:
+            self._hist3_ax = self._fig.add_subplot(5, 3, 13)
+            self._hist3_ax.set_title('Weight')
+            self._hist3_bins = np.linspace(0, 60, num=20)
 
         # needs updating on subsequent calls to simulate()
         # add 1 so we can show values for time zero and time final_step
-        self._pop_ax.set_xlim(0, final_step + 1)
+        self._line_ax.set_xlim(0, final_step + 1)
 
-        if (self._pop_line1 and self._pop_line2) is None:
-            line_plot1 = self._pop_ax.plot(np.arange(0, final_step + 1),
-                                           np.full(final_step + 1, np.nan))
-            self._pop_line1 = line_plot1[0]
+        if self._line1 and self._line2 is None:
+            self._line1 = self._line_ax.plot(np.arange(final_step),
+                                             np.full(final_step, np.nan), 'b-')[0]
+            self._line2 = self._line_ax.plot(np.arange(final_step),
+                                             np.full(final_step, np.nan), 'b-')[0]
 
-            line_plot2 = self._pop_ax.plot(np.arange(0, final_step + 1),
-                                           np.full(final_step + 1, np.nan))
-            self._pop_line2 = line_plot2[0]
+    def _update_system_map(self, herbivores_arr, carnivores_arr):
+        """Update the 2D-view of the system.
+            :param herbivores_arr: numpy array containing the amount of herbivores in each cell
+            :param carnivores_arr: numpy array containing the amount of carnivores in each cell
+        """
 
+        if self._img_axis1 and self._img_axis2 is not None:
+            self._heat1_map = herbivores_arr
+            self._heat2_map = carnivores_arr
         else:
-            x_data, y_data1 = self._pop_line1.get_data()
-            _, y_data2 = self._pop_line2.get_data()
-            x_new = np.arange(x_data[-1] + 1, final_step + 1)
-            if len(x_new) > 0:
-                y_new = np.full(x_new.shape, np.nan)
-                self._pop_line1.set_data(np.hstack((x_data, x_new)),
-                                         np.hstack((y_data1, y_new)))
-                self._pop_line2.set_data(np.hstack((x_data, x_new)),
-                                         np.hstack((y_data2, y_new)))
+            self._img_axis1 = self._heat1_ax.imshow(self._heat1_map, interpolation='nearest',
+                                                    vmin=0, vmax=200, cmap='plasma')
+            self._img_axis2 = self._heat2_ax.imshow(self._heat2_map, interpolation='nearest',
+                                                    vmin=0, vmax=50, cmap='plasma')
+            plt.colorbar(self._img_axis1, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
+            plt.colorbar(self._img_axis2, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
-    def _update_line_graph(self, year, n_herbivores, n_carnivores):
-        y_data1 = self._pop_line1.get_ydata()
-        y_data2 = self._pop_line2.get_ydata()
-        y_data1[year] = n_herbivores
-        y_data2[year] = n_carnivores
+    def _update_line_graph(self, year, total_herbivores, total_carnivores):
+        ydata_line1 = self._line1.get_ydata()
+        ydata_line2 = self._line2.get_ydata()
+        ydata_line1[year] = total_herbivores
+        ydata_line2[year] = total_carnivores
+        self._line1.set_ydata(ydata_line1)
+        self._line2.set_ydata(ydata_line2)
 
-        self._pop_line1.set_ydata(y_data1)
-        self._pop_line2.set_ydata(y_data2)
+    def _update_histograms(self, herbi_fitness, carni_fitness, herbi_age, carni_age,
+                           herbi_weight, carni_weight):
+        self._hist1_ax.hist(herbi_fitness, self._hist1_bins, color='b', histtype='step', density='False')
+        self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step', density='False')
+        self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step', density='False')
+        self._hist2_ax.hist(carni_age, self._hist2_bins, color='r', histtype='step', density='False')
+        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='r', histtype='step', density='False')
+        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step', density='False')
+
+
+    def update(self, step, herbivores_arr, carnivores_arr):
+        """
+        Updates graphics with current data and save to file if necessary.
+
+        :param step: current time step
+        """
+
+        self._hist1_ax.cla()
+        self._hist2_ax.cla()
+        self._hist3_ax.cla()
+        self._hist1_ax.set_title('Weight')
+        self._hist2_ax.set_title('Age')
+        self._hist3_ax.set_title('Fitness')
+        template = 'Count: {:5d}'
+        txt = self._time_ax.text(0.5, 0.5, template.format(0),
+                                 horizontalalignment='center',
+                                 verticalalignment='center',
+                                 transform=self._time_ax.transAxes)
+        txt.set_text(template.format(step))
+
+        self._update_system_map(herbivores_arr, carnivores_arr)
+        self._update_line_graph(step, np.sum(herbivores_arr), np.sum(carnivores_arr))
+
+        self._fig.canvas.flush_events()  # ensure every thing is drawn
+        plt.pause(1e-6)  # pause required to pass control to GUI
+
+        self._save_graphics(step)
+
+    def _save_graphics(self, step):
+        """Saves graphics to file if file name given."""
+
+        if self._img_base is None or step % self._img_step != 0:
+            return
+
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
+                                                     num=self._img_ctr,
+                                                     type=self._img_fmt))
+        self._img_ctr += 1
+
 
     def make_movie(self, movie_fmt=None):
         """
@@ -160,4 +298,3 @@ class Graphics:
                 raise RuntimeError('ERROR: convert failed with: {}'.format(err))
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
-

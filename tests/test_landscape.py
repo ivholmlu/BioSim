@@ -52,7 +52,7 @@ class TestPopulation:
         Carnivores.set_params(Carnivores.param)
         Herbivores.set_params(Herbivores.param)
 
-    def test_insert_animals(self, insert_animals):
+    def test_insert_animals(self, create_animals, insert_animals):
         """
         Test if the amount of inserted animals are as expected with the fixed value.
         """
