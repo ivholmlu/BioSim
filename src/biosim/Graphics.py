@@ -62,6 +62,7 @@ class Graphics:
         self.island_map = island_map
         self.rows = rows
         self.columns = columns
+        self._img_axis = None
         self._time_ax = None
         self._fig = None
         self._map_ax = None
@@ -82,6 +83,9 @@ class Graphics:
         self._hist2_bins = None
         self._hist3_ax = None
         self._hist3_bins = None
+
+    def set_bins(self, bins):
+        pass
 
     def setup(self, final_step, img_step):
         """
@@ -105,7 +109,6 @@ class Graphics:
         # the size of the image, so we delay its creation.
         if self._map_ax is None:
             self._map_ax = self._fig.add_subplot(3, 3, 1)
-            self._img_axis = None
             rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
                          'L': (0.0, 0.6, 0.0),  # dark green
                          'H': (0.5, 1.0, 0.5),  # light green
@@ -136,13 +139,8 @@ class Graphics:
             self._line_ax.set_title('Number of each species')
 
         if self._time_ax is None:
-            self._time_ax = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
-            self._time_ax.axis('off')  # turn off coordinate system
-            template = 'Count: {:5d}'
-            txt = self._time_ax.text(0.5, 0.5, template.format(0),
-                           horizontalalignment='center',
-                           verticalalignment='center',
-                           transform=self._time_ax.transAxes)  # relative coordinates
+            self._time_ax = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
+            self._time_ax.axis('off')
 
         if self._heat1_ax is None:
             self._heat1_ax = self._fig.add_subplot(3, 3, 4)
@@ -185,15 +183,19 @@ class Graphics:
             self._line2 = self._line_ax.plot(np.arange(final_step),
                                              np.full(final_step, np.nan), 'b-')[0]
 
-    def _update_system_map(self, sys_map):
-        """Update the 2D-view of the system."""
+    def _update_system_map(self, herbivores_arr, carnivores_arr):
+        """Update the 2D-view of the system.
+            :param herbivores_arr: numpy array containing the amount of herbivores in each cell
+            :param carnivores_arr: numpy array containing the amount of carnivores in each cell
+        """
 
-        if self._img_axis is not None:
-            self._img_axis.set_data(sys_map)
+        if self._img_axis1 and self._img_axis2 is not None:
+            self._heat1_map = herbivores_arr
+            self._heat2_map = carnivores_arr
         else:
             self._img_axis1 = self._heat1_ax.imshow(self._heat1_map, interpolation='nearest',
                                                     vmin=0, vmax=200, cmap='plasma')
-            self._img_axis2 = self._heat2_ax.imshow(self._heat1_map, interpolation='nearest',
+            self._img_axis2 = self._heat2_ax.imshow(self._heat2_map, interpolation='nearest',
                                                     vmin=0, vmax=50, cmap='plasma')
             plt.colorbar(self._img_axis1, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
             plt.colorbar(self._img_axis2, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
@@ -206,13 +208,21 @@ class Graphics:
         self._line1.set_ydata(ydata_line1)
         self._line2.set_ydata(ydata_line2)
 
-    def update(self, step, sys_map, tot_herbivores, tot_carnivores):
+    def _update_histograms(self, herbi_fitness, carni_fitness, herbi_age, carni_age,
+                           herbi_weight, carni_weight):
+        self._hist1_ax.hist(herbi_fitness, self._hist1_bins, color='b', histtype='step', density='False')
+        self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step', density='False')
+        self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step', density='False')
+        self._hist2_ax.hist(carni_age, self._hist2_bins, color='r', histtype='step', density='False')
+        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='r', histtype='step', density='False')
+        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step', density='False')
+
+
+    def update(self, step, herbivores_arr, carnivores_arr):
         """
         Updates graphics with current data and save to file if necessary.
 
         :param step: current time step
-        :param sys_map: current system status (2d array)
-        :param sys_mean: current mean value of system
         """
 
         self._hist1_ax.cla()
@@ -221,11 +231,16 @@ class Graphics:
         self._hist1_ax.set_title('Weight')
         self._hist2_ax.set_title('Age')
         self._hist3_ax.set_title('Fitness')
-
-
+        template = 'Count: {:5d}'
+        txt = self._time_ax.text(0.5, 0.5, template.format(0),
+                                 horizontalalignment='center',
+                                 verticalalignment='center',
+                                 transform=self._time_ax.transAxes)
         txt.set_text(template.format(step))
-        self._update_system_map(sys_map)
-        self._update_line_graph(step, tot_herbivores, tot_carnivores)
+
+        self._update_system_map(herbivores_arr, carnivores_arr)
+        self._update_line_graph(step, np.sum(herbivores_arr), np.sum(carnivores_arr))
+
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
