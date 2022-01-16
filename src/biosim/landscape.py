@@ -13,9 +13,9 @@ class Landscape:
     f_max = 0
     habitable = None
 
-    def replenish(self):
+    def replenish(self): #return None blir overfladisK?
         """
-        Refills landscapes fodder
+        Refills landscapes fodder to f_max value
         """
         self.current_fodder = self.f_max
 
@@ -95,7 +95,7 @@ class Landscape:
         If a paren has given birth, the baby attribute is added to baby_herb.
         Returns
         -------
-
+        None
         """
         baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))
                      and parent.alive is True]
