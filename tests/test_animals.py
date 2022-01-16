@@ -1,3 +1,5 @@
+import random
+
 import pytest
 from biosim.animals import Herbivores, Carnivores
 import math
@@ -90,7 +92,7 @@ class TestCreationAndFunc:
             assert obj2.alive is False
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
-    def test_birth_herbivores(self, species, test_animal):
+    def test_birth(self, species, test_animal):
         """
         Setting parameter to ensure 100% chance for birth
         Test if baby has weight above zero which means that the animal object
@@ -138,6 +140,28 @@ class TestCreationAndFunc:
             Z = (weight - mean) / math.sqrt(std)
             Z_value_prob = 2* stats.norm.cdf((-abs(Z))) #Tosidig test
             assert Z_value_prob > ALPHA
+
+
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
+    def test_parent_weight(self, species, test_animal, mocker):
+        """
+        Test to ensure that parents weight are regained parents weight are to low
+        to give birth
+        Using mock to ensure a very unlikely baby weight to happen
+        """
+
+        parent = species(test_animal)
+        parent.weight = 34
+        initial_weight = parent.weight
+        mocker.patch('random.random', return_value=-1)
+        mocker.patch('random.gauss', return_value=33)
+        parent.birth()
+
+        assert parent.weight == initial_weight
+
+
+
+
 
 
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
