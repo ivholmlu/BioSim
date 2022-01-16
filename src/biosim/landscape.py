@@ -18,10 +18,10 @@ class Landscape:
 
     def append_population(self, ext_population=None):
         for animal in ext_population:
-            if type(animal) is Herbivores or animal['species'] == 'Herbivores':
-                self.herbivores.append(animal)
-            elif type(animal) is Carnivores or animal['species'] == 'Carnivores':
-                self.carnivores.append(animal)
+            if type(animal) is Herbivores or animal['species'] == 'Herbivore':
+                self.herbivores.append(Herbivores(animal))
+            elif type(animal) is Carnivores or animal['species'] == 'Carnivore':
+                self.carnivores.append(Carnivores(animal))
 
     def calculate_fitness(self):
         for animal in itertools.chain(self.herbivores, self.carnivores):
