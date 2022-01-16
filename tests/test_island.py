@@ -52,7 +52,16 @@ def test_assign_animals():
 def test_assign():
     island = Island(Island3)
     island.assign()
-    assert type(island.cells[(2, 2)]) == type(Desert())
+    assert type(island.cells[(2, 2)])== type(Desert())
+
+def test_get_animals_per_species():
+    island = Island(Island1)
+    island.assign()
+    island.assign_animals(ini_herbs)
+    dict_animals = island.get_animals_per_species()
+    assert dict_animals['Herbivore'] == m
+
+
 
 
 
