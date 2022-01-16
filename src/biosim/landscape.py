@@ -17,9 +17,11 @@ class Landscape:
         self.current_fodder = self.f_max
 
     def append_population(self, ext_population=None):
-        [self.herbivores.append(Herbivores(animal))
-         if (animal['species'] or animal.species) == 'Herbivore'
-         else self.carnivores.append(Carnivores(animal)) for animal in ext_population]
+        for animal in ext_population:
+            if type(animal) is Herbivores or animal['species'] == 'Herbivores':
+                self.herbivores.append(animal)
+            elif type(animal) is Carnivores or animal['species'] == 'Carnivores':
+                self.carnivores.append(animal)
 
     def calculate_fitness(self):
         for animal in itertools.chain(self.herbivores, self.carnivores):
@@ -123,7 +125,7 @@ class Landscape:
                 raise KeyError(f'{key} is an invalid parameter.')
 
             if 'habitable' in new_params:
-                if not isinstance(new_params['key'], bool):
+                if not isinstance(new_params['habitable'], bool):
                     raise ValueError('habitable must be a boolean (True or False).')
                 cls.habitable = new_params['habitable']
 
