@@ -163,8 +163,9 @@ class Graphics:
             self._hist1_ax = self._fig.add_subplot(5, 3, 13)
             self._hist1_ax.set_title('Fitness')
             self._hist1_bins = np.linspace(0, 1, num=20)
-            _ax = plt.gca()
-            _ax.set_ylim([0, 2000])
+            ax = plt.gca()
+            ax.set_ylim((0, 2000))
+            ax.set_yticks([1000, 2000])
 
         if self._hist2_ax is None:
             self._hist2_ax = self._fig.add_subplot(5, 3, 14)
@@ -192,16 +193,14 @@ class Graphics:
             :param herbivores_arr: numpy array containing the amount of herbivores in each cell
             :param carnivores_arr: numpy array containing the amount of carnivores in each cell
         """
-        if self._img_axis1 and self._img_axis2 is not None:
+        if self._img_axis1 is not None and self._img_axis2 is not None:
             self._heat1_map = self._img_axis1.set_data(herbivores_arr)
             self._heat2_map = self._img_axis2.set_data(carnivores_arr)
         else:
             self._img_axis1 = self._heat1_ax.imshow(self._heat1_map, interpolation='nearest',
                                                     vmin=0, vmax=200, cmap='plasma')
-            plt.colorbar(self._img_axis1, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
             self._img_axis2 = self._heat2_ax.imshow(self._heat2_map, interpolation='nearest',
                                                     vmin=0, vmax=50, cmap='plasma')
-            plt.colorbar(self._img_axis2, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
     def _update_line_graph(self, year, total_herbivores, total_carnivores):
         ydata_line1 = self._line1.get_ydata()
@@ -213,30 +212,36 @@ class Graphics:
 
     def _update_histograms(self, herbi_fitness, carni_fitness, herbi_age, carni_age,
                            herbi_weight, carni_weight):
-        self._hist1_ax.hist(herbi_fitness, self._hist1_bins, color='b', histtype='step', density='False')
-        self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step', density='False')
-        self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step', density='False')
-        self._hist2_ax.hist(carni_age, self._hist2_bins, color='r', histtype='step', density='False')
-        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='r', histtype='step', density='False')
-        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step', density='False')
+        self._hist1_ax.hist(herbi_fitness, self._hist1_bins, color='b', histtype='step')
+        self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step')
+        self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step')
+        self._hist2_ax.hist(carni_age, self._hist2_bins, color='r', histtype='step')
+        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='r', histtype='step')
+        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step')
+
+    def _update_headers(self):
+        self._hist1_ax.cla()
+        self._hist2_ax.cla()
+        self._hist3_ax.cla()
+        self._hist1_ax.set_title('Fitness')
+        self._hist2_ax.set_title('Age')
+        self._hist3_ax.set_title('Weight')
 
 
-    def update(self, step, herbivores_arr, carnivores_arr, n_herbivores, n_carnivores):
+    def update(self, step, herbivores_arr, carnivores_arr, n_herbivores, n_carnivores,
+               herbi_fitness, carni_fitness, herbi_age, carni_age,herbi_weight, carni_weight):
         """
         Updates graphics with current data and save to file if necessary.
 
         :param step: current time step
         """
-        self._hist1_ax.cla()
-        self._hist2_ax.cla()
-        self._hist3_ax.cla()
-        self._hist1_ax.set_title('Weight')
-        self._hist2_ax.set_title('Age')
-        self._hist3_ax.set_title('Fitness')
+        self._update_headers()
         template = 'Count: {:5d}'
         self.txt.set_text(template.format(step))
         self._update_system_map(herbivores_arr, carnivores_arr)
         self._update_line_graph(step, n_herbivores, n_carnivores)
+        self._update_histograms(herbi_fitness, carni_fitness, herbi_age, carni_age,
+                                herbi_weight, carni_weight)
 
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
