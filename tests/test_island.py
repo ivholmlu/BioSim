@@ -61,7 +61,8 @@ def test_get_animals_per_species():
     dict_animals = island.get_animals_per_species()
     assert dict_animals['Herbivore'] == m
 
-
+def test_get_neighbours():
+    assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
 
 
 
