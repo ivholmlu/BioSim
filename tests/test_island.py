@@ -4,18 +4,19 @@ Test file to test island module in biosim
 import pytest
 import textwrap
 from biosim.island import Island
+from biosim.landscape import Lowland, Highland, Desert, Water
 m = 50
 n = 20
 herb_loc = (2, 2)
 carn_loc = (2, 2)
 
-ini_herbs = [{'loc': (3, 3),
+ini_herbs = [{'loc': herb_loc,
               'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
                       for _ in range(m)]}]
 
-ini_carns = [{'loc': (3, 3),
+ini_carns = [{'loc': carn_loc,
               'pop': [{'species': 'Carnivore',
                        'age': 5,
                        'weight': 20}
@@ -34,15 +35,25 @@ Island2 = """\
            WDHVW
            WWWWW"""
 Island2 = textwrap.dedent(Island2)
+Island3 = """\
+           WWW
+           WDW
+           WWW"""
+Island3 = textwrap.dedent(Island3)
+
 
 
 def test_assign_animals():
     island = Island(Island1)
     island.assign()
-
     island.assign_animals(ini_herbs)
+    assert len(island.cells[herb_loc].herbivores) == m
 
-    assert len(island.cells[(3,3)].herbivores) == m
+def test_assign():
+    island = Island(Island3)
+    island.assign()
+    assert type(island.cells[(2, 2)]) == type(Desert())
+
 
 
 
