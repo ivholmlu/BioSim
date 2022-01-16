@@ -277,4 +277,4 @@ class Water(Landscape):
      """
      Subclass of Landscape
      """
-    habitable = False
+     habitable = False
