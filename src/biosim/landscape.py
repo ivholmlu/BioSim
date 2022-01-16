@@ -1,7 +1,6 @@
 from .animals import Herbivores, Carnivores
 import itertools
 import random
-# rydde opp i methods. Vi ser flere methods bruker samme 'teknikk', bruker samme list comprehension.
 
 
 class Landscape:
@@ -87,20 +86,18 @@ class Landscape:
         self.migrants.append(animal)
 
     def add_migrants(self):
-        # for animal in self.migrants:
-        #     if animal.species == 'Herbivore':
-        #         self.herbivores.append(animal)
-        #     else:
-        #         self.carnivores.append(animal)
-        #
-        [self.herbivores.append(migrant) if migrant.species == 'Herbivore' else self.carnivores.append(migrant)
-         for migrant in self.migrants]
+        for migrant in self.migrants:
+            if type(migrant) is Carnivores:
+                self.carnivores.append(migrant)
+            elif type(migrant) is Herbivores:
+                self.herbivores.append(migrant)
+
         self.migrants = []
 
     def stay_in_cell(self, animal):
-        if animal.species == 'Herbivore':
+        if type(animal) is Herbivores:
             self.herbivores.append(animal)
-        else:
+        elif type(animal) is Carnivores:
             self.carnivores.append(animal)
 
     def aging_and_weight_loss(self):
