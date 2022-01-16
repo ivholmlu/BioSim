@@ -12,7 +12,12 @@ class Animals:
 
     def __init__(self, attr=None):
         """
-            :param attr: dictionary with age and/or weight
+        Constructor for animal class
+
+        Parameters
+        ------
+        attr : dict
+            Dictionary containig aga and/or weight for an animal
         """
         self.fitness = 0
         self.alive = True
@@ -23,7 +28,9 @@ class Animals:
             self.weight = attr['weight']
 
     def fitness_flux(self):
-        """Function to calculate """
+        """
+        Function to calculate an animals fitness'
+        """
         q_age = 1 / (1 + math.exp(self.param['phi_age'] *
                                   (self.age - self.param['a_half'])))
         q_weight = 1 / (1 + math.exp(-self.param['phi_weight'] *
@@ -33,8 +40,6 @@ class Animals:
     def weight_gain(self, gain=0.0):
         """
         Calculates the weight gained from food
-
-        :param gain: Food eaten by animal
         """
         self.weight += self.param['beta'] * gain
         self.fitness_flux()
@@ -44,7 +49,10 @@ class Animals:
         Calculates the probability for giving birth and add a weight
         to the baby attribute if a birth is given.
 
-        :param n: Number of individuals of the same species within the same cell
+        Parameters
+        ----------
+        n : int
+            Number of individuals of the same species within the same cell
         """
         phi = self.fitness
         p = min(1, self.param['gamma'] * phi * (n - 1))
@@ -62,22 +70,37 @@ class Animals:
         self.fitness_flux()
 
     def migration(self):
-        """ Checks if the animal will migrate or not"""
+        """
+        Checks if the animal will migrate or not
+
+        Returns
+        -------
+        bool
+            Decides if the animals migrate or stay in the cell
+        """
+
+
         if random.random() < self.fitness * self.param['mu']:
             return True
 
     def ages(self):
-        """The animals age attribute increase by 1"""
+        """
+        The animals age attribute increase by 1
+        """
         self.age += 1
         self.fitness_flux()
 
     def weight_loss(self):
-        """ Calculates weight loss for each year """
+        """
+        Calculates weight loss for each year
+        """
         self.weight -= self.weight * self.param['eta']
         self.fitness_flux()
 
     def death(self):
-        """Calculates if an animal dies or not during the year"""
+        """
+        Calculates if an animal dies or not during the year
+        """
         if self.alive is True:
             if self.weight <= 0:
                 self.alive = False
@@ -91,7 +114,11 @@ class Animals:
         """
         Set new parameter for animal objects
 
-        : param new_param: Dictionary with new parameters
+        Parameters
+        ----------
+
+        new_param: dict
+            Dictionary containing new parameters for animal object
         """
         pos_params = [key for key in cls.param.keys() if key != 'DeltaPhiMax']
         for key in new_params.keys():
@@ -114,11 +141,21 @@ class Animals:
 
     @classmethod
     def get_params(cls):
-        """Returns the animal parameters in a dictionary"""
+        """
+        Returns the animal parameters in a dictionary
+
+        Returns
+        -------
+        dict
+            The current param the animal object has
+        """
         return cls.param
 
 
 class Herbivores(Animals):
+    """
+    Subclass for animals.
+    """
     species = 'Herbivore'
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
              'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
@@ -128,6 +165,9 @@ class Herbivores(Animals):
 
 
 class Carnivores(Animals):
+    """
+    Subclass for animals
+    """
     eaten = 0
     species = 'Carnivore'
     param = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
