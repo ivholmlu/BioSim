@@ -29,7 +29,11 @@ class Animals:
 
     def fitness_flux(self):
         """
-        Function to calculate an animals fitness'
+        Function to calculate an animals fitness
+
+        Returns
+        -------
+        None
         """
         q_age = 1 / (1 + math.exp(self.param['phi_age'] *
                                   (self.age - self.param['a_half'])))
@@ -40,6 +44,10 @@ class Animals:
     def weight_gain(self, gain=0.0):
         """
         Calculates the weight gained from food
+
+        Returns
+        -------
+        None
         """
         self.weight += self.param['beta'] * gain
         self.fitness_flux()
@@ -53,6 +61,10 @@ class Animals:
         ----------
         n : int
             Number of individuals of the same species within the same cell
+
+        Returns
+        -------
+        None
         """
         phi = self.fitness
         p = min(1, self.param['gamma'] * phi * (n - 1))
@@ -86,6 +98,10 @@ class Animals:
     def ages(self):
         """
         The animals age attribute increase by 1
+
+        Returns
+        -------
+        None
         """
         self.age += 1
         self.fitness_flux()
@@ -93,6 +109,10 @@ class Animals:
     def weight_loss(self):
         """
         Calculates weight loss for each year
+
+        Returns
+        -------
+        None
         """
         self.weight -= self.weight * self.param['eta']
         self.fitness_flux()
@@ -100,6 +120,10 @@ class Animals:
     def death(self):
         """
         Calculates if an animal dies or not during the year
+
+        Returns
+        -------
+        None
         """
         if self.alive is True:
             if self.weight <= 0:
@@ -116,9 +140,12 @@ class Animals:
 
         Parameters
         ----------
-
         new_param: dict
             Dictionary containing new parameters for animal object
+
+        Returns
+        -------
+        None
         """
         pos_params = [key for key in cls.param.keys() if key != 'DeltaPhiMax']
         for key in new_params.keys():
