@@ -5,6 +5,7 @@ from biosim.animals import Herbivores, Carnivores
 import math
 from scipy import stats
 import unittest
+
 SEED = 41
 ALPHA = 0.001
 
@@ -160,10 +161,6 @@ class TestCreationAndFunc:
         assert parent.weight == initial_weight
 
 
-
-
-
-
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
                                                              (0.250, {'age': 40, 'weight': 10}),
                                                              (0.165906, {'age': 40, 'weight': 3}),
@@ -193,9 +190,9 @@ class TestSetWrongParameters(unittest.TestCase):
             Carni.set_params({'w_half' : -3})
 
     def test_special_values_DeltaPhiMax(self):
-        Herbi = Herbivores()
+        Carni = Carnivores()
         with self.assertRaises(ValueError):
-            Herbi.set_params({'DeltaPhiMax' : -1})
+            Carni.set_params({'DeltaPhiMax' : -1})
 
     def test_special_values_eta(self):
         Herbi = Herbivores()
