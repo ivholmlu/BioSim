@@ -107,9 +107,12 @@ class Landscape:
 
     def emigrants(self):
         """
+        Checks with each animal object in landscape if they want to emigrate or not.
 
         Returns
         -------
+        list
+            list of animal objects that has emigrated from the Landscape object
 
         """
         emigrants = [animal for animal in itertools.chain(self.herbivores, self.carnivores)
@@ -121,9 +124,27 @@ class Landscape:
         return emigrants
 
     def insert_migrant(self, animal):
+        """
+        Function takes the animal input and appends it to the migrants attribute
+        Parameters
+        ----------
+        animal
+            Animal object to append to migrants attribute
+
+        Returns
+        -------
+        None
+        """
         self.migrants.append(animal)
 
     def add_migrants(self):
+        """
+        Add animal objects from migrants attribute and delegates them into
+        their respective species attribute list
+        Returns
+        -------
+        None
+        """
         for migrant in self.migrants:
             if type(migrant) is Carnivores:
                 self.carnivores.append(migrant)
@@ -133,17 +154,44 @@ class Landscape:
         self.migrants = []
 
     def stay_in_cell(self, animal):
+        """
+        Animal objects that did not migrate are appended back to their
+        landscape object.
+
+        Parameters
+        ----------
+        animal
+            animal : animal class object
+
+        Returns
+        -------
+        None
+        """
         if type(animal) is Herbivores:
             self.herbivores.append(animal)
         elif type(animal) is Carnivores:
             self.carnivores.append(animal)
 
     def aging_and_weight_loss(self):
+        """
+        Calculates weight loss and ensure aging for all animal objects
+        in landscape object.
+        Returns
+        -------
+        None
+        """
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.ages()
             animal.weight_loss()
 
     def deceased(self):
+        """
+        Run death function on all animal in landscape object.
+        Iterate over each animal and only keep those who are alive.
+        Returns
+        -------
+        None
+        """
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.death()
         self.carnivores = [carnivore for carnivore in self.carnivores if carnivore.alive
@@ -152,10 +200,29 @@ class Landscape:
                            is True]
 
     def get_population(self):
+        """
+        Function that returns the amount of animals in landscape object.
+
+        Returns
+        -------
+        int
+            Amount of animals in landscape object.
+        """
         return len(self.herbivores + self.carnivores)
 
     @classmethod
     def set_params(cls, new_params):
+        """
+
+        Parameters
+        ----------
+        new_params : dict
+            Dictionary with new parameters to be set for landscape object
+
+        Returns
+        -------
+        None
+        """
         for key in new_params:
             if key not in ['habitable', 'f_max']:
                 raise KeyError(f'{key} is an invalid parameter.')
@@ -172,23 +239,42 @@ class Landscape:
 
     @classmethod
     def get_params(cls):
+        """
+        Return current parameters for lanscape object
+        Returns
+        -------
+        dict
+            Dictionary containing landscape object current parameters
+        """
         return {'habitable': cls.habitable, 'f_max': cls.f_max}
 
 
 class Lowland(Landscape):
+    """
+    Subclass of Landscape
+    """
     habitable = True
     f_max = 800
 
 
 class Highland(Landscape):
+    """
+    Subclass of Landscape
+    """
     habitable = True
     f_max = 300
 
 
 class Desert(Landscape):
+    """
+    Subclass of Landscape
+    """
     habitable = True
     f_max = 0
 
 
 class Water(Landscape):
+     """
+     Subclass of Landscape
+     """
     habitable = False
