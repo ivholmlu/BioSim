@@ -20,7 +20,6 @@ class BioSim:
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
 
-
         """
         :param island_map: Multi-line string specifying island geography
         :param ini_pop: List of dictionaries specifying initial population
@@ -57,8 +56,12 @@ class BioSim:
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
+        self.vis_years = vis_years
+        self.img_years = img_years
+
         self.heat_map1 = np.zeros((self.island.rows + 1, self.island.columns + 1))
         self.heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
+
         self._graphics = Graphics(img_dir, img_base, img_fmt, self.island_map,
                                   self.heat_map1, self.heat_map2)
 
@@ -69,9 +72,9 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
-        if species == 'Herbivores':
+        if species == 'Herbivore':
             Herbivores.set_params(params)
-        elif species == 'Carnivores':
+        elif species == 'Carnivore':
             Carnivores.set_params(params)
         else:
             raise ValueError('The island only has two species: '
@@ -104,31 +107,43 @@ class BioSim:
 
         :param num_years: number of years to simulate
         """
-        self.island.assign()
+        if self.img_years is None:
+            self.img_years = self.vis_years
+
+        if self.img_years % self.vis_years != 0:
+            raise ValueError('img_years ust be multiple of vis_steps')
+
         self.island.assign_animals(self.ini_pop)
-        self._graphics.setup(num_years, 1)
+        self._graphics.setup(num_years, self.vis_years)
 
         for year in range(0, num_years):
             self.island.cycle()
-            histogram_dict = self.get_attributes
-            total_herbivores = len(histogram_dict['Herbivores']['age'])
-            total_carnivores = len(histogram_dict['Carnivores']['age'])
-            animal_coords = self.island.get_coord_animals()
 
-            for coord, n_animals in animal_coords.items():
-                x = list(coord)[0]
-                y = list(coord)[1]
-                self.heat_map1[x, y] = n_animals['Herbivores']
-                self.heat_map2[x, y] = n_animals['Carnivores']
+            try:
+                if year % self.vis_years == 0:
+                    histogram_dict = self.get_attributes
+                    total_herbivores = len(histogram_dict['Herbivores']['age'])
+                    total_carnivores = len(histogram_dict['Carnivores']['age'])
+                    animal_coords = self.island.get_coord_animals()
 
-            self._graphics.update(year, self.heat_map1, self.heat_map2, total_herbivores, total_carnivores,
-                                  histogram_dict['Herbivores']['fitness'], histogram_dict['Carnivores']['fitness'],
-                                  histogram_dict['Herbivores']['age'], histogram_dict['Carnivores']['age'],
-                                  histogram_dict['Herbivores']['weight'], histogram_dict['Carnivores']['weight'])
+                    for coord, n_animals in animal_coords.items():
+                        x = list(coord)[0]
+                        y = list(coord)[1]
+                        self.heat_map1[x, y] = n_animals['Herbivores']
+                        self.heat_map2[x, y] = n_animals['Carnivores']
 
-            plt.pause(0.001)
+                    self._graphics.update(year, self.heat_map1, self.heat_map2, total_herbivores,
+                                          total_carnivores,
+                                          histogram_dict['Herbivores']['fitness'],
+                                          histogram_dict['Carnivores']['fitness'],
+                                          histogram_dict['Herbivores']['age'],
+                                          histogram_dict['Carnivores']['age'],
+                                          histogram_dict['Herbivores']['weight'],
+                                          histogram_dict['Carnivores']['weight'])
+                    plt.pause(0.001)
 
-        #plt.show()
+            except ZeroDivisionError:
+                plt.close()
 
 
     def add_population(self, population):
