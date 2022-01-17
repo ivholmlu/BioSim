@@ -163,7 +163,7 @@ class BioSim:
         """Create MPEG4 movie from visualization images saved."""
         self._graphics.make_movie(img_fmt)
 
-    @staticmethod
+    @property
     def num_animals(self):
         """Total number of animals on island."""
         ani_dict = self.island.get_animals_per_species()
