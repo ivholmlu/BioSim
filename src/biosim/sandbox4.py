@@ -35,6 +35,7 @@ island_map = textwrap.dedent(geogr)
 
 a = Island(island_map)
 
+
 ini_herbs = [{'loc': (2, 7),
               'pop': [{'species': 'Herbivore',
                        'age': 5,
@@ -46,10 +47,9 @@ ini_carns = [{'loc': (2, 7),
                        'weight': 20}
                       for _ in range(50)]}]
 
-sim = BioSim(island_map, ini_herbs, seed=1336163161, vis_years=10, cmax_animals={'Herbivore': 50, 'Carnivore': 20},
-             ymax_animals=15000, img_dir='.\movie')
-sim.simulate(200)
-sim.make_movie('mp4')
+sim = BioSim(island_map, ini_herbs+ini_carns, seed=1336163161, vis_years=10, img_dir='.\movie')
+sim.simulate(201)
+#sim.make_movie('mp4')
 # sim.add_population(ini_carns)
 # sim.simulate(100)
 
