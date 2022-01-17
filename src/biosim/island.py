@@ -68,10 +68,13 @@ class Island():
         """
         for animals in list_of_animals:
             coord = animals['loc']
+            if coord not in self.cells.keys():
+                raise ValueError('Inserted coordinate does not exist on the map.')
+
             if self.cells[coord].habitable is True:
                 pop = animals['pop']
                 self.cells[coord].append_population(pop)
-            else:
+            elif type(self.cells[coord]) == type(Water):
                 raise ValueError('Animal cannot be inserted into a water cell.')
 
     def cycle(self):
