@@ -77,8 +77,8 @@ class Island():
             if self.cells[coord].habitable is True:
                 pop = animals['pop']
                 self.cells[coord].append_population(pop)
-            elif type(self.cells[coord]) == type(Water):
-                raise ValueError('Animal cannot be inserted into a water cell.')
+            else:
+                raise ValueError(f'Coordinate {coord} is an invalid place to assign animals')
 
     def cycle(self):
         """
