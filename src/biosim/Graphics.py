@@ -29,7 +29,7 @@ _MAGICK_BINARY = 'magick'
 _DEFAULT_GRAPHICS_DIR = os.path.join('../..', 'data')
 _DEFAULT_GRAPHICS_NAME = 'dv'
 _DEFAULT_IMG_FORMAT = 'png'
-_DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
+_DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: mp4, gif
 
 
 class Graphics:
@@ -98,7 +98,7 @@ class Graphics:
             cmax_animals = {'Herbivore': 200, 'Carnivore': 50}
 
         if y_max is None:
-            y_max = 10**4
+            y_max = 10 ** 4
 
         if hist_specs is None:
             hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
@@ -129,12 +129,10 @@ class Graphics:
             self._map_ax.imshow(map_rgb)
             self._map_ax.set_title('Map of Rossumøya')
 
-
             for ix, name in enumerate(('Water', 'Lowland',
                                        'Highland', 'Desert')):
                 self._map_ax.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                                      edgecolor='none',
-                                                      facecolor=rgb_value[name[0]]))
+                                                     edgecolor='none', facecolor=rgb_value[name[0]]))
 
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
@@ -147,9 +145,9 @@ class Graphics:
             self._time_ax.axis('off')
             template = 'Count: {:5d}'
             self.txt = self._time_ax.text(0.5, 0.5, template.format(0),
-                           horizontalalignment='center',
-                           verticalalignment='center',
-                           transform=self._time_ax.transAxes)
+                                          horizontalalignment='center',
+                                          verticalalignment='center',
+                                          transform=self._time_ax.transAxes)
 
         if self._heat1_ax is None:
             self._heat1_ax = self._fig.add_subplot(2, 3, 4)
@@ -176,26 +174,26 @@ class Graphics:
             self._hist1_ax.set_title('Fitness')
             bins1 = hist_specs['fitness']['max']
             delta1 = hist_specs['fitness']['delta']
-            self._hist1_bins = np.linspace(0, bins1, num=int(bins1/delta1))
+            self._hist1_bins = np.linspace(0, bins1, num=int(bins1 / delta1))
 
         if self._hist2_ax is None:
             self._hist2_ax = self._fig.add_subplot(3, 3, 6)
             self._hist2_ax.set_title('Age')
             bins2 = hist_specs['age']['max']
             delta2 = hist_specs['age']['delta']
-            self._hist2_bins = np.linspace(0, bins2, num=int(bins2/delta2))
+            self._hist2_bins = np.linspace(0, bins2, num=int(bins2 / delta2))
 
         if self._hist3_ax is None:
             self._hist3_ax = self._fig.add_subplot(3, 3, 9)
             self._hist3_ax.set_title('Weight')
             bins3 = hist_specs['weight']['max']
             delta3 = hist_specs['weight']['delta']
-            self._hist3_bins = np.linspace(0, bins3, num=int(bins3/delta3))
+            self._hist3_bins = np.linspace(0, bins3, num=int(bins3 / delta3))
 
         # needs updating on subsequent calls to simulate()
         # add 1 so we can show values for time zero and time final_step
-        self._line_ax.set_xlim(0, final_step+1)
-        self._line_ax.set_xlim(0, final_step+1)
+        self._line_ax.set_xlim(0, final_step + 1)
+        self._line_ax.set_xlim(0, final_step + 1)
 
         if self._line1 is None and self._line2 is None:
             self._line1 = self._line_ax.plot(np.arange(final_step),
@@ -252,7 +250,6 @@ class Graphics:
         self._hist2_ax.set_title('Age')
         self._hist3_ax.set_title('Weight')
 
-
     def update(self, step, herbivores_arr=None, carnivores_arr=None, n_herbivores=None, n_carnivores=None,
                herbi_fitness=None, carni_fitness=None, herbi_age=None, carni_age=None, herbi_weight=None,
                carni_weight=None):
@@ -279,7 +276,7 @@ class Graphics:
         if self._img_base is None or step % self._img_step != 0:
             return
         fig = plt.gcf()
-        fig.set_size_inches(19.2, 10.8)
+        fig.set_size_inches(19.2, 10.8)  # (38.4, 21.6), (25.6, 14.4)
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))
