@@ -21,7 +21,19 @@ class Island():
         self.columns = len(self.geogr[0])
         self.cells = {(row, column): None for row in range(1, self.rows + 1)
                       for column in range(1, self.columns + 1)}
-        #Fjerne alle celler som er W ? Burde optimisere litt
+
+        self.assign()
+
+        # Fiks senere
+        try:
+            if self.geogr[0].count('W') != len(self.geogr[1]) or self.geogr[-1].count('W') != len(self.geogr[1]):
+                raise ValueError('Outer boundaries must be water.')
+        except IndexError:
+            pass
+
+        for current, next in zip(self.geogr, self.geogr[1:]):
+            if len(next) != len(current):
+                raise ValueError('Inconsistent row length. All rows must be of the same length.')
 
     def assign(self):
         """
@@ -38,8 +50,10 @@ class Island():
                 self.cells[coord] = Highland()
             elif landscape == 'D':
                 self.cells[coord] = Desert()
-            else:
+            elif landscape == 'W':
                 self.cells[coord] = Water()
+            else:
+                raise ValueError(f'"{landscape}" is an invalid landscape type')
         #self.cells = {coord: landscape for coord, landscape in self.cells.items() if landscape != 'W'}
 
 
