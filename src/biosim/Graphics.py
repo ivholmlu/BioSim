@@ -276,7 +276,6 @@ class Graphics:
                                                      type=self._img_fmt))
         self._img_ctr += 1
 
-
     def make_movie(self, movie_fmt=None):
         """
         Creates MPEG4 movie from visualization images saved.
