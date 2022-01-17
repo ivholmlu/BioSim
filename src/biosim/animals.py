@@ -150,7 +150,7 @@ class Animals:
         pos_params = [key for key in cls.param.keys() if key != 'DeltaPhiMax']
         for key in new_params.keys():
             if key not in cls.param.keys():
-                raise KeyError(f'{key} is an invalid parameter.')
+                raise ValueError(f'{key} is an invalid parameter.')
 
             if key in pos_params:
                 if not 0 <= new_params[key]:
