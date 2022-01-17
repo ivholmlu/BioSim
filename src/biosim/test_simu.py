@@ -124,7 +124,7 @@ class BioSim:
             histogram_dict = self.get_attributes
             total_herbivores = len(histogram_dict['Herbivores']['fitness'])
             total_carnivores = len(histogram_dict['Carnivores']['fitness'])
-            self._graphics.update(year, n_herbivores=total_herbivores, n_carnivores=total_carnivores)
+            self._graphics.update_line_graph(year, total_herbivores, total_carnivores)
 
             if self.vis_years != 0 and year % self.vis_years == 0:
                 animal_coords = self.island.get_coord_animals()
