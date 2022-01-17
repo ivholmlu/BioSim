@@ -61,6 +61,8 @@ class Graphics:
 
         # the following will be initialized by _setup_graphics
         self.island_map = island_map
+        self._heat1_map = heat_map1
+        self._heat2_map = heat_map2
         self._img_axis = None
         self._time_ax = None
         self._fig = None
@@ -72,10 +74,8 @@ class Graphics:
         self._line2 = None
         self._heat1_ax = None
         self._heat1_img = None
-        self._heat1_map = heat_map1
         self._heat2_ax = None
         self._heat2_img = None
-        self._heat2_map = heat_map2
         self._hist1_ax = None
         self._hist1_bins = None
         self._hist2_ax = None
@@ -103,28 +103,25 @@ class Graphics:
         # create new figure window
         if self._fig is None:
             self._fig = plt.figure()
-
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
         if self._map_ax is None:
-            self._map_ax = self._fig.add_subplot(3, 3, 1)
-            rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-                         'L': (0.0, 0.6, 0.0),  # dark green
-                         'H': (0.5, 1.0, 0.5),  # light green
-                         'D': (1.0, 1.0, 0.5)}  # light yellow
+            self._map_ax = self._fig.add_subplot(2, 3, 1)
+            rgb_value = {'W': (0.0, 0.0, 1.0),
+                         'L': (0.0, 0.6, 0.0),
+                         'H': (0.5, 1.0, 0.5),
+                         'D': (1.0, 1.0, 0.5)}
 
             map_rgb = [[rgb_value[column] for column in row]
                        for row in self.island_map.splitlines()]
-
-            self._map_ax = self._fig.add_subplot(3, 3, 1)
-            self._map_ax.imshow(map_rgb)
             self._map_ax.set_xticks(range(len(map_rgb[0])))
             self._map_ax.set_xticklabels(range(1, 1 + len(map_rgb[0])))
             self._map_ax.set_yticks(range(len(map_rgb)))
             self._map_ax.set_yticklabels(range(1, 1 + len(map_rgb)))
-            self._map_ax.set_title('Map of Rossumoya')
-            self._map_ax.axis('off')
+            self._map_ax.imshow(map_rgb)
+            self._map_ax.set_title('Map of Rossumøya')
+
 
             for ix, name in enumerate(('Water', 'Lowland',
                                        'Highland', 'Desert')):
@@ -132,14 +129,15 @@ class Graphics:
                                                       edgecolor='none',
                                                       facecolor=rgb_value[name[0]]))
 
+
         if self._line_ax is None:
-            self._line_ax = self._fig.add_subplot(3, 3, 3)
+            self._line_ax = self._fig.add_subplot(2, 3, 2)
             self._line_ax.set_xlim(0, 300)
-            self._line_ax.set_ylim(0, 10000)
+            self._line_ax.set_ylim(0, 11000)
             self._line_ax.set_title('Number of each species')
 
         if self._time_ax is None:
-            self._time_ax = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
+            self._time_ax = self._fig.add_axes([0.4, 0.83, 0.2, 0.2])
             self._time_ax.axis('off')
             template = 'Count: {:5d}'
             self.txt = self._time_ax.text(0.5, 0.5, template.format(0),
@@ -148,32 +146,34 @@ class Graphics:
                            transform=self._time_ax.transAxes)
 
         if self._heat1_ax is None:
-            self._heat1_ax = self._fig.add_subplot(3, 3, 4)
+            self._heat1_ax = self._fig.add_subplot(2, 3, 4)
+            self._heat1_ax.set_title('Herbivore distribution')
+            self._heat1_ax.set_yticks([1, 5, 11, 16, 21])
             self._heat1_img = self._heat1_ax.imshow(self._heat1_map,
                                                     interpolation='nearest', vmin=0, vmax=200, cmap='plasma')
             plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
 
         if self._heat2_ax is None:
-            self._heat2_ax = self._fig.add_subplot(3, 3, 6)
+            self._heat2_ax = self._fig.add_subplot(2, 3, 5)
+            self._heat2_ax.set_title('Carnivore distribution')
+            self._heat2_ax.set_yticks([1, 5, 11, 16, 21])
             self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
                                                     interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
             plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
         if self._hist1_ax is None:
-            self._hist1_ax = self._fig.add_subplot(5, 3, 13)
+            self._hist1_ax = self._fig.add_subplot(3, 3, 3)
+            self._hist1_ax.set_ylim(0, 2000)
             self._hist1_ax.set_title('Fitness')
             self._hist1_bins = np.linspace(0, 1, num=20)
-            ax = plt.gca()
-            ax.set_ylim((0, 2000))
-            ax.set_yticks([1000, 2000])
 
         if self._hist2_ax is None:
-            self._hist2_ax = self._fig.add_subplot(5, 3, 14)
+            self._hist2_ax = self._fig.add_subplot(3, 3, 6)
             self._hist2_ax.set_title('Age')
             self._hist2_bins = np.linspace(0, 60, num=30)
 
         if self._hist3_ax is None:
-            self._hist3_ax = self._fig.add_subplot(5, 3, 15)
+            self._hist3_ax = self._fig.add_subplot(3, 3, 9)
             self._hist3_ax.set_title('Weight')
             self._hist3_bins = np.linspace(0, 60, num=20)
 
@@ -245,7 +245,6 @@ class Graphics:
 
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
-
         self._save_graphics(step)
 
     def _save_graphics(self, step):
