@@ -45,7 +45,8 @@ ini_carns = [{'loc': (2, 7),
                        'weight': 20}
                       for _ in range(50)]}]
 
-sim = BioSim(island_map, ini_herbs, seed=1336163161, vis_years=10)
+sim = BioSim(island_map, ini_herbs, seed=1336163161, vis_years=10, cmax_animals={'Herbivore': 50, 'Carnivore': 20},
+             ymax_animals=15000)
 sim.simulate(50)
 sim.add_population(ini_carns)
 sim.simulate(100)
