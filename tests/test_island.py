@@ -35,24 +35,25 @@ Island2 = """\
            WWWWW"""
 Island2 = textwrap.dedent(Island2)
 
-Island3 = """\
-           WWW
-           WDW
-           WWW"""
-Island3 = textwrap.dedent(Island3)
 
-
-
-class Test_island_cycle_and_creation:
+@pytest.mark.parametrize('herbivores, carnivores',
+                         [([{'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(n)]}],
+                           [{'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 20} for _ in range(m)]}])])
+class TestIslandCycleAndCreation:
 
     @pytest.fixture(autouse=True)
-    def create_island(self):
+    def create_island(self, species, amount):
         """
         Create an island to be used in Test_island_creation Test class
         """
-        self.island = Island(Island2)
+        self.island = Island('WWWWW\nWDHLW\nWWWWW')
         self.island.assign()
-        self.island.assign_animals(ini_herbs)
+        self.island.assign_animals([{'loc': (2, 2),
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(amount)]}])
+
 
     def test_island_cycle_call(self, mocker):
 
@@ -65,13 +66,13 @@ class Test_island_cycle_and_creation:
 
         assert self.island.cycle.call_count == num_years
 
-    def test_assign_animals(self):
+    def test_assign_animals(self, species, amount):
         """
         Test if assign animals have been assigned to their respective cell and correct
         amount is assigned
         """
 
-        assert len(self.island.cells[loc].herbivores) == amount_herbivores
+        assert len(self.island.cells[(2, 2)].species) == amount
 
     def test_assign(self):
         """
@@ -102,6 +103,18 @@ def test_get_neighbours():
     """
     assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
 
+def test_no_migration_to_water():
+    map = 'WWW\nWLW\nWWW'
+    island = Island(map)
+    island.assign_animals([{'loc': (2,2),
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(1000)]}])
+    island.cycle()
+    neighbours = island.get_neighbours((2,2))
+    for neighbour in neighbours:
+        assert len(island.cells[neighbour].herbivores) == 0
 
 def test_migration(mocker):
     """
@@ -144,6 +157,12 @@ def test_map_invalid_landscape():
     map = 'WWW\nWXW\nWWW'
     with pytest.raises(ValueError):
         island = Island(map)
+
+def test_right_landscape_in_cell():
+    map = 'WWW\nWLW\nWWW'
+    island = Island(map)
+
+
 
 
 
