@@ -8,22 +8,44 @@ import numpy as np
 
 
 def test_create_landscapes():
+    """
+    A test to check if the different landscapes are created, and to ensure the default value of fodder is inherited
+    from the main class, which in this case is 0.
+    """
     lowland = Lowland()
     highland = Highland()
     desert = Desert()
     water = Water()
-    assert lowland.current_fodder == 0 and highland.current_fodder == 0 \
-           and desert.current_fodder == 0 and water.current_fodder == 0  # The current fodder should always be set to 0
-    # regardless of the landscape type. Only when .replenish() is
-    # called, should .current_fodder == f_max
+    assert lowland.current_fodder == highland.current_fodder == desert.current_fodder == water.current_fodder == 0
 
 
-@pytest.mark.parametrize('f_max', [100, 240, 700])
-def test_set_parameters(f_max):
+@pytest.mark.parametrize('f_max, habitable', [[100, True], [23, False], [700, True]])
+def test_set_parameters(f_max, habitable):
+    """
+    A test to check if set_params sets the parameters to the assigned landscape.
+    """
     highland = Highland()
-    highland.set_params({'f_max': f_max})
+    highland.set_params({'f_max': f_max, 'habitable': habitable})
     highland.replenish()
-    assert highland.f_max == highland.current_fodder
+    assert highland.f_max == highland.current_fodder and highland.habitable is habitable
+
+
+@pytest.mark.parametrize('f_max', [-100, -3.21, -0.01])
+def test_set_faulty_f_max(f_max):
+    """
+    A test to check if setting incompatible f_max value raises a ValueError.
+    """
+    with pytest.raises(ValueError):
+        Desert.set_params({'f_max': f_max})
+
+
+@pytest.mark.parametrize('habitable', ['False', 'True', None])
+def test_set_faulty_habitable(habitable):
+    """
+    A test to check if setting a incompatible habitable value raises a ValueError.
+    """
+    with pytest.raises(ValueError):
+        Highland.set_params({'habitable': habitable})
 
 
 n = 50
@@ -102,6 +124,10 @@ class TestPopulation:
         assert fodder1 < fodder0 and tot_herbivores1 < tot_herbivores0
 
     def test_age_and_weight_loss(self, create_animals, insert_animals, mocker):
+        """
+        Test to check if the amount of calls made to the ages and weight_loss is equal to the amount of animals in
+        the landscape, as well as checking that the age and weight has increased.
+        """
         mocker.spy(Carnivores, 'ages')
         mocker.spy(Carnivores, 'weight_loss')
 
@@ -144,6 +170,9 @@ class TestPopulation:
 
 
 def test_reject_unrecognizable_animal():
+    """
+    Test to check if inserting a unspecified type of animal raises a ValueError.
+    """
     highland = Highland()
     with pytest.raises(ValueError):
         unrecognizable_animal_type = [{'loc': (2, 7),
@@ -152,10 +181,13 @@ def test_reject_unrecognizable_animal():
         highland.append_population(unrecognizable_animal_type[0]['pop'])
 
 
-@pytest.mark.parametrize('f_max', [2.1, 8.3, 3.9])
+@pytest.mark.parametrize('f_max', [2.1, 8.3, 3.9, 9.0])
 def test_limited_fodder(f_max):
+    """
+    Test to check if the fodder available is eaten up, leaving the next herbivore to eat with no food left.
+    """
     test_herbivores = [{'loc': (2, 7),
-                        'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 25} for _ in range(3)]}]
+                        'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 25} for _ in range(2)]}]
 
     Highland.set_params({'f_max': f_max})
     highland = Highland()
