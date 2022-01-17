@@ -193,23 +193,23 @@ class TestSetWrongParameters:
             self.animal.set_params({'not a key' : 0})
 
     def test_ValueError_keys(self):
-        Carni = Carnivores()
-        with self.assertRaises(ValueError):
-            Carni.set_params({'w_half' : 3})
+
+        with pytest.raises(ValueError):
+            self.animal.set_params({'w_half' : -1})
 
     def test_special_values_DeltaPhiMax(self):
-        Carni = Carnivores()
-        with self.assertRaises(ValueError):
-            Carni.set_params({'DeltaPhiMax' : -1})
+
+        with pytest.raises(ValueError):
+            self.animal.set_params({'DeltaPhiMax' : -1})
 
     def test_special_values_eta(self):
-        Herbi = Herbivores()
-        with self.assertRaises(ValueError):
-            Herbi.set_params({'eta' : 1.1})
 
-def test_get_values():
-    Herb = Herbivores()
-    assert Herb.param == Herb.get_params()
+        with pytest.raises(ValueError):
+            self.animal.set_params({'eta' : 1.1})
+
+    def test_get_values(self):
+
+        assert self.animal.param == self.animal.get_params()
 
 
 
