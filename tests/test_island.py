@@ -25,13 +25,13 @@ Island1 = """\
            WWWWW
            WLLLW
            WLLLW
-           WLLLW 
+           WLLLW
            WWWWW"""
 Island1 = textwrap.dedent(Island1)
 
 Island2 = """\
            WWWWW
-           WDHVW
+           WDHLW
            WWWWW"""
 Island2 = textwrap.dedent(Island2)
 
@@ -43,8 +43,8 @@ Island3 = textwrap.dedent(Island3)
 
 
 class Test_island_creation:
-    #No animals can be assigned to a cell with water object
-    @pytest.fixture(autouse = True)
+
+    @pytest.fixture(autouse=True)
     def create_island(self):
         """
         Create an island to be used in Test_island_creation Test class
