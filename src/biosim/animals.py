@@ -17,7 +17,7 @@ class Animals:
         Parameters
         ------
         attr : dict
-            Dictionary containig aga and/or weight for an animal
+            Dictionary containing aga and/or weight for an animal
         """
         self.fitness = 0
         self.alive = True
@@ -158,9 +158,8 @@ class Animals:
                 cls.param[key] = new_params[key]
 
             if 'DeltaPhiMax' in new_params.keys():
-                if type(cls) is Carnivores:
-                    if not new_params['DeltaPhiMax'] > 0:
-                        raise ValueError('DeltaPhiMax must be strictly greater than 0.')
+                if not new_params['DeltaPhiMax'] > 0:
+                    raise ValueError('DeltaPhiMax must be strictly greater than 0.')
 
             if 'eta' in new_params.keys():
                 if not new_params['eta'] <= 1:
