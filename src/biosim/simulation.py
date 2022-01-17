@@ -9,9 +9,10 @@ Template for BioSim class.
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
 from biosim.island import Island
-import textwrap
+from biosim.Graphics import Graphics
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 
 class BioSim:
@@ -19,7 +20,6 @@ class BioSim:
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
-
 
         """
         :param island_map: Multi-line string specifying island geography
@@ -54,9 +54,23 @@ class BioSim:
 
         img_dir and img_base must either be both None or both strings.
         """
+        random.seed(seed)
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
+        self.vis_years = vis_years
+        self.img_years = img_years
+        self.ymax_animals = ymax_animals
+        self.cmax_animals = cmax_animals
+        self.hist_specs = hist_specs
+
+        self.heat_map1 = np.zeros((self.island.rows + 1, self.island.columns + 1))
+        self.heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
+
+        self._graphics = Graphics(img_dir, img_base, img_fmt, self.island_map,
+                                  self.heat_map1, self.heat_map2)
+        self.years = 0
+        self.final_year = None
 
     def set_animal_parameters(self, species, params):
         """
@@ -65,14 +79,12 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
-        if species == 'Herbivores':
+        if species == 'Herbivore':
             Herbivores.set_params(params)
-        elif species == 'Carnivores':
+        elif species == 'Carnivore':
             Carnivores.set_params(params)
         else:
-            raise ValueError('The island only has two species: '
-                  'Herbivores and Carnivores')
-
+            raise ValueError('The island only has two species: Herbivores and Carnivores')
 
     def set_landscape_parameters(self, landscape, params):
         """
@@ -90,138 +102,55 @@ class BioSim:
         elif landscape == 'H':
             Highland.set_params(params)
         else:
-            raise ValueError('Code letter for landscape must be\n'
-                  'either W, D, L or H')
+            raise ValueError('Code letter for landscape must be one of the following: W, D, L or H.')
 
-
-    def simulate(self, num_years, island_map):
+    def simulate(self, num_years):
         """
         Run simulation while visualizing the result.
 
         :param num_years: number of years to simulate
         """
-        island_map = textwrap.dedent(island_map)
-
-        #                   R    G    B
-        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-                     'L': (0.0, 0.6, 0.0),  # dark green
-                     'H': (0.5, 1.0, 0.5),  # light green
-                     'D': (1.0, 1.0, 0.5)}  # light yellow
-
-        map_rgb = [[rgb_value[column] for column in row]
-                   for row in island_map.splitlines()]
-
-
-        self.island.assign()
         self.island.assign_animals(self.ini_pop)
-        f1 = plt.figure()
+        self.final_year = num_years + self.years
+        self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals, self.cmax_animals, self.hist_specs)
 
+        if self.img_years is None:
+            self.img_years = self.vis_years
 
-        ax1 = f1.add_subplot(3, 3, 1)
+        try:
+            if self.img_years % self.vis_years != 0:
+                raise ValueError('img_years ust be multiple of vis_steps')
+        except ZeroDivisionError:
+            pass
 
-        ax1.imshow(map_rgb)
-        ax1.set_xticks(range(len(map_rgb[0])))
-        ax1.set_xticklabels(range(1, 1 + len(map_rgb[0])))
-        ax1.set_yticks(range(len(map_rgb)))
-        ax1.set_yticklabels(range(1, 1 + len(map_rgb)))
-        ax1.set_title('Map of Rossumoya')
-        ax1.axis('off')
-
-        for ix, name in enumerate(('Water', 'Lowland',
-                                   'Highland', 'Desert')):
-            ax1.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                          edgecolor='none',
-                                          facecolor=rgb_value[name[0]]))
-
-        ax2 = f1.add_subplot(3, 3, 3)
-        ax2.set_xlim(0, num_years)
-        ax2.set_ylim(0, 10000)
-        ax2.set_title('Number of each species')
-        line = ax2.plot(np.arange(num_years),
-                        np.full(num_years, np.nan), 'b-')[0]
-        line2 = ax2.plot(np.arange(num_years),
-                         np.full(num_years, np.nan), 'r-')[0]
-
-        axt = f1.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
-        axt.axis('off')  # turn off coordinate system
-        template = 'Count: {:5d}'
-        txt = axt.text(0.5, 0.5, template.format(0),
-                       horizontalalignment='center',
-                       verticalalignment='center',
-                       transform=axt.transAxes)  # relative coordinates
-
-        #HISTOGRAM
-        x3 = f1.add_subplot(5, 3, 13)
-        bins_x3 = np.linspace(0, 1, num=20)
-        x3.set_title('Fitness')
-        ax = plt.gca()
-        ax.set_ylim([0, 2000])
-
-        x4 = f1.add_subplot(5, 3, 14)
-        x4.set_title('Age')
-        bins_x4 = np.linspace(0, 60, num=30)
-
-        x5 = f1.add_subplot(5, 3, 15)
-        x5.set_title('Weight')
-
-        # Heatmap #1 - Herbivores
-        x6 = f1.add_subplot(3, 3, 4)
-        heat_map1 = np.zeros((self.island.rows+1, self.island.columns+1))
-        heat_im1 = x6.imshow(heat_map1, interpolation='nearest', vmin=0, vmax=175, cmap='plasma')
-        plt.colorbar(heat_im1, ax=x6, orientation='vertical', cmap='plasma')
-
-        # Heatmap #2 - Carnivores
-        x7 = f1.add_subplot(3, 3, 6)
-        heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
-        heat_im2 = x7.imshow(heat_map2, interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
-        plt.colorbar(heat_im2, ax=x7, orientation='vertical', cmap='plasma')
-        # Fix colorbar values!
-
-
-        for year in range(0, num_years):
-            x3.cla()
-            x4.cla()
-            x5.cla()
-            x5.set_title('Weight')
-            x4.set_title('Age')
-            x3.set_title('Fitness')
+        # for year in range(self.years, self.final_year):
+        while self.years < self.final_year:
             self.island.cycle()
-            tot_animals = self.num_animals
             histogram_dict = self.get_attributes
-            total_herbivores = len(histogram_dict['Herbivores']['age'])
-            total_carnivores = len(histogram_dict['Carnivores']['age'])
-            #Histogram
-            x3.hist(histogram_dict['Herbivores']['fitness'],bins_x3, color='b', histtype='step', density='False')
-            x3.hist(histogram_dict['Carnivores']['fitness'], bins_x3, color='r', histtype='step', density='False')
-            x4.hist(histogram_dict['Herbivores']['age'], bins_x4, color='b', histtype='step', density='False')
-            x4.hist(histogram_dict['Carnivores']['age'], bins_x4, color='r', histtype='step', density='False')
-            x5.hist(histogram_dict['Herbivores']['weight'], bins_x4, color='r', histtype='step', density='False')
-            x5.hist(histogram_dict['Carnivores']['weight'], bins_x4, color = 'b', histtype='step', density='False')
+            total_herbivores = len(histogram_dict['Herbivores']['fitness'])
+            total_carnivores = len(histogram_dict['Carnivores']['fitness'])
+            self._graphics.update_line_graph(self.years, total_herbivores, total_carnivores)
 
-            #Animal graph
-            ydata = line.get_ydata()
-            ydata2 = line2.get_ydata()
-            ydata[year] = total_herbivores
-            ydata2[year] = total_carnivores
-            line.set_ydata(ydata)
-            line2.set_ydata(ydata2)
+            if self.vis_years != 0 and self.years % self.vis_years == 0:
+                animal_coords = self.island.get_coord_animals()
+                for coord, n_animals in animal_coords.items():
+                    x = list(coord)[0]
+                    y = list(coord)[1]
+                    self.heat_map1[x, y] = n_animals['Herbivores']
+                    self.heat_map2[x, y] = n_animals['Carnivores']
 
-            #Counter
-            txt.set_text(template.format(year))
+                self._graphics.update(self.years, self.heat_map1, self.heat_map2, total_herbivores, total_carnivores,
+                                      histogram_dict['Herbivores']['fitness'],
+                                      histogram_dict['Carnivores']['fitness'],
+                                      histogram_dict['Herbivores']['age'],
+                                      histogram_dict['Carnivores']['age'],
+                                      histogram_dict['Herbivores']['weight'],
+                                      histogram_dict['Carnivores']['weight'])
+                plt.pause(0.001)
+            elif self.vis_years == 0:
+                plt.close()
 
-            animal_coords = self.island.get_coord_animals()
-            for coord, n_animals in animal_coords.items():
-                x = list(coord)[0]
-                y = list(coord)[1]
-                heat_map1[x, y] = n_animals['Herbivores']
-                heat_map2[x, y] = n_animals['Carnivores']
-            heat_im1.set_data(heat_map1)
-            heat_im2.set_data(heat_map2)
-
-            plt.pause(0.001)
-
-        plt.show()
-
+            self.years += 1
 
     def add_population(self, population):
         """
@@ -230,25 +159,9 @@ class BioSim:
         """
         self.island.assign_animals(population)
 
-    @property
-    def year(self):
-        """Last year simulated."""
-
-    @property
-    def get_attributes(self):
-        return self.island.get_attributes()
-
-    @property
-    def get_animals_fitness(self):
-        return self.island.get_fitness()
-
-    @property
-    def get_animals_age(self):
-        return self.island.get_age()
-
-    @property
-    def get_animals_weight(self):
-        return self.island.get_weight()
+    def make_movie(self, img_fmt=None):
+        """Create MPEG4 movie from visualization images saved."""
+        self._graphics.make_movie(img_fmt)
 
     @property
     def num_animals(self):
@@ -256,15 +169,20 @@ class BioSim:
         ani_dict = self.island.get_animals_per_species()
         return ani_dict['Herbivore'] + ani_dict['Carnivore']
 
+    @staticmethod
+    def coord_animals(self):
+        return self.island.get_coord_animals()
+
+    @property
+    def year(self):
+        return self.years
+
+    @property
+    def get_attributes(self):
+        return self.island.get_attributes()
+
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
         return self.island.get_animals_per_species()
 
-    @staticmethod
-    def coord_animals(self):
-        return self.island.get_coord_animals()
-
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        pass
