@@ -73,9 +73,7 @@ class BioSim:
         self.years = 0
         self.final_year = None
         self.log = []
-
-        if log_file is not None:
-            log_file_name = log_file
+        self.log_file = log_file
 
     def set_animal_parameters(self, species, params):
         """
@@ -157,8 +155,13 @@ class BioSim:
 
             self.years += 1
 
-            if log_file is not None:
+            if self.log_file is not None:
                 self.log.append([self.years, total_herbivores, total_carnivores])
+                header = ['year', 'herbivore', 'carnivore']
+                with open(self.log_file, 'w', encoding='UTF8', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(header)
+                    writer.writerows(self.log)
 
     def add_population(self, population):
         """
@@ -194,10 +197,10 @@ class BioSim:
         """Number of animals per species in island, as dictionary."""
         return self.island.get_animals_per_species()
 
-    @property
-    def log_data(self):
+    @staticmethod
+    def log_data():
         header = ['year', 'herbivore', 'carnivore']
-        with open(log_file_name, 'w', encoding='UTF8', newline='') as f:
+        with open(self.log_file, 'w', encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(header)
             writer.writerows(self.log)
