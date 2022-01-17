@@ -3,6 +3,7 @@ from biosim.test_simu import BioSim
 from biosim.island import Island
 import textwrap
 import random
+import matplotlib.pyplot as plt
 
 random.seed(15838511)
 
@@ -46,10 +47,12 @@ ini_carns = [{'loc': (2, 7),
                       for _ in range(50)]}]
 
 sim = BioSim(island_map, ini_herbs, seed=1336163161, vis_years=10, cmax_animals={'Herbivore': 50, 'Carnivore': 20},
-             ymax_animals=15000)
-sim.simulate(50)
-sim.add_population(ini_carns)
-sim.simulate(100)
+             ymax_animals=15000, img_dir='.\movie')
+sim.simulate(200)
+sim.make_movie('mp4')
+# sim.add_population(ini_carns)
+# sim.simulate(100)
+
 
 
 
