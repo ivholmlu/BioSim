@@ -28,6 +28,8 @@ class Landscape:
             list of animal objects or dictionaries with animal object parameters
         """
         for animal in ext_population:
+            if animal['species'] not in ['Herbivore', 'Carnivore']:
+                raise ValueError('The island only contains carnivores and herbivores.')
             if type(animal) is Herbivores or animal['species'] == 'Herbivore':
                 self.herbivores.append(Herbivores(animal))
             elif type(animal) is Carnivores or animal['species'] == 'Carnivore':
@@ -225,7 +227,7 @@ class Landscape:
         """
         for key in new_params:
             if key not in ['habitable', 'f_max']:
-                raise KeyError(f'{key} is an invalid parameter.')
+                raise ValueError(f'{key} is an invalid parameter.')
 
             if 'habitable' in new_params:
                 if not isinstance(new_params['habitable'], bool):
