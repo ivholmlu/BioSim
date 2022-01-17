@@ -87,7 +87,7 @@ class Graphics:
     def set_bins(self, bins):
         pass
 
-    def setup(self, final_step, img_step):
+    def setup(self, final_step, img_step, y_max=None, cmax_animals=None):
         """
         Prepare graphics.
 
@@ -97,6 +97,11 @@ class Graphics:
         :param final_step: last time step to be visualised (upper limit of x-axis)
         :param img_step: interval between saving image to file
         """
+        if cmax_animals is None:
+            cmax_animals = {'Herbivore': 200, 'Carnivore': 50}
+
+        if y_max is None:
+            y_max = 10**4
 
         self._img_step = img_step
 
@@ -129,11 +134,10 @@ class Graphics:
                                                       edgecolor='none',
                                                       facecolor=rgb_value[name[0]]))
 
-
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
             self._line_ax.set_xlim(0, 300)
-            self._line_ax.set_ylim(0, 11000)
+            self._line_ax.set_ylim(0, y_max)
             self._line_ax.set_title('Number of each species')
 
         if self._time_ax is None:
@@ -149,16 +153,19 @@ class Graphics:
             self._heat1_ax = self._fig.add_subplot(2, 3, 4)
             self._heat1_ax.set_title('Herbivore distribution')
             self._heat1_ax.set_yticks([1, 5, 11, 16, 21])
+            vmax_herb = cmax_animals['Herbivore']
             self._heat1_img = self._heat1_ax.imshow(self._heat1_map,
-                                                    interpolation='nearest', vmin=0, vmax=200, cmap='plasma')
+                                                    interpolation='nearest', vmin=0, vmax=vmax_herb, cmap='plasma')
             plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
 
         if self._heat2_ax is None:
             self._heat2_ax = self._fig.add_subplot(2, 3, 5)
             self._heat2_ax.set_title('Carnivore distribution')
             self._heat2_ax.set_yticks([1, 5, 11, 16, 21])
+
+            vmax_carn = cmax_animals['Carnivore']
             self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
-                                                    interpolation='nearest', vmin=0, vmax=50, cmap='plasma')
+                                                    interpolation='nearest', vmin=0, vmax=vmax_carn, cmap='plasma')
             plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
         if self._hist1_ax is None:
