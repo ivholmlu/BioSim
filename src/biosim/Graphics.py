@@ -93,6 +93,10 @@ class Graphics:
 
         :param final_step: last time step to be visualised (upper limit of x-axis)
         :param img_step: interval between saving image to file
+        :param y_max: sets the limit of the y-axis for the population plot
+        :param cmax_animals: dict, sets the maximum values of the color bars in each heatmap plot.
+        :param hist_specs: dict, sets the bins and the ticks of the x-axis for the histograms.
+
         """
         if cmax_animals is None:
             cmax_animals = {'Herbivore': 200, 'Carnivore': 50}
@@ -226,6 +230,21 @@ class Graphics:
                                                     vmin=0, vmax=50, cmap='plasma')
 
     def update_line_graph(self, year, total_herbivores, total_carnivores):
+        """
+        Updates the line/population graph
+
+        Parameters
+        ----------
+        year: int
+            Sets the x-value, the current year, for the incoming y-values, total_herbivores and total_carnivores.
+        total_herbivores: int
+            Sets the y-value for the herbivore line.
+        total_carnivores: int
+            Sets the y-value for the carnivore line.
+        Returns
+        -------
+            None
+        """
         ydata_line1 = self._line1.get_ydata()
         ydata_line2 = self._line2.get_ydata()
         ydata_line1[year] = total_herbivores
@@ -235,6 +254,28 @@ class Graphics:
 
     def _update_histograms(self, herbi_fitness, carni_fitness, herbi_age, carni_age,
                            herbi_weight, carni_weight):
+        """
+        Updates the histogram by inserting the fitness, age and weight of both carnivores and herbivores.
+
+        Parameters
+        ----------
+        herbi_fitness: list
+            A list of the fitness of all the herbivores on the island.
+        carni_fitness: list
+            A list of the fitness of all the carnivores on the island.
+        herbi_age: list
+            A list of the age of all the herbivores on the island.
+        carni_age: list
+            A list of the age of all the carnivores on the island.
+        herbi_weight: list
+            A list of the weight of all the herbivores on the island.
+        carni_weight: list
+            A list of the weight of all the carnivores on the island.
+
+        Returns
+        -------
+
+        """
         self._hist1_ax.hist(herbi_fitness, self._hist1_bins, color='b', histtype='step')
         self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step')
         self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step')
@@ -243,6 +284,9 @@ class Graphics:
         self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step')
 
     def _update_headers(self):
+        """
+        Updates the headers the histograms.
+        """
         self._hist1_ax.cla()
         self._hist2_ax.cla()
         self._hist3_ax.cla()
@@ -250,25 +294,54 @@ class Graphics:
         self._hist2_ax.set_title('Age')
         self._hist3_ax.set_title('Weight')
 
-    def update(self, step, herbivores_arr=None, carnivores_arr=None, n_herbivores=None, n_carnivores=None,
+    def update(self, year, herbivores_arr=None, carnivores_arr=None, n_herbivores=None, n_carnivores=None,
                herbi_fitness=None, carni_fitness=None, herbi_age=None, carni_age=None, herbi_weight=None,
                carni_weight=None):
         """
         Updates graphics with current data and save to file if necessary.
 
-        :param step: current time step
+        Parameters
+        ----------
+        year: int
+            The year which the incoming values are coming from.
+        herbivores_arr: numpy array
+            A 2D numpy array in which its indices [row, column], which is mapped after the geography of the map and is
+            analogous to the coordinates of the map, contains the specific amount herbivores in the coordinate.
+        carnivores_arr: numpy array
+            A 2D numpy array in which its indices [row, column], which is mapped after the geography of the map and is
+            analogous to the coordinates of the map, contains the specific amount herbivores in the coordinate.
+        n_herbivores: int
+            Total herbivores on the island
+        n_carnivores: int
+            Total carnivores on the island
+        herbi_fitness: list
+            A list of the fitness of all the herbivores on the island.
+        carni_fitness: list
+            A list of the fitness of all the carnivores on the island.
+        herbi_age: list
+            A list of the age of all the herbivores on the island.
+        carni_age: list
+            A list of the age of all the carnivores on the island.
+        herbi_weight: list
+            A list of the weight of all the herbivores on the island.
+        carni_weight: list
+            A list of the weight of all the carnivores on the island.
+
+        Returns
+        -------
+
         """
         self._update_headers()
         template = 'Count: {:5d}'
-        self.txt.set_text(template.format(step))
+        self.txt.set_text(template.format(year))
         self._update_system_map(herbivores_arr, carnivores_arr)
-        self.update_line_graph(step, n_herbivores, n_carnivores)
+        self.update_line_graph(year, n_herbivores, n_carnivores)
         self._update_histograms(herbi_fitness, carni_fitness, herbi_age, carni_age,
                                 herbi_weight, carni_weight)
 
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
-        self._save_graphics(step)
+        self._save_graphics(year)
 
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""
