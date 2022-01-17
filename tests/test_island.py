@@ -128,6 +128,14 @@ def test_map_boundaries_top_bottom(landscapes):
     with pytest.raises(ValueError):
         island = Island(map)
 
+@pytest.mark.parametrize('landscapes', ['D', 'R', 'H'])
+def test_map_boundaries_sides(landscapes):
+    map = f'WWW\nWD{landscapes}\nWWW'
+    with pytest.raises(ValueError):
+        island = Island(map)
+
+
+
 
 
 
