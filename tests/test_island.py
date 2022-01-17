@@ -52,7 +52,6 @@ class Test_island_cycle_and_creation:
         """
         self.island = Island(Island2)
         self.island.assign()
-        self.island.assign_animals(ini_herbs)
 
     def test_island_cycle_call(self, mocker):
 
@@ -68,7 +67,7 @@ class Test_island_cycle_and_creation:
         Test if assign animals have been assigned to their respective cell and correct
         amount is assigned
         """
-
+        self.island.assign_animals(ini_herbs)
         assert len(self.island.cells[loc].herbivores) == amount_herbivores
 
     def test_assign(self):
@@ -83,14 +82,15 @@ class Test_island_cycle_and_creation:
         """
 
         """
-
+        self.island.assign_animals(ini_herbs)
         dict_animals = self.island.get_animals_per_species()
         assert dict_animals['Herbivore'] == amount_herbivores
 
     def test_get_coord_animals(self):
 
+        self.island.assign_animals(ini_herbs)
         coord_animals = self.island.get_coord_animals()
-        assert coord_animals[(loc)]['Herbivores'] == amount_herbivores
+        assert coord_animals[(2,2)]['Herbivores'] == amount_herbivores
 
 
 def test_get_neighbours():
@@ -100,12 +100,13 @@ def test_get_neighbours():
     """
     assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
 
-def test_assign_animals_to_invalid_cell():
+@pytest.mark.parametrize('Invalid_cells', [(-3, 1), (1,1)])
+def test_assign_animals_to_invalid_cell(Invalid_cells):
     map = 'WWW\nWLW\nWWW'
     island = Island(map)
     island.assign()
     with pytest.raises(ValueError):
-        island.assign_animals([{'loc': (1, 1),
+        island.assign_animals([{'loc': Invalid_cells,
                                 'pop': [{'species': 'Herbivore',
                                          'age': 5,
                                          'weight': 20}
