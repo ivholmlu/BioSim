@@ -126,7 +126,6 @@ class BioSim:
         except ZeroDivisionError:
             pass
 
-        # for year in range(self.years, self.final_year):
         while self.years < self.final_year:
             self.island.cycle()
             histogram_dict = self.get_attributes
