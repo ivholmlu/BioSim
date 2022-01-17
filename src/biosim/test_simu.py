@@ -60,6 +60,7 @@ class BioSim:
         self.img_years = img_years
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
+        self.hist_specs = hist_specs
 
         self.heat_map1 = np.zeros((self.island.rows + 1, self.island.columns + 1))
         self.heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
@@ -115,7 +116,7 @@ class BioSim:
         """
         self.island.assign_animals(self.ini_pop)
         self.final_year = num_years + self.years
-        self._graphics.setup(self.final_year, self.vis_years, y_max=self.ymax_animals, cmax_animals=self.cmax_animals)
+        self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals, self.cmax_animals, self.hist_specs)
 
         if self.img_years is None:
             self.img_years = self.vis_years
