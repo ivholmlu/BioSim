@@ -84,10 +84,7 @@ class Graphics:
         self._hist3_bins = None
         self.txt = None
 
-    def set_bins(self, bins):
-        pass
-
-    def setup(self, final_step, img_step, y_max=None, cmax_animals=None):
+    def setup(self, final_step, img_step, y_max=None, cmax_animals=None, hist_specs=None):
         """
         Prepare graphics.
 
@@ -102,6 +99,11 @@ class Graphics:
 
         if y_max is None:
             y_max = 10**4
+
+        if hist_specs is None:
+            hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
+                          'age': {'max': 60.0, 'delta': 2},
+                          'weight': {'max': 60.0, 'delta': 2}}
 
         self._img_step = img_step
 
@@ -172,17 +174,23 @@ class Graphics:
             self._hist1_ax = self._fig.add_subplot(3, 3, 3)
             self._hist1_ax.set_ylim(0, 2000)
             self._hist1_ax.set_title('Fitness')
-            self._hist1_bins = np.linspace(0, 1, num=20)
+            bins1 = hist_specs['fitness']['max']
+            delta1 = hist_specs['fitness']['delta']
+            self._hist1_bins = np.linspace(0, bins1, num=int(bins1/delta1))
 
         if self._hist2_ax is None:
             self._hist2_ax = self._fig.add_subplot(3, 3, 6)
             self._hist2_ax.set_title('Age')
-            self._hist2_bins = np.linspace(0, 60, num=30)
+            bins2 = hist_specs['age']['max']
+            delta2 = hist_specs['age']['delta']
+            self._hist2_bins = np.linspace(0, bins2, num=int(bins2/delta2))
 
         if self._hist3_ax is None:
             self._hist3_ax = self._fig.add_subplot(3, 3, 9)
             self._hist3_ax.set_title('Weight')
-            self._hist3_bins = np.linspace(0, 60, num=20)
+            bins3 = hist_specs['weight']['max']
+            delta3 = hist_specs['weight']['delta']
+            self._hist3_bins = np.linspace(0, bins3, num=int(bins3/delta3))
 
         # needs updating on subsequent calls to simulate()
         # add 1 so we can show values for time zero and time final_step
@@ -270,7 +278,8 @@ class Graphics:
 
         if self._img_base is None or step % self._img_step != 0:
             return
-
+        fig = plt.gcf()
+        fig.set_size_inches(19.2, 10.8)
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))
