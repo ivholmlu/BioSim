@@ -220,7 +220,7 @@ class TestSetWrongParameters:
         with pytest.raises(ValueError):
             self.animal.set_params({'eta' : 1.1})
 
-    def test_get_values(self):
+    def test_get_params(self):
         """
         Test if param attribute is the same as the one get_params return.
 
