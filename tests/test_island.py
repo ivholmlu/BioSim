@@ -35,25 +35,24 @@ Island2 = """\
            WWWWW"""
 Island2 = textwrap.dedent(Island2)
 
+Island3 = """\
+           WWW
+           WDW
+           WWW"""
+Island3 = textwrap.dedent(Island3)
 
-@pytest.mark.parametrize('herbivores, carnivores',
-                         [([{'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(n)]}],
-                           [{'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 20} for _ in range(m)]}])])
-class TestIslandCycleAndCreation:
+
+
+class Test_island_cycle_and_creation:
 
     @pytest.fixture(autouse=True)
-    def create_island(self, species, amount):
+    def create_island(self):
         """
         Create an island to be used in Test_island_creation Test class
         """
-        self.island = Island('WWWWW\nWDHLW\nWWWWW')
+        self.island = Island(Island2)
         self.island.assign()
-        self.island.assign_animals([{'loc': (2, 2),
-              'pop': [{'species': 'Herbivore',
-                       'age': 5,
-                       'weight': 20}
-                      for _ in range(amount)]}])
-
+        self.island.assign_animals(ini_herbs)
 
     def test_island_cycle_call(self, mocker):
 
@@ -66,13 +65,13 @@ class TestIslandCycleAndCreation:
 
         assert self.island.cycle.call_count == num_years
 
-    def test_assign_animals(self, species, amount):
+    def test_assign_animals(self):
         """
         Test if assign animals have been assigned to their respective cell and correct
         amount is assigned
         """
 
-        assert len(self.island.cells[(2, 2)].species) == amount
+        assert len(self.island.cells[loc].herbivores) == amount_herbivores
 
     def test_assign(self):
         """
