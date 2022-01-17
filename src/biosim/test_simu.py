@@ -12,6 +12,7 @@ from biosim.island import Island
 from biosim.Graphics import Graphics
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 
 class BioSim:
@@ -53,6 +54,7 @@ class BioSim:
 
         img_dir and img_base must either be both None or both strings.
         """
+        random.seed(seed)
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
