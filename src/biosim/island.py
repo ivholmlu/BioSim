@@ -24,17 +24,6 @@ class Island():
 
         self.assign()
 
-        # Fiks senere
-        try:
-            if self.geogr[0].count('W') != len(self.geogr[1]) or self.geogr[-1].count('W') != len(self.geogr[1]):
-                raise ValueError('Outer boundaries must be water.')
-        except IndexError:
-            pass
-
-        for current, next in zip(self.geogr, self.geogr[1:]):
-            if len(next) != len(current):
-                raise ValueError('Inconsistent row length. All rows must be of the same length.')
-
     def assign(self):
         """
         Assign each landscape object to each coordinate
@@ -43,6 +32,14 @@ class Island():
         -------
         None
         """
+        for current, next in zip(self.geogr, self.geogr[1:]):
+            if len(next) != len(current):
+                raise ValueError('Inconsistent row length. All rows must be of the same length.')
+
+        for row in self.geogr[1:-1]:
+            if row[0] != 'W' or row[-1] != 'W':
+                raise ValueError('Edges of the island must be water.')
+
         for coord, landscape in zip(self.cells, self.t_geogr):
             if landscape == 'L':
                 self.cells[coord] = Lowland()
@@ -71,8 +68,11 @@ class Island():
         """
         for animals in list_of_animals:
             coord = animals['loc']
-            pop = animals['pop']
-            self.cells[coord].append_population(pop)
+            if self.cells[coord].habitable is True:
+                pop = animals['pop']
+                self.cells[coord].append_population(pop)
+            else:
+                raise ValueError('Animal cannot be inserted into a water cell.')
 
     def cycle(self):
         """
