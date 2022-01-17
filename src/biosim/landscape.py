@@ -13,7 +13,7 @@ class Landscape:
     f_max = 0
     habitable = None
 
-    def replenish(self): #return None blir overfladisK?
+    def replenish(self):
         """
         Refills landscapes fodder to f_max value
         """
