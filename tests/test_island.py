@@ -122,17 +122,29 @@ def test_migration(mocker):
     for cell in neighbour_cells:
         assert island.cells[cell].get_population() > 0
 
-@pytest.mark.parametrize('landscapes', ['D', 'R', 'H'])
-def test_map_boundaries_top_bottom(landscapes):
-    map = f'WWW\nWDW\nWW{landscapes}'
+@pytest.mark.parametrize('landscapes', ['D', 'L', 'H'])
+class TestMap:
+    def test_map_boundaries_top_bottom(self, landscapes):
+        map = f'WWW\nWDW\nWW{landscapes}'
+        with pytest.raises(ValueError):
+            island = Island(map)
+
+    def test_map_boundaries_sides(self, landscapes):
+        map = f'WWW\nWD{landscapes}\nWWW'
+        with pytest.raises(ValueError):
+            island = Island(map)
+
+
+def test_map_unequal_lengths():
+    map = 'WWW\nWDWW\nWWW'
     with pytest.raises(ValueError):
         island = Island(map)
 
-@pytest.mark.parametrize('landscapes', ['D', 'R', 'H'])
-def test_map_boundaries_sides(landscapes):
-    map = f'WWW\nWD{landscapes}\nWWW'
+def test_map_invalid_landscape():
+    map = 'WWW\nWXW\nWWW'
     with pytest.raises(ValueError):
         island = Island(map)
+
 
 
 
