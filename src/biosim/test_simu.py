@@ -162,6 +162,10 @@ class BioSim:
         """
         self.island.assign_animals(population)
 
+    def make_movie(self, img_fmt=None):
+        """Create MPEG4 movie from visualization images saved."""
+        self._graphics.make_movie(img_fmt)
+
     @property
     def year(self):
         return self.years
@@ -196,8 +200,4 @@ class BioSim:
     @staticmethod
     def coord_animals(self):
         return self.island.get_coord_animals()
-
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        pass
 
