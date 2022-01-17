@@ -107,44 +107,43 @@ class BioSim:
 
         :param num_years: number of years to simulate
         """
-        if self.img_years is None:
-            self.img_years = self.vis_years
-
-        if self.img_years % self.vis_years != 0:
-            raise ValueError('img_years ust be multiple of vis_steps')
-
         self.island.assign_animals(self.ini_pop)
         self._graphics.setup(num_years, self.vis_years)
 
+        if self.img_years is None:
+            self.img_years = self.vis_years
+
+        try:
+            if self.img_years % self.vis_years != 0:
+                raise ValueError('img_years ust be multiple of vis_steps')
+        except ZeroDivisionError:
+            pass
+
         for year in range(0, num_years):
             self.island.cycle()
+            histogram_dict = self.get_attributes
+            total_herbivores = len(histogram_dict['Herbivores']['fitness'])
+            total_carnivores = len(histogram_dict['Carnivores']['fitness'])
+            self._graphics.update(year, n_herbivores=total_herbivores, n_carnivores=total_carnivores)
 
-            try:
-                if year % self.vis_years == 0:
-                    histogram_dict = self.get_attributes
-                    total_herbivores = len(histogram_dict['Herbivores']['age'])
-                    total_carnivores = len(histogram_dict['Carnivores']['age'])
-                    animal_coords = self.island.get_coord_animals()
+            if self.vis_years != 0 and year % self.vis_years == 0:
+                animal_coords = self.island.get_coord_animals()
+                for coord, n_animals in animal_coords.items():
+                    x = list(coord)[0]
+                    y = list(coord)[1]
+                    self.heat_map1[x, y] = n_animals['Herbivores']
+                    self.heat_map2[x, y] = n_animals['Carnivores']
 
-                    for coord, n_animals in animal_coords.items():
-                        x = list(coord)[0]
-                        y = list(coord)[1]
-                        self.heat_map1[x, y] = n_animals['Herbivores']
-                        self.heat_map2[x, y] = n_animals['Carnivores']
-
-                    self._graphics.update(year, self.heat_map1, self.heat_map2, total_herbivores,
-                                          total_carnivores,
-                                          histogram_dict['Herbivores']['fitness'],
-                                          histogram_dict['Carnivores']['fitness'],
-                                          histogram_dict['Herbivores']['age'],
-                                          histogram_dict['Carnivores']['age'],
-                                          histogram_dict['Herbivores']['weight'],
-                                          histogram_dict['Carnivores']['weight'])
-                    plt.pause(0.001)
-
-            except ZeroDivisionError:
+                self._graphics.update(year, self.heat_map1, self.heat_map2, total_herbivores, total_carnivores,
+                                      histogram_dict['Herbivores']['fitness'],
+                                      histogram_dict['Carnivores']['fitness'],
+                                      histogram_dict['Herbivores']['age'],
+                                      histogram_dict['Carnivores']['age'],
+                                      histogram_dict['Herbivores']['weight'],
+                                      histogram_dict['Carnivores']['weight'])
+                plt.pause(0.001)
+            elif self.vis_years == 0:
                 plt.close()
-
 
     def add_population(self, population):
         """
