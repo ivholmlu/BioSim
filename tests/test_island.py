@@ -57,8 +57,6 @@ class Test_island_cycle_and_creation:
     def test_island_cycle_call(self, mocker):
 
         num_years = 10
-
-
         mocker.spy(self.island, "cycle")
         for _ in range(num_years):
             self.island.cycle()
@@ -101,6 +99,16 @@ def test_get_neighbours():
     specific cells neighbour
     """
     assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
+
+def test_assign_animals_to_water():
+    map = 'WWW\nWLW\nWWW'
+    island = Island(map)
+    with pytest.raises(ValueError)
+        island.assign_animals([{'loc': (1, 1),
+                                'pop': [{'species': 'Herbivore',
+                                         'age': 5,
+                                         'weight': 20}
+                                        for _ in range(1000)]}])
 
 def test_no_migration_to_water():
     map = 'WWW\nWLW\nWWW'
