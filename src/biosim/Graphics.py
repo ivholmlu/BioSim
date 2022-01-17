@@ -179,14 +179,24 @@ class Graphics:
 
         # needs updating on subsequent calls to simulate()
         # add 1 so we can show values for time zero and time final_step
-        self._line_ax.set_xlim(0, final_step + 1)
-        self._line_ax.set_xlim(0, final_step + 1)
+        self._line_ax.set_xlim(0, final_step+1)
+        self._line_ax.set_xlim(0, final_step+1)
 
         if self._line1 is None and self._line2 is None:
             self._line1 = self._line_ax.plot(np.arange(final_step),
                                              np.full(final_step, np.nan), 'b-')[0]
             self._line2 = self._line_ax.plot(np.arange(final_step),
                                              np.full(final_step, np.nan), 'r-')[0]
+        else:
+            x_data1, y_data1 = self._line1.get_data()
+            x_data2, y_data2 = self._line2.get_data()
+            x_new = np.arange(x_data1[-1] + 1, final_step + 1)
+            if len(x_new) > 0:
+                y_new = np.full(x_new.shape, np.nan)
+                self._line1.set_data(np.hstack((x_data1, x_new)),
+                                     np.hstack((y_data1, y_new)))
+                self._line2.set_data(np.hstack((x_data2, x_new)),
+                                     np.hstack((y_data2, y_new)))
 
     def _update_system_map(self, herbivores_arr, carnivores_arr):
         """Update the 2D-view of the system.
