@@ -12,7 +12,7 @@ class Island():
             list of strings containing L, W, D, H to specify each cell values
             Each row are seperated by \n
 
-        t_geogr
+        t_geogr :
 
         """
         self.geogr = geogr.splitlines()
@@ -32,11 +32,14 @@ class Island():
         -------
         None
         """
-        for current, next in zip(self.geogr, self.geogr[1:]):
-            if len(next) != len(current):
+        for current_row, next_row in zip(self.geogr, self.geogr[1:]):
+            if len(next_row) != len(current_row):
                 raise ValueError('Inconsistent row length. All rows must be of the same length.')
 
         for row in self.geogr[1:-1]:
+            if self.geogr[0].count('W') != len(self.geogr[0]) or self.geogr[-1].count('W') != len(self.geogr[-1]):
+                raise ValueError('Edges of the island must be water.')
+
             if row[0] != 'W' or row[-1] != 'W':
                 raise ValueError('Edges of the island must be water.')
 
@@ -50,7 +53,7 @@ class Island():
             elif landscape == 'W':
                 self.cells[coord] = Water()
             else:
-                raise ValueError(f'"{landscape}" is an invalid landscape type')
+                raise ValueError(f'"{landscape}" is an invalid landscape type.')
         #self.cells = {coord: landscape for coord, landscape in self.cells.items() if landscape != 'W'}
 
 
@@ -68,10 +71,13 @@ class Island():
         """
         for animals in list_of_animals:
             coord = animals['loc']
+            if coord not in self.cells.keys():
+                raise ValueError('Inserted coordinate does not exist on the map.')
+
             if self.cells[coord].habitable is True:
                 pop = animals['pop']
                 self.cells[coord].append_population(pop)
-            else:
+            elif type(self.cells[coord]) == type(Water):
                 raise ValueError('Animal cannot be inserted into a water cell.')
 
     def cycle(self):
@@ -89,10 +95,6 @@ class Island():
                 self.cells[coord].sort_fitness()
                 self.cells[coord].feed()
                 self.cells[coord].procreate()
-
-                # coord_now = list(coord)
-                # neighbour_cell = [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),
-                #                   (coord_now[0] - 1, coord_now[1]), (coord_now[0], coord_now[1] - 1)]
 
                 neighbour_cell = self.get_neighbours(coord)
                 emigrants = self.cells[coord].emigrants()

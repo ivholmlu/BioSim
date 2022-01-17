@@ -46,7 +46,7 @@ class TestPopulation:
         self.lowland.append_population(self.carnivores[0]['pop'])
 
     @pytest.fixture
-    def reset_animal_params(self):
+    def set_animal_params(self):
         yield
 
         Carnivores.set_params(Carnivores.param)
@@ -68,7 +68,7 @@ class TestPopulation:
 
         assert all(np.array(herb_fitness) > 0) and all(np.array(carn_fitness) > 0)
 
-    def test_animal_extinction(self, mocker, create_animals, insert_animals, reset_animal_params):
+    def test_animal_extinction(self, mocker, create_animals, insert_animals):
         """
         Tests the certainty of death of every animal in the land by setting a fixed probability.
         """
@@ -121,5 +121,14 @@ class TestPopulation:
         tot_carnivores1 = len(self.lowland.carnivores)
 
         assert tot_herbivores1 > tot_herbivores0 and tot_carnivores1 > tot_carnivores0
+
+    @pytest.mark.parametrize('set_params', [{'f_max': 450, 'xi': 1.9, 'gamma': 0.3, 'omega': 0.75}])
+    def test_set_parameters(self, set_params):
+        lowland = Lowland()
+        highland = Highland()
+        desert = Desert()
+        water = Water()
+
+
 
 
