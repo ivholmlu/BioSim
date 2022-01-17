@@ -1,6 +1,6 @@
-import numpy as np
 from .landscape import Lowland, Highland, Desert, Water
 import random
+
 
 class Island():
     def __init__(self, geogr=None):
