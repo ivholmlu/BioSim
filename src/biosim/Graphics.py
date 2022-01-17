@@ -228,13 +228,18 @@ class Graphics:
         self._hist3_ax.set_title('Weight')
 
 
-    def update(self, step, herbivores_arr, carnivores_arr, n_herbivores, n_carnivores,
-               herbi_fitness, carni_fitness, herbi_age, carni_age,herbi_weight, carni_weight):
+    def update(self, step, herbivores_arr=None, carnivores_arr=None, n_herbivores=None, n_carnivores=None,
+               herbi_fitness=None, carni_fitness=None, herbi_age=None, carni_age=None, herbi_weight=None,
+               carni_weight=None):
         """
         Updates graphics with current data and save to file if necessary.
 
         :param step: current time step
         """
+
+        if n_herbivores and n_carnivores is not None:
+            self._update_line_graph(step, n_herbivores, n_carnivores)
+
         self._update_headers()
         template = 'Count: {:5d}'
         self.txt.set_text(template.format(step))
