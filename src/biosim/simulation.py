@@ -13,6 +13,7 @@ from biosim.Graphics import Graphics
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+import csv
 
 
 class BioSim:
@@ -71,6 +72,10 @@ class BioSim:
                                   self.heat_map1, self.heat_map2)
         self.years = 0
         self.final_year = None
+        self.log = []
+
+        if log_file is not None:
+            log_file_name = log_file
 
     def set_animal_parameters(self, species, params):
         """
@@ -152,6 +157,9 @@ class BioSim:
 
             self.years += 1
 
+            if log_file is not None:
+                self.log.append([self.years, total_herbivores, total_carnivores])
+
     def add_population(self, population):
         """
         Add a population to the island
@@ -185,4 +193,12 @@ class BioSim:
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
         return self.island.get_animals_per_species()
+
+    @property
+    def log_data(self):
+        header = ['year', 'herbivore', 'carnivore']
+        with open(log_file_name, 'w', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
+            writer.writerows(self.log)
 
