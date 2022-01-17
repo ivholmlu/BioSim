@@ -106,7 +106,7 @@ class BioSim:
         """
         self.island.assign()
         self.island.assign_animals(self.ini_pop)
-        self._graphics.setup(300, 300)
+        self._graphics.setup(num_years, 1)
 
         for year in range(0, num_years):
             self.island.cycle()
