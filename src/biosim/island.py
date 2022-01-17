@@ -11,6 +11,9 @@ class Island():
         geogr : list
             list of strings containing L, W, D, H to specify each cell values
             Each row are seperated by \n
+
+        t_geogr
+
         """
         self.geogr = geogr.splitlines()
         self.t_geogr = geogr.replace('\n', '')
@@ -18,6 +21,7 @@ class Island():
         self.columns = len(self.geogr[0])
         self.cells = {(row, column): None for row in range(1, self.rows + 1)
                       for column in range(1, self.columns + 1)}
+        #Fjerne alle celler som er W ? Burde optimisere litt
 
     def assign(self):
         """
@@ -36,6 +40,8 @@ class Island():
                 self.cells[coord] = Desert()
             else:
                 self.cells[coord] = Water()
+        #self.cells = {coord: landscape for coord, landscape in self.cells.items() if landscape != 'W'}
+
 
     def assign_animals(self, list_of_animals=None):
         """
