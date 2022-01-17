@@ -13,7 +13,9 @@ ALPHA = 0.001
                                              {'age': 22, 'weight': 33},
                                              {'age': 3, 'weight': 8}])
 class TestCreationAndFunc:
-
+    """
+    Test class to test creation and functions from biosim.animals
+    """
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_eq_age_creation(self, test_animal, species):
         """
@@ -127,7 +129,6 @@ class TestCreationAndFunc:
         """
         obj1 = species(test_animal)
 
-        #Seed øverst i syntaksen
         num = 3
         N = 10
         obj1.fitness = 1
@@ -139,18 +140,17 @@ class TestCreationAndFunc:
             obj1.birth(N)
             weight = obj1.baby['weight']
             Z = (weight - mean) / math.sqrt(std)
-            Z_value_prob = 2* stats.norm.cdf((-abs(Z))) #Tosidig test
+            Z_value_prob = 2* stats.norm.cdf((-abs(Z)))
             assert Z_value_prob > ALPHA
 
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_parent_weight(self, species, test_animal, mocker):
         """
-        Test to ensure that parents weight are regained parents weight are to low
+        Test to ensure that parents weight are regained parents weight are too low
         to give birth
         Using mock to ensure a very unlikely baby weight to happen
         """
-
         parent = species(test_animal)
         parent.weight = 34
         initial_weight = parent.weight
@@ -170,24 +170,32 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
     Tests if the fitness_flux function calculates right values.
     40 and 10 are the 'a_half' and 'w_half' parameters. If inserted for herbivores
     they will return 0.250
-    The others are values calculated by Ivar using CAS from Geogebra and the formula
+    The others are values calculated by Ivar using CAS from Geogebra and the formula given in the task
     """
     herb = Herbivores(weigth_age_parameters)
     herb.fitness_flux()
     assert herb.fitness == pytest.approx(expected_fitness)
 
 
-class TestSetWrongParameters(unittest.TestCase):
+@pytest.mark.parametrize('species', [Herbivores, Carnivores])
+class TestSetWrongParameters:
+    """
+    Class to test for parameters in animal class
+    """
+    @pytest.fixture(autouse=True)
+    def create_animal(self, species):
+        self.animal = species()
+
 
     def test_invalid_key(self):
-        Herbi = Herbivores()
-        with self.assertRaises(KeyError):
-            Herbi.set_params({'not_a_key' : 0})
+
+        with pytest.raises(ValueError):
+            self.animal.set_params({'not a key' : 0})
 
     def test_ValueError_keys(self):
         Carni = Carnivores()
         with self.assertRaises(ValueError):
-            Carni.set_params({'w_half' : -3})
+            Carni.set_params({'w_half' : 3})
 
     def test_special_values_DeltaPhiMax(self):
         Carni = Carnivores()
@@ -197,7 +205,7 @@ class TestSetWrongParameters(unittest.TestCase):
     def test_special_values_eta(self):
         Herbi = Herbivores()
         with self.assertRaises(ValueError):
-            Herbi.set_params({'eta' : 2})
+            Herbi.set_params({'eta' : 1.1})
 
 def test_get_values():
     Herb = Herbivores()
