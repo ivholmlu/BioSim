@@ -36,7 +36,7 @@ island_map = textwrap.dedent(geogr)
 a = Island(island_map)
 
 ini_herbs = [{'loc': (2, 7),
-              'pop': [{'species': 'g',
+              'pop': [{'species': 'Herbivore',
                        'age': 5,
                        'weight': 20}
                       for _ in range(200)]}]
