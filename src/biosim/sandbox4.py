@@ -4,9 +4,6 @@ from biosim.island import Island
 import textwrap
 import random
 import matplotlib.pyplot as plt
-
-random.seed(15838511)
-
 geogr = """\
            WWWWWWWWWWWWWWWWWWWWW
            WHHHHHLLLLWWLLLLLLLWW
@@ -47,7 +44,7 @@ ini_carns = [{'loc': (2, 7),
                        'weight': 20}
                       for _ in range(50)]}]
 
-sim = BioSim(island_map, ini_herbs+ini_carns, seed=1336163161, vis_years=10, img_dir='.\movie')
+sim = BioSim(island_map, ini_herbs + ini_carns, seed=15838511, vis_years=40)
 sim.simulate(201)
 #sim.make_movie('mp4')
 # sim.add_population(ini_carns)
