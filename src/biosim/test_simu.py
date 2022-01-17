@@ -64,6 +64,9 @@ class BioSim:
 
         self._graphics = Graphics(img_dir, img_base, img_fmt, self.island_map,
                                   self.heat_map1, self.heat_map2)
+        self.years = 0
+        self.final_year = None
+
 
     def set_animal_parameters(self, species, params):
         """
@@ -108,7 +111,8 @@ class BioSim:
         :param num_years: number of years to simulate
         """
         self.island.assign_animals(self.ini_pop)
-        self._graphics.setup(num_years, self.vis_years)
+        self.final_year = num_years + self.years
+        self._graphics.setup(self.final_year, self.vis_years)
 
         if self.img_years is None:
             self.img_years = self.vis_years
@@ -119,14 +123,15 @@ class BioSim:
         except ZeroDivisionError:
             pass
 
-        for year in range(0, num_years):
+        # for year in range(self.years, self.final_year):
+        while self.years < self.final_year:
             self.island.cycle()
             histogram_dict = self.get_attributes
             total_herbivores = len(histogram_dict['Herbivores']['fitness'])
             total_carnivores = len(histogram_dict['Carnivores']['fitness'])
-            self._graphics.update_line_graph(year, total_herbivores, total_carnivores)
+            self._graphics.update_line_graph(self.years, total_herbivores, total_carnivores)
 
-            if self.vis_years != 0 and year % self.vis_years == 0:
+            if self.vis_years != 0 and self.years % self.vis_years == 0:
                 animal_coords = self.island.get_coord_animals()
                 for coord, n_animals in animal_coords.items():
                     x = list(coord)[0]
@@ -134,7 +139,7 @@ class BioSim:
                     self.heat_map1[x, y] = n_animals['Herbivores']
                     self.heat_map2[x, y] = n_animals['Carnivores']
 
-                self._graphics.update(year, self.heat_map1, self.heat_map2, total_herbivores, total_carnivores,
+                self._graphics.update(self.years, self.heat_map1, self.heat_map2, total_herbivores, total_carnivores,
                                       histogram_dict['Herbivores']['fitness'],
                                       histogram_dict['Carnivores']['fitness'],
                                       histogram_dict['Herbivores']['age'],
@@ -145,6 +150,8 @@ class BioSim:
             elif self.vis_years == 0:
                 plt.close()
 
+            self.years += 1
+
     def add_population(self, population):
         """
         Add a population to the island
@@ -154,7 +161,7 @@ class BioSim:
 
     @property
     def year(self):
-        """Last year simulated."""
+        return self.years
 
     @property
     def get_attributes(self):
@@ -190,3 +197,4 @@ class BioSim:
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
         pass
+
