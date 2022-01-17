@@ -202,7 +202,7 @@ class Graphics:
             self._img_axis2 = self._heat2_ax.imshow(self._heat2_map, interpolation='nearest',
                                                     vmin=0, vmax=50, cmap='plasma')
 
-    def _update_line_graph(self, year, total_herbivores, total_carnivores):
+    def update_line_graph(self, year, total_herbivores, total_carnivores):
         ydata_line1 = self._line1.get_ydata()
         ydata_line2 = self._line2.get_ydata()
         ydata_line1[year] = total_herbivores
@@ -236,15 +236,11 @@ class Graphics:
 
         :param step: current time step
         """
-
-        if n_herbivores and n_carnivores is not None:
-            self._update_line_graph(step, n_herbivores, n_carnivores)
-
         self._update_headers()
         template = 'Count: {:5d}'
         self.txt.set_text(template.format(step))
         self._update_system_map(herbivores_arr, carnivores_arr)
-        self._update_line_graph(step, n_herbivores, n_carnivores)
+        self.update_line_graph(step, n_herbivores, n_carnivores)
         self._update_histograms(herbi_fitness, carni_fitness, herbi_age, carni_age,
                                 herbi_weight, carni_weight)
 
