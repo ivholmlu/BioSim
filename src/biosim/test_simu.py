@@ -58,6 +58,8 @@ class BioSim:
         self.island = Island(island_map)
         self.vis_years = vis_years
         self.img_years = img_years
+        self.ymax_animals = ymax_animals
+        self.cmax_animals = cmax_animals
 
         self.heat_map1 = np.zeros((self.island.rows + 1, self.island.columns + 1))
         self.heat_map2 = np.zeros((self.island.rows + 1, self.island.columns + 1))
@@ -66,6 +68,7 @@ class BioSim:
                                   self.heat_map1, self.heat_map2)
         self.years = 0
         self.final_year = None
+
 
 
     def set_animal_parameters(self, species, params):
@@ -112,7 +115,7 @@ class BioSim:
         """
         self.island.assign_animals(self.ini_pop)
         self.final_year = num_years + self.years
-        self._graphics.setup(self.final_year, self.vis_years)
+        self._graphics.setup(self.final_year, self.vis_years, y_max=self.ymax_animals, cmax_animals=self.cmax_animals)
 
         if self.img_years is None:
             self.img_years = self.vis_years
