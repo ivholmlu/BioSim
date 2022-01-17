@@ -42,7 +42,8 @@ Island3 = """\
 Island3 = textwrap.dedent(Island3)
 
 
-class Test_island_creation:
+
+class Test_island_cycle_and_creation:
 
     @pytest.fixture(autouse=True)
     def create_island(self):
@@ -104,7 +105,8 @@ def test_get_neighbours():
 
 def test_migration(mocker):
     """
-    Test if all neighbour cell are migrated to after one cycle.
+    Test if all neighbour cell are migrated to after one cycle. Placing many animals to ensure
+    migration
     """
     island = Island(Island1)
     island.assign()
@@ -119,5 +121,14 @@ def test_migration(mocker):
     neighbour_cells = island.get_neighbours((3, 3))
     for cell in neighbour_cells:
         assert island.cells[cell].get_population() > 0
+
+@pytest.mark.parametrize('landscapes', ['D', 'R', 'H'])
+def test_map_boundaries_top_bottom(landscapes):
+    map = f'WWW\nWDW\nWW{landscapes}'
+    with pytest.raises(ValueError):
+        island = Island(map)
+
+
+
 
 
