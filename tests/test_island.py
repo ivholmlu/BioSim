@@ -100,10 +100,11 @@ def test_get_neighbours():
     """
     assert Island.get_neighbours((2, 2)) == [(3, 2), (2, 3), (1, 2), (2, 1)]
 
-def test_assign_animals_to_water():
+def test_assign_animals_to_invalid_cell():
     map = 'WWW\nWLW\nWWW'
     island = Island(map)
-    with pytest.raises(ValueError)
+    island.assign()
+    with pytest.raises(ValueError):
         island.assign_animals([{'loc': (1, 1),
                                 'pop': [{'species': 'Herbivore',
                                          'age': 5,
