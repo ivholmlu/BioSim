@@ -72,8 +72,6 @@ class BioSim:
         self.years = 0
         self.final_year = None
 
-
-
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -86,9 +84,7 @@ class BioSim:
         elif species == 'Carnivore':
             Carnivores.set_params(params)
         else:
-            raise ValueError('The island only has two species: '
-                  'Herbivores and Carnivores')
-
+            raise ValueError('The island only has two species: Herbivores and Carnivores')
 
     def set_landscape_parameters(self, landscape, params):
         """
@@ -106,9 +102,7 @@ class BioSim:
         elif landscape == 'H':
             Highland.set_params(params)
         else:
-            raise ValueError('Code letter for landscape must be\n'
-                  'either W, D, L or H')
-
+            raise ValueError('Code letter for landscape must be one of the following: W, D, L or H.')
 
     def simulate(self, num_years):
         """
@@ -169,6 +163,16 @@ class BioSim:
         """Create MPEG4 movie from visualization images saved."""
         self._graphics.make_movie(img_fmt)
 
+    @staticmethod
+    def num_animals(self):
+        """Total number of animals on island."""
+        ani_dict = self.island.get_animals_per_species()
+        return ani_dict['Herbivore'] + ani_dict['Carnivore']
+
+    @staticmethod
+    def coord_animals(self):
+        return self.island.get_coord_animals()
+
     @property
     def year(self):
         return self.years
@@ -178,29 +182,7 @@ class BioSim:
         return self.island.get_attributes()
 
     @property
-    def get_animals_fitness(self):
-        return self.island.get_fitness()
-
-    @property
-    def get_animals_age(self):
-        return self.island.get_age()
-
-    @property
-    def get_animals_weight(self):
-        return self.island.get_weight()
-
-    @property
-    def num_animals(self):
-        """Total number of animals on island."""
-        ani_dict = self.island.get_animals_per_species()
-        return ani_dict['Herbivore'] + ani_dict['Carnivore']
-
-    @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
         return self.island.get_animals_per_species()
-
-    @staticmethod
-    def coord_animals(self):
-        return self.island.get_coord_animals()
 
