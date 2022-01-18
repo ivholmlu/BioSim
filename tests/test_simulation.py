@@ -38,7 +38,7 @@ def test_simulation():
 @pytest.mark.parametrize('landscape, f_max',[('H', {'f_max': 100}), ('L', {'f_max': 300}), ('D', {'f_max': 40})])
 def test_set_param_f_max(landscape, f_max):
     """
-    Test to check that set parameters work for existing landscapes and
+    Test to check that set parameters work for all existing landscapes and that
     non existing landscapes return ValueError
     """
     sim = BioSim(geogr, ini_herbs + ini_carns)
