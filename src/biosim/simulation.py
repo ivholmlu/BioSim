@@ -183,14 +183,17 @@ class BioSim:
 
     @staticmethod
     def coord_animals(self):
+        """Return the amount of each species in each landscape object on island"""
         return self.island.get_coord_animals()
 
     @property
     def year(self):
+        """Return the current year in simulation"""
         return self.years
 
     @property
     def get_attributes(self):
+        """Return the attributes of all the animals"""
         return self.island.get_attributes()
 
     @property
