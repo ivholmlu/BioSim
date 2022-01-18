@@ -89,7 +89,7 @@ class BioSim:
                                     'weight': 20} for _ in range(200)]}]
             initial_carnivores = [{'loc': (2, 7), 'pop': [{'species': 'Carnivore', 'age': 7,
                                     'weight': 35} for _ in range(50)]}]
-            sim = BioSim(island_map, initial_herbivores +  initial_carnivores)
+            sim = BioSim(island_map, initial_herbivores + initial_carnivores)
 
         If ymax_animals is None, the y-axis limit should be adjusted automatically.
         If cmax_animals is None, sensible, fixed default values should be used.
