@@ -55,33 +55,29 @@ class BioSim:
         :param log_file: If given, write animal counts to this file
 
         island_map should be written like the following by using textwrap.dedent to achieve
-        the correct string format.
+        the correct string format which the code can read. ::
 
-        ..
             island_map = '''\
                             WWW
                             WLW
                             WWW'''
             island_map = textwrap.dedent(island_map)
 
-
         ini_pop must be provided as a list with the following:
         #. a list containing a dictionary with keys 'loc' and 'pop'
         #. the value of 'pop' must contain a list of dictionaries
             #. with a key 'species' with a string value of either 'Herbivore' or 'Carnivore',
             #. a key with string 'age' with a integer value, and
-            #. a key with string 'weight' with an integer/float value.
+            #. a key with string 'weight' with an integer/float value. ::
 
-        ..
             initial_population = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
                                     'weight': 20} for _ in range(200)]}]
 
         Optionally you can make a list comprehension as in the example above and create multiple
         copies with the same attributes, or write a list where the attributes varies.
 
-        ini_pop also supports combining two lists of the same format as shown above, i.e:
+        ini_pop also supports combining two lists of the same format as shown above, i.e: ::
 
-        ..
             initial_herbivores = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
                                     'weight': 20} for _ in range(200)]}]
             initial_carnivores = [{'loc': (2, 7), 'pop': [{'species': 'Carnivore', 'age': 7,
@@ -182,9 +178,8 @@ class BioSim:
 
         :param num_years: number of years to simulate
 
-        If the method is called multiple times after creating the :class:`BioSim` object , i.e.
+        If the method is called multiple times after creating the :class:`BioSim` object , i.e. ::
 
-        ..
             sim = BioSim(island_map, initial_population)
             sim.simulate(30)
             sim.simulate(50)
