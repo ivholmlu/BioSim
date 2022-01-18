@@ -9,7 +9,7 @@ Template for BioSim class.
 from biosim.animals import Carnivores, Herbivores
 from biosim.landscape import Lowland, Highland, Desert, Water
 from biosim.island import Island
-from biosim.Graphics import Graphics
+from biosim.graphics import Graphics
 import matplotlib.pyplot as plt
 import numpy as np
 import random
