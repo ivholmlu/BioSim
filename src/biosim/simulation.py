@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import csv
+import os
 
 
 class BioSim:
@@ -72,8 +73,8 @@ class BioSim:
                                   self.heat_map1, self.heat_map2)
         self.years = 0
         self.final_year = None
-        self.log = []
-        self.log_file = log_file
+        self.log_data = []
+        self.log_filename = log_file
 
 
     def set_animal_parameters(self, species, params):
@@ -81,7 +82,7 @@ class BioSim:
         Set parameters for animal species.
 
         :param species: String, name of animal species
-        :param params: Dict with valid parameter specification for species
+        :param params: Dictionary with valid parameter specification for species
         """
         if species == 'Herbivore':
             Herbivores.set_params(params)
@@ -132,7 +133,12 @@ class BioSim:
             histogram_dict = self.get_attributes
             total_herbivores = len(histogram_dict['Herbivores']['fitness'])
             total_carnivores = len(histogram_dict['Carnivores']['fitness'])
-            self._graphics.update_line_graph(self.years, total_herbivores, total_carnivores)
+
+            if self.vis_years != 0:
+                self._graphics.update_line_graph(self.years, total_herbivores, total_carnivores)
+
+            if self.vis_years == 0:
+                plt.close()
 
             if self.vis_years != 0 and self.years % self.vis_years == 0:
                 animal_coords = self.island.get_coord_animals()
@@ -150,18 +156,11 @@ class BioSim:
                                       histogram_dict['Herbivores']['weight'],
                                       histogram_dict['Carnivores']['weight'])
                 plt.pause(0.001)
-            elif self.vis_years == 0:
-                plt.close()
 
             self.years += 1
 
-            if self.log_file is not None:
-                self.log.append([self.years, total_herbivores, total_carnivores])
-                header = ['year', 'herbivore', 'carnivore']
-                with open(self.log_file, 'w', encoding='UTF8', newline='') as f:
-                    writer = csv.writer(f)
-                    writer.writerow(header)
-                    writer.writerows(self.log)
+            if self.log_filename is not None:
+                self.write_log_data(self.log_filename, self.log_data)
 
     def add_population(self, population):
         """
@@ -198,16 +197,24 @@ class BioSim:
         return self.island.get_animals_per_species()
 
     @staticmethod
-    def log_data():
+    def write_log_data(log_filename, log_data):
         """
+        Writes a .csv file containing the input data.
+
+        Parameters
+        ----------
+        log_filename: str
+            Sets the name for the .csv file
+        log_data: list
+            Takes in a list of nested
 
         Returns
         -------
 
         """
         header = ['year', 'herbivore', 'carnivore']
-        with open(self.log_file, 'w', encoding='UTF8', newline='') as f:
+        with open(log_filename, 'w', encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(header)
-            writer.writerows(self.log)
+            writer.writerows(log_data)
 
