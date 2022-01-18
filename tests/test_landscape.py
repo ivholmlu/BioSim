@@ -9,14 +9,16 @@ import numpy as np
 
 def test_create_landscapes():
     """
-    A test to check if the different landscapes are created, and to ensure the default value of fodder is inherited
-    from the main class, which in this case is 0.
+    A test to check if the different landscapes are created, and to ensure the default value
+    of fodder are inherited from the main class, which in this case is 0.
     """
     lowland = Lowland()
     highland = Highland()
     desert = Desert()
     water = Water()
-    assert lowland.current_fodder == highland.current_fodder == desert.current_fodder == water.current_fodder == 0
+    assert lowland.current_fodder == highland.current_fodder\
+           == desert.current_fodder\
+           == water.current_fodder == 0
 
 
 @pytest.mark.parametrize('f_max, habitable', [[100, True], [23, False], [700, True]])
@@ -53,8 +55,10 @@ m = 20
 
 
 @pytest.mark.parametrize('herbivores, carnivores',
-                         [([{'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(n)]}],
-                           [{'pop': [{'species': 'Carnivore', 'age': 7, 'weight': 22} for _ in range(m)]}])])
+                         [([{'pop': [{'species': 'Herbivore',
+                                      'age': 5, 'weight': 20} for _ in range(n)]}],
+                           [{'pop': [{'species': 'Carnivore',
+                                      'age': 7, 'weight': 22} for _ in range(m)]}])])
 class TestPopulation:
     @pytest.fixture(autouse=True)
     def create_lowland(self):
@@ -106,8 +110,8 @@ class TestPopulation:
 
     def test_feeding(self, create_animals, insert_animals):
         """
-        Tests that fodder available goes down as herbivores starts eating, as well as the total herbivore population
-        decreases due to the carnivores eating.
+        Tests that fodder available goes down as herbivores starts eating, as well as the total
+        herbivore population decreases due to the carnivores eating.
         """
         self.lowland.replenish()
         self.lowland.calculate_fitness()
@@ -125,8 +129,9 @@ class TestPopulation:
 
     def test_age_and_weight_loss(self, create_animals, insert_animals, mocker):
         """
-        Test to check if the amount of calls made to the ages and weight_loss is equal to the amount of animals in
-        the landscape, as well as checking that the age and weight has increased.
+        Test to check if the amount of calls made to the ages and weight_loss is equal to the
+        amount of animals in the landscape,
+        as well as checking that the age and weight has increased.
         """
         mocker.spy(Carnivores, 'ages')
         mocker.spy(Carnivores, 'weight_loss')
@@ -143,7 +148,8 @@ class TestPopulation:
         assert all(np.array(carn_weight_post) < np.array(carn_weight_pre)) and \
                all(np.array(carn_age_post) > np.array(carn_age_pre))
 
-        assert Carnivores.ages.call_count == Carnivores.weight_loss.call_count == len(self.lowland.carnivores)
+        assert Carnivores.ages.call_count == Carnivores.weight_loss.call_count\
+               == len(self.lowland.carnivores)
 
     def test_procreation(self, create_animals, insert_animals, mocker):
         """
@@ -185,10 +191,12 @@ def test_reject_unrecognizable_animal():
 def test_limited_fodder(f_max):
     """
     Test to check if the fodder available is eaten up, which in these cases which is less than F
-    (the desired amount for a herbivore to eat), leaving the next herbivore to eat with no food left.
+    (the desired amount for a herbivore to eat),
+    leaving the next herbivore to eat with no food left.
     """
     test_herbivores = [{'loc': (2, 7),
-                        'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 25} for _ in range(2)]}]
+                        'pop': [{'species': 'Herbivore',
+                                 'age': 6, 'weight': 25} for _ in range(2)]}]
 
     Highland.set_params({'f_max': f_max})
     highland = Highland()
