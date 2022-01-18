@@ -16,16 +16,24 @@ ini_carns = [{'loc': (2, 7),
                       for _ in range(50)]}]
 
 num_years = 10
+seed = 100
 def test_simulation():
     """
-    Test that Biosim runs without problems
-    Runs the simulation for num_years
-    Returns
-    -------
-
+    Test that Biosim runs without problems and runs the simulation for num_years as defined above.
     """
-    sim = BioSim(geogr, ini_herbs + ini_carns, seed=100, vis_years=10)
+    sim = BioSim(geogr, ini_herbs + ini_carns, seed=seed, vis_years=10)
     sim.simulate(num_years)
+
+def test_no_plot_simulation():
+    """
+    Test to check that the plot window does not appear when vis_years is set to 0.
+    """
+    sim = BioSim(geogr, ini_herbs, seed=seed, vis_years=0)
+    sim.simulate(50)
+    sim.add_population(ini_carns)
+    sim.simulate(50)
+
+
 
 
 
