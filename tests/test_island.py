@@ -48,12 +48,15 @@ class Test_island_cycle_and_creation:
     @pytest.fixture(autouse=True)
     def create_island(self):
         """
-        Create an island to be used in Test_island_creation Test class
+        Create an island to be used in Test_island_cycle_and_creation Test class
         """
         self.island = Island(Island2)
         self.island.assign()
 
     def test_island_cycle_call(self, mocker):
+        """
+        Test if aging in island cycle runs for excpected amount of time
+        """
 
         num_years = 10
         mocker.spy(self.island, "cycle")
@@ -80,14 +83,16 @@ class Test_island_cycle_and_creation:
 
     def test_get_animals_per_species(self):
         """
-
+        Test that get_animals_per_species dict has the right amount of herbivores
         """
         self.island.assign_animals(ini_herbs)
         dict_animals = self.island.get_animals_per_species()
         assert dict_animals['Herbivore'] == amount_herbivores
 
     def test_get_coord_animals(self):
+    """
 
+    """
         self.island.assign_animals(ini_herbs)
         coord_animals = self.island.get_coord_animals()
         assert coord_animals[(2,2)]['Herbivores'] == amount_herbivores
