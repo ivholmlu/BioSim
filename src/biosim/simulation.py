@@ -135,7 +135,7 @@ class BioSim:
 
     def set_animal_parameters(self, species, params):
         """
-         Set parameters for animal species.
+        Set parameters for animal species.
 
         Parameters
         ----------
