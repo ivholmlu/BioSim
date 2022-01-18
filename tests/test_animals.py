@@ -1,17 +1,15 @@
-import random
-
 import pytest
 from biosim.animals import Herbivores, Carnivores
 import math
 from scipy import stats
-import unittest
 
 SEED = 41
 ALPHA = 0.001
 
+
 @pytest.mark.parametrize('test_animal', [{'age': 0, 'weight': 5},
-                                             {'age': 22, 'weight': 33},
-                                             {'age': 3, 'weight': 8}])
+                                         {'age': 22, 'weight': 33},
+                                         {'age': 3, 'weight': 8}])
 class TestCreationAndFunc:
     """
     Test class to test creation and functions from biosim.animals
@@ -43,7 +41,6 @@ class TestCreationAndFunc:
             obj2.ages()
         assert obj1.age == obj2.age and (obj1.age and obj2.age) == expected
 
-
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_weight_gain(self, species, test_animal):
         """
@@ -72,6 +69,7 @@ class TestCreationAndFunc:
         Creates a certain death scenario for all N animals. Checks if all objects alive attributes
         have been set to False
         """
+        # noinspection PyPep8Naming
         N = 50
         obj1 = species(test_animal)
         obj1.param['omega'] = 1
@@ -80,8 +78,8 @@ class TestCreationAndFunc:
             obj1.death()
             assert not obj1.alive
 
-    @pytest.mark.parametrize('species', [Herbivores, Carnivores]) # MULIGENS KOMBINERE DENNE OG DEN OVENFOR?
-    def test_zero_weigth_death(self, species, test_animal):
+    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
+    def test_zero_weight_death(self, species, test_animal):
         """
         Test if animals attribute alive attribute is set to zero when weight = 0
         """
@@ -102,7 +100,6 @@ class TestCreationAndFunc:
         has given birth
         """
         obj1 = species(test_animal)
-        obj2 = species(test_animal)
         obj1.fitness = 1
         obj1.weight = 100
         obj1.param['gamma'] = 1
@@ -111,25 +108,14 @@ class TestCreationAndFunc:
         assert obj1.baby['weight'] > 0.0
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
-    def test_migration(self, species, test_animal):
+    def test_birth_distribution(self, species, test_animal):
         """
-        Setting parameters to ensure migration for all cases. Checks if the migration attribute
-        is changed to True.
-        """
-        obj1 = species()
-        obj1.fitness = 1
-        obj1.param['mu'] = 1
-        assert obj1.migration() is True
-
-    @pytest.mark.parametrize('species', [Herbivores, Carnivores])
-    def test_birth_distr(self, species, test_animal):
-        """
-        Test is inspired from Hans Plessers bacteria death distribution test
+        Test is inspired from Hans Plesser bacteria death distribution test
         The test checks if the Z-value from the birth disstribution is lower than the ALPHA value.
         """
         obj1 = species(test_animal)
-
         num = 3
+        # noinspection PyPep8Naming
         N = 10
         obj1.fitness = 1
         obj1.weight = 100
@@ -139,10 +125,10 @@ class TestCreationAndFunc:
         for _ in range(num):
             obj1.birth(N)
             weight = obj1.baby['weight']
+            # noinspection PyPep8Naming
             Z = (weight - mean) / math.sqrt(std)
-            Z_value_prob = 2* stats.norm.cdf((-abs(Z)))
-            assert Z_value_prob > ALPHA
-
+            z_value_prob = 2 * stats.norm.cdf((-abs(Z)))
+            assert z_value_prob > ALPHA
 
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_parent_weight(self, species, test_animal, mocker):
@@ -159,6 +145,18 @@ class TestCreationAndFunc:
         parent.birth()
 
         assert parent.weight == initial_weight
+
+
+@pytest.mark.parametrize('species', [Herbivores, Carnivores])
+def test_migration(species):
+    """
+    Setting parameters to ensure migration for all cases. Checks if the migration attribute
+    is changed to True.
+    """
+    obj1 = species()
+    obj1.fitness = 1
+    obj1.param['mu'] = 1
+    assert obj1.migration() is True
 
 
 @pytest.mark.parametrize('expected_fitness, weigth_age_parameters', [
@@ -189,28 +187,27 @@ class TestSetWrongParameters:
         """
         self.animal = species()
 
-
     def test_invalid_key(self):
         """
         Test if a parameter is not valid
         """
         with pytest.raises(ValueError):
-            self.animal.set_params({'not a key' : 0})
+            self.animal.set_params({'not a key': 0})
 
     @pytest.mark.parametrize('key, neg_value', [('w_half', -1), ('a_half', -1), ('mu', -1)])
-    def test_ValueError_keys(self, key, neg_value):
+    def test_valueerror_keys(self, key, neg_value):
         """
         Test if any keys is negative value
         """
         with pytest.raises(ValueError):
-            self.animal.set_params({key : neg_value})
+            self.animal.set_params({key: neg_value})
 
-    def test_special_values_DeltaPhiMax(self):
+    def test_special_values_deltaphimax(self):
         """
         Test if deltaphimax is set strictly above zero
         """
         with pytest.raises(ValueError):
-            self.animal.set_params({'DeltaPhiMax' : -1})
+            self.animal.set_params({'DeltaPhiMax': -1})
 
     def test_special_values_eta(self):
         """
@@ -218,7 +215,7 @@ class TestSetWrongParameters:
         """
 
         with pytest.raises(ValueError):
-            self.animal.set_params({'eta' : 1.1})
+            self.animal.set_params({'eta': 1.1})
 
     def test_get_params(self):
         """
