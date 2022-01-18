@@ -17,7 +17,7 @@ class Island:
         ----------
         geogr : list
             List of strings containing L, W, D, H to specify each cell values
-            where each row is seperated by a newline (\n)
+            where each row is seperated by a newline
 
 
         """
