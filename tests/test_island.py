@@ -21,12 +21,6 @@ ini_carns = [{'loc': loc,
                        'weight': 20}
                       for _ in range(amount_carnivores)]}]
 
-Island2 = """\
-           WWWWW
-           WDHLW
-           WWWWW"""
-Island2 = textwrap.dedent(Island2)
-
 
 
 class Test_island_cycle_and_creation:
@@ -36,7 +30,7 @@ class Test_island_cycle_and_creation:
         """
         Create an island to be used in Test_island_cycle_and_creation Test class
         """
-        self.island = Island(Island2)
+        self.island = Island('WWWWW\nWDHLW\nWWWWW')
         self.island.assign()
 
     def test_island_cycle_call(self, mocker):
