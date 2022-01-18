@@ -135,13 +135,13 @@ def test_no_migration_to_water():
 def test_migration():
     """
     Test if all neighbour cell are migrated to after one cycle. Placing many animals to ensure
-    migration
+    migration.
     """
     island = Island('WWWWW\nWLLLW\nWLLLW\nWLLLW\nWWWWW')
     island.assign()
     island.assign_animals([{'loc': (3, 3),
-                            'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20}
-                                    for _ in range(1000)]}])
+                            'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 100}
+                                    for _ in range(100)]}])
 
     island.cycle()
     neighbour_cells = island.get_neighbours((3, 3))
