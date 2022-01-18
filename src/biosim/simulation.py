@@ -129,8 +129,16 @@ class BioSim:
         """
         Set parameters for landscape type.
 
-        :param landscape: String, code letter for landscape
-        :param params: Dict with valid parameter specification for landscape
+        Parameters
+        ----------
+        landscape: str
+            String, code letter for the specific landscape
+        params: dict
+            Dictionary with valid parameter specification for landscape
+
+        Returns
+        -------
+        ValueError
         """
         if landscape == 'W':
             Water.set_params(params)
@@ -145,7 +153,7 @@ class BioSim:
 
     def simulate(self, num_years):
         """
-        Run simulation while visualizing the results.
+        Runs the simulation and retrieves data to visualize the results.
 
         :param num_years: number of years to simulate
 
