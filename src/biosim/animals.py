@@ -24,8 +24,13 @@ class Animals:
         self.baby = {'age': 0, 'weight': 0.0, 'species': self.species}
 
         if attr is not None:
-            self.age = attr['age']
-            self.weight = attr['weight']
+            if not attr['age'] >= 0:
+                raise ValueError('Age must be equal or greater than 0.')
+            if not attr['weight'] > 0:
+                raise ValueError('Weight must strictly be greater than 0')
+            else:
+                self.age = attr['age']
+                self.weight = attr['weight']
 
     def fitness_flux(self):
         """
@@ -90,14 +95,12 @@ class Animals:
         bool
             Decides if the animals migrate or stay in the cell
         """
-
-
         if random.random() < self.fitness * self.param['mu']:
             return True
 
     def ages(self):
         """
-        The animals age attribute increase by 1
+        The animals age attribute increase by 1.
 
         Returns
         -------
@@ -108,7 +111,7 @@ class Animals:
 
     def weight_loss(self):
         """
-        Calculates weight loss for each year
+        Calculates weight loss for each year.
 
         Returns
         -------
@@ -119,7 +122,7 @@ class Animals:
 
     def death(self):
         """
-        Calculates if an animal dies or not during the year
+        Determines whether or not an animal is going to die by the end of the year.
 
         Returns
         -------
@@ -136,12 +139,13 @@ class Animals:
     @classmethod
     def set_params(cls, new_params):
         """
-        Set new parameter for animal objects
+        Sets new parameter for animal objects.
 
         Parameters
         ----------
-        new_param: dict
-            Dictionary containing new parameters for animal object
+        new_params: dict
+            Dictionary containing new parameters for animal object. See params in either of the subclasses
+            Carnivore or Herbivore to see valid parameters.
 
         Returns
         -------
@@ -168,19 +172,19 @@ class Animals:
     @classmethod
     def get_params(cls):
         """
-        Returns the animal parameters in a dictionary
+        Returns the current parameters set to the animal in a dictionary.
 
         Returns
         -------
         dict
-            The current param the animal object has
+            Returns the current parameters set to the animal object.
         """
         return cls.param
 
 
 class Herbivores(Animals):
     """
-    Subclass for animals.
+    Herbivore subclass with inherited properties from the parent class.
     """
     species = 'Herbivore'
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
@@ -192,7 +196,7 @@ class Herbivores(Animals):
 
 class Carnivores(Animals):
     """
-    Subclass for animals
+    Carnivore subclass with inherited properties from the parent class.
     """
     eaten = 0
     species = 'Carnivore'

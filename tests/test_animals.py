@@ -184,67 +184,49 @@ class TestSetWrongParameters:
     """
     @pytest.fixture(autouse=True)
     def create_animal(self, species):
+        """
+        Create animal object to use in parameter testing
+        """
         self.animal = species()
 
 
     def test_invalid_key(self):
-
+        """
+        Test if a parameter is not valid
+        """
         with pytest.raises(ValueError):
             self.animal.set_params({'not a key' : 0})
 
-    def test_ValueError_keys(self):
-
+    @pytest.mark.parametrize('key, neg_value', [('w_half', -1), ('a_half', -1), ('mu', -1)])
+    def test_ValueError_keys(self, key, neg_value):
+        """
+        Test if any keys is negative value
+        """
         with pytest.raises(ValueError):
-            self.animal.set_params({'w_half' : -1})
+            self.animal.set_params({key : neg_value})
 
     def test_special_values_DeltaPhiMax(self):
-
+        """
+        Test if deltaphimax is set strictly above zero
+        """
         with pytest.raises(ValueError):
             self.animal.set_params({'DeltaPhiMax' : -1})
 
     def test_special_values_eta(self):
+        """
+        Test if eta is set lower than 1
+        """
 
         with pytest.raises(ValueError):
             self.animal.set_params({'eta' : 1.1})
 
-    def test_get_values(self):
+    def test_get_params(self):
+        """
+        Test if param attribute is the same as the one get_params return.
+
+        -------
+
+        """
 
         assert self.animal.param == self.animal.get_params()
 
-
-
-
-
-
-"""
-
-    def test_birth_distribution(self):
-        """"""
-        The weight for newborn babies should fall within the bell curve for the
-        normal distribution. This test checks with alpha certainty that it does.
-        Add parameters to ensure 100% birth rate
-        This test only check if the baby is within 2 STD from the mean weight
-        It will fail about 1/20 times
-        """"""
-        self.carn.fitness = 1
-        self.carn.weight = 100
-        self.carn.param['gamma'] = 1
-        self.carn.birth(100)
-        weight = self.carn.baby['weight']
-        mean = self.carn.param['w_birth']
-        std = self.carn.param['sigma_birth']
-        lower_limit = mean - 2*std
-        upper_limit = mean + 2*std
-        assert weight < upper_limit and weight > lower_limit
-        
-        
-        @pytest.mark.parametrize('species', [Herbivores, Carnivores])
-    def test_ages(self, species, test_animal):
-        
-        obj1 = species(test_animal)
-        obj2 = species(test_animal)
-        num_years = 5
-        expected = num_years + obj1.age
-        [(obj1.ages(), obj2.ages()) for _ in range(num_years)]
-        assert obj1.age and obj2.age == expected
-"""

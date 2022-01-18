@@ -1,19 +1,17 @@
-import numpy as np
 from .landscape import Lowland, Highland, Desert, Water
 import random
+
 
 class Island():
     def __init__(self, geogr=None):
         """
+        Constructor for the island class, containing its different attributes.
 
         Parameters
         ----------
         geogr : list
-            list of strings containing L, W, D, H to specify each cell values
-            Each row are seperated by \n
-
-        t_geogr :
-
+            List of strings containing L, W, D, H to specify each cell values
+            where each row is seperated by a newline (\n)
         """
         self.geogr = geogr.splitlines()
         self.t_geogr = geogr.replace('\n', '')
@@ -26,7 +24,8 @@ class Island():
 
     def assign(self):
         """
-        Assign each landscape object to each coordinate
+        Assigns each coordinate a landscape object depending on the geography depicted by geogr in the constructor.
+        The method has 3 different if-tests to ensure that a valid map geography is being mapped.
 
         Return
         -------
@@ -59,11 +58,12 @@ class Island():
 
     def assign_animals(self, list_of_animals=None):
         """
-        Assign animals to specified coordinate
+        Assigns animals to specific coordinates provided by its input list_of_animals.
+
         Parameters
         ----------
         list_of_animals : list
-            list containing dictionaries with animal object containing position to be assigned
+            List containing dictionaries with animal objects containing its position of where its being assigned
 
         Returns
         -------
@@ -77,13 +77,14 @@ class Island():
             if self.cells[coord].habitable is True:
                 pop = animals['pop']
                 self.cells[coord].append_population(pop)
-            elif type(self.cells[coord]) == type(Water):
-                raise ValueError('Animal cannot be inserted into a water cell.')
+            else:
+                raise ValueError(f'Coordinate {coord} is an invalid place to assign animals')
 
     def cycle(self):
         """
-        Function to ensure cycle on island. Runs through every function in
-        chronological order
+        Function to simulate a cycle on island. Runs through every function in
+        chronological order.
+
         Returns
         -------
         None
@@ -113,12 +114,12 @@ class Island():
 
     def get_animals_per_species(self):
         """
-        Iterates through each cell to get amount of each species
+        Iterates through each cell to get the specific amount of each species on the whole island.
 
         Returns
         -------
         dict
-            Contains dictionary with the amount of each species
+            Dictionary contains the amount of each species on the whole island.
         """
         dict_animals = {'Herbivore': 0, 'Carnivore': 0}
         for cell in self.cells:
@@ -129,7 +130,8 @@ class Island():
 
     def get_attributes(self):
         """
-        Iterates through each cell to get every animals attributes
+        Iterates through each cell to get every animals' attributes.
+
         Returns
         -------
         dict
@@ -153,12 +155,13 @@ class Island():
 
     def get_coord_animals(self):
         """
-        Get each coordinates amount of each species
+        Retrieves the current herbivore and carnivore population in each coordinate on the map.
+
         Returns
         -------
         dict
-            Dictionary contains each coord as a key with a
-            dictionary with species and their amount as a value
+            Dictionary containing every coordinate on the map as a key with the value being a
+            dictionary of herbivores and carnivores on that specific coordinate.
         """
         coord_animals = {}
         for coord, land in self.cells.items():
@@ -169,16 +172,17 @@ class Island():
     @staticmethod
     def get_neighbours(coord_now):
         """
-        Function to obtain a coordinates neighbour coordinates
+        Function to obtain a coordinates' neighbour coordinates
+
         Parameters
         ----------
         coord_now : tuple
-            tuple containing (row, column) to specify coordinate
+            Tuple containing (row, column) specifying the current coordinate
 
         Returns
         -------
         list
-            list contains the four neighbouring cells as tuples.
+            Returns a list of the four neighbouring cells as tuples.
         """
         coord_now = list(coord_now)
         return [(coord_now[0] + 1, coord_now[1]), (coord_now[0], coord_now[1] + 1),

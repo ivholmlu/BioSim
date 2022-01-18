@@ -29,7 +29,7 @@ _MAGICK_BINARY = 'magick'
 _DEFAULT_GRAPHICS_DIR = os.path.join('../..', 'data')
 _DEFAULT_GRAPHICS_NAME = 'dv'
 _DEFAULT_IMG_FORMAT = 'png'
-_DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
+_DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: mp4, gif
 
 
 class Graphics:
@@ -93,12 +93,16 @@ class Graphics:
 
         :param final_step: last time step to be visualised (upper limit of x-axis)
         :param img_step: interval between saving image to file
+        :param y_max: sets the limit of the y-axis for the population plot
+        :param cmax_animals: dict, sets the maximum values of the color bars in each heatmap plot.
+        :param hist_specs: dict, sets the bins and the ticks of the x-axis for the histograms.
+
         """
         if cmax_animals is None:
             cmax_animals = {'Herbivore': 200, 'Carnivore': 50}
 
         if y_max is None:
-            y_max = 10**4
+            y_max = 10 ** 4
 
         if hist_specs is None:
             hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
@@ -129,12 +133,10 @@ class Graphics:
             self._map_ax.imshow(map_rgb)
             self._map_ax.set_title('Map of Rossumøya')
 
-
             for ix, name in enumerate(('Water', 'Lowland',
                                        'Highland', 'Desert')):
                 self._map_ax.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                                      edgecolor='none',
-                                                      facecolor=rgb_value[name[0]]))
+                                                     edgecolor='none', facecolor=rgb_value[name[0]]))
 
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
@@ -147,9 +149,9 @@ class Graphics:
             self._time_ax.axis('off')
             template = 'Count: {:5d}'
             self.txt = self._time_ax.text(0.5, 0.5, template.format(0),
-                           horizontalalignment='center',
-                           verticalalignment='center',
-                           transform=self._time_ax.transAxes)
+                                          horizontalalignment='center',
+                                          verticalalignment='center',
+                                          transform=self._time_ax.transAxes)
 
         if self._heat1_ax is None:
             self._heat1_ax = self._fig.add_subplot(2, 3, 4)
@@ -176,26 +178,26 @@ class Graphics:
             self._hist1_ax.set_title('Fitness')
             bins1 = hist_specs['fitness']['max']
             delta1 = hist_specs['fitness']['delta']
-            self._hist1_bins = np.linspace(0, bins1, num=int(bins1/delta1))
+            self._hist1_bins = np.linspace(0, bins1, num=int(bins1 / delta1))
 
         if self._hist2_ax is None:
             self._hist2_ax = self._fig.add_subplot(3, 3, 6)
             self._hist2_ax.set_title('Age')
             bins2 = hist_specs['age']['max']
             delta2 = hist_specs['age']['delta']
-            self._hist2_bins = np.linspace(0, bins2, num=int(bins2/delta2))
+            self._hist2_bins = np.linspace(0, bins2, num=int(bins2 / delta2))
 
         if self._hist3_ax is None:
             self._hist3_ax = self._fig.add_subplot(3, 3, 9)
             self._hist3_ax.set_title('Weight')
             bins3 = hist_specs['weight']['max']
             delta3 = hist_specs['weight']['delta']
-            self._hist3_bins = np.linspace(0, bins3, num=int(bins3/delta3))
+            self._hist3_bins = np.linspace(0, bins3, num=int(bins3 / delta3))
 
         # needs updating on subsequent calls to simulate()
         # add 1 so we can show values for time zero and time final_step
-        self._line_ax.set_xlim(0, final_step+1)
-        self._line_ax.set_xlim(0, final_step+1)
+        self._line_ax.set_xlim(0, final_step + 1)
+        self._line_ax.set_xlim(0, final_step + 1)
 
         if self._line1 is None and self._line2 is None:
             self._line1 = self._line_ax.plot(np.arange(final_step),
@@ -228,6 +230,21 @@ class Graphics:
                                                     vmin=0, vmax=50, cmap='plasma')
 
     def update_line_graph(self, year, total_herbivores, total_carnivores):
+        """
+        Updates the line/population graph
+
+        Parameters
+        ----------
+        year: int
+            Sets the x-value, the current year, for the incoming y-values, total_herbivores and total_carnivores.
+        total_herbivores: int
+            Sets the y-value for the herbivore line.
+        total_carnivores: int
+            Sets the y-value for the carnivore line.
+        Returns
+        -------
+            None
+        """
         ydata_line1 = self._line1.get_ydata()
         ydata_line2 = self._line2.get_ydata()
         ydata_line1[year] = total_herbivores
@@ -237,6 +254,28 @@ class Graphics:
 
     def _update_histograms(self, herbi_fitness, carni_fitness, herbi_age, carni_age,
                            herbi_weight, carni_weight):
+        """
+        Updates the histogram by inserting the fitness, age and weight of both carnivores and herbivores.
+
+        Parameters
+        ----------
+        herbi_fitness: list
+            A list of the fitness of all the herbivores on the island.
+        carni_fitness: list
+            A list of the fitness of all the carnivores on the island.
+        herbi_age: list
+            A list of the age of all the herbivores on the island.
+        carni_age: list
+            A list of the age of all the carnivores on the island.
+        herbi_weight: list
+            A list of the weight of all the herbivores on the island.
+        carni_weight: list
+            A list of the weight of all the carnivores on the island.
+
+        Returns
+        -------
+
+        """
         self._hist1_ax.hist(herbi_fitness, self._hist1_bins, color='b', histtype='step')
         self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step')
         self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step')
@@ -245,6 +284,9 @@ class Graphics:
         self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step')
 
     def _update_headers(self):
+        """
+        Updates the headers the histograms.
+        """
         self._hist1_ax.cla()
         self._hist2_ax.cla()
         self._hist3_ax.cla()
@@ -252,26 +294,54 @@ class Graphics:
         self._hist2_ax.set_title('Age')
         self._hist3_ax.set_title('Weight')
 
-
-    def update(self, step, herbivores_arr=None, carnivores_arr=None, n_herbivores=None, n_carnivores=None,
+    def update(self, year, herbivores_arr=None, carnivores_arr=None, n_herbivores=None, n_carnivores=None,
                herbi_fitness=None, carni_fitness=None, herbi_age=None, carni_age=None, herbi_weight=None,
                carni_weight=None):
         """
         Updates graphics with current data and save to file if necessary.
 
-        :param step: current time step
+        Parameters
+        ----------
+        year: int
+            The year which the incoming values are coming from.
+        herbivores_arr: numpy array
+            A 2D numpy array in which its indices [row, column], which is mapped after the geography of the map and is
+            analogous to the coordinates of the map, contains the specific amount herbivores in the coordinate.
+        carnivores_arr: numpy array
+            A 2D numpy array in which its indices [row, column], which is mapped after the geography of the map and is
+            analogous to the coordinates of the map, contains the specific amount herbivores in the coordinate.
+        n_herbivores: int
+            Total herbivores on the island
+        n_carnivores: int
+            Total carnivores on the island
+        herbi_fitness: list
+            A list of the fitness of all the herbivores on the island.
+        carni_fitness: list
+            A list of the fitness of all the carnivores on the island.
+        herbi_age: list
+            A list of the age of all the herbivores on the island.
+        carni_age: list
+            A list of the age of all the carnivores on the island.
+        herbi_weight: list
+            A list of the weight of all the herbivores on the island.
+        carni_weight: list
+            A list of the weight of all the carnivores on the island.
+
+        Returns
+        -------
+
         """
         self._update_headers()
         template = 'Count: {:5d}'
-        self.txt.set_text(template.format(step))
+        self.txt.set_text(template.format(year))
         self._update_system_map(herbivores_arr, carnivores_arr)
-        self.update_line_graph(step, n_herbivores, n_carnivores)
+        self.update_line_graph(year, n_herbivores, n_carnivores)
         self._update_histograms(herbi_fitness, carni_fitness, herbi_age, carni_age,
                                 herbi_weight, carni_weight)
 
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
-        self._save_graphics(step)
+        self._save_graphics(year)
 
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""
@@ -279,7 +349,7 @@ class Graphics:
         if self._img_base is None or step % self._img_step != 0:
             return
         fig = plt.gcf()
-        fig.set_size_inches(19.2, 10.8)
+        fig.set_size_inches(19.2, 10.8)  # (38.4, 21.6), (25.6, 14.4)
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))
