@@ -42,7 +42,7 @@ def test_set_faulty_f_max(f_max):
 @pytest.mark.parametrize('habitable', ['False', 'True', None])
 def test_set_faulty_habitable(habitable):
     """
-    A test to check if setting a incompatible habitable value raises a ValueError.
+    A test to check if setting an incompatible habitable value raises a ValueError.
     """
     with pytest.raises(ValueError):
         Highland.set_params({'habitable': habitable})
@@ -85,7 +85,7 @@ class TestPopulation:
 
     def test_fitness_calculation(self, create_animals, insert_animals):
         """
-        Test if every animals fitness get calculated after being inserted into the landscape.
+        Test if every animal's fitness get calculated after being inserted into the landscape.
         """
         self.lowland.calculate_fitness()
         carn_fitness = [carnivore.fitness for carnivore in self.lowland.carnivores]
@@ -171,7 +171,7 @@ class TestPopulation:
 
 def test_reject_unrecognizable_animal():
     """
-    Test to check if inserting a unspecified type of animal raises a ValueError.
+    Test to check if inserting an unspecified type of animal raises a ValueError.
     """
     highland = Highland()
     with pytest.raises(ValueError):
@@ -214,4 +214,3 @@ def test_limited_fodder(f_max):
 
     assert weight_post_feeding1 == weight_pre_feeding1 + herbivore1.param['beta'] * set_f_max \
            and weight_pre_feeding2 == weight_post_feeding2 and highland.current_fodder == 0
-
