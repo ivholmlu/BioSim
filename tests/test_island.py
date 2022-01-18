@@ -21,14 +21,6 @@ ini_carns = [{'loc': loc,
                        'weight': 20}
                       for _ in range(amount_carnivores)]}]
 
-Island1 = """\
-           WWWWW
-           WLLLW
-           WLLLW
-           WLLLW
-           WWWWW"""
-Island1 = textwrap.dedent(Island1)
-
 Island2 = """\
            WWWWW
            WDHLW
@@ -148,7 +140,7 @@ def test_migration(mocker):
     Test if all neighbour cell are migrated to after one cycle. Placing many animals to ensure
     migration
     """
-    island = Island(Island1)
+    island = Island('WWWWW\nWLLLW\nWLLLW\nWLLLW\nWWWWW')
     island.assign()
     island.assign_animals([{'loc': (3, 3),
               'pop': [{'species': 'Herbivore',
