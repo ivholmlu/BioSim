@@ -77,7 +77,6 @@ class BioSim:
         self.log_data = []
         self.log_filename = log_file
 
-
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -225,4 +224,3 @@ class BioSim:
             writer = csv.writer(log_file)
             writer.writerow(header)
             writer.writerows(log_data)
-
