@@ -7,6 +7,9 @@ import random
 
 
 class Animals:
+    """
+    Animal class, used to create animal objects
+    """
     param = None
     species = None
 

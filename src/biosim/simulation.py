@@ -1,5 +1,5 @@
 """
-Template for BioSim class.
+Simulation module. Used to run a simulation of BioSim
 """
 
 # The material in this file is licensed under the BSD 3-clause license
@@ -18,6 +18,9 @@ import os
 
 
 class BioSim:
+    """
+    Biosim class, used to run a simulation of the island
+    """
     def __init__(self, island_map, ini_pop, seed=None,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,

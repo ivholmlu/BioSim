@@ -3,6 +3,9 @@ import random
 
 
 class Island:
+    """
+    Island class, used to create the island
+    """
     def __init__(self, geogr=None):
         """
         Constructor for the island class, containing its different attributes.

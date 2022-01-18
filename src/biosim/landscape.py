@@ -1,9 +1,15 @@
+"""
+Landscape module
+"""
 from .animals import Herbivores, Carnivores
 import itertools
 import random
 
 
 class Landscape:
+    """
+    Landscape class, used to create landscape objects
+    """
     def __init__(self):
         self.current_fodder = 0
         self.carnivores = []
