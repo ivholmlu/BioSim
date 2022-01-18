@@ -253,7 +253,17 @@ class BioSim:
         self.island.assign_animals(population)
 
     def make_movie(self, img_fmt=None):
-        """Create MPEG4 movie from visualization images saved."""
+        """
+        Create MPEG4 movie from visualization images saved.
+
+        Parameters
+        ----------
+        img_fmt : string
+            string containing file to store images for the movie
+        Returns
+        -------
+
+        """
         self._graphics.make_movie(img_fmt)
 
     @property
