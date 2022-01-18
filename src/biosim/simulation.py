@@ -1,5 +1,20 @@
 """
-Template for BioSim class.
+:mod: `biosim.simulation` contains the user interface to the package.
+
+Each simulation is being done through the :class:`BioSim` object. However, to create
+the :class:`BioSim` object, users have to provide a valid map representing the geography of
+the island, as well as its starting population its location. Only after then can users
+initiate the simulation by using the :meth: `BioSim.simulate`, which simulates the island
+after given steps by the user.
+
+The island and its properties is visualized while the simulation is running. If wanted the
+user can visualize it at chosen intervals. This means that the user can choose how regularly they
+want the graphics to update.
+
+The graphics can be saved to a png files if wanted with given intervals, and by calling
+the :meth:`BioSim.make_movie` after a completed simulation, the graphics will be compiled
+into video file.
+
 """
 
 # The material in this file is licensed under the BSD 3-clause license
@@ -22,7 +37,6 @@ class BioSim:
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
-
         """
         :param island_map: Multi-line string specifying island geography
         :param ini_pop: List of dictionaries specifying initial population
@@ -111,9 +125,20 @@ class BioSim:
 
     def simulate(self, num_years):
         """
-        Run simulation while visualizing the result.
+        Run simulation while visualizing the results.
 
         :param num_years: number of years to simulate
+
+        If the method is called multiple times after creating the :class:`BioSim` object , i.e.
+        --------
+        ::
+
+        sim = BioSim(island_map, initial_population)
+        sim.simulate(30)
+        sim.simulate(50)
+
+        the simulation will be continued from where it last ended. So after simulating 30 years,
+        it will now continue simulating from year 30 and simulate onwards 50 more years.
         """
         self.island.assign_animals(self.ini_pop)
         self.final_year = num_years + self.years
@@ -198,7 +223,9 @@ class BioSim:
 
     @property
     def num_animals_per_species(self):
-        """Number of animals per species in island, as dictionary."""
+        """
+        Number of animals per species in island, as dictionary.
+        """
         return self.island.get_animals_per_species()
 
     @staticmethod
@@ -211,7 +238,8 @@ class BioSim:
         log_filename: str
             Sets the name for the .csv file
         log_data: list
-            Takes in a list of nested
+            Takes in a list of nested lists containing what year is being simulated,
+                total amount of herbivores and total amount of carnivores on the island currently.
 
         Returns
         -------

@@ -1,4 +1,7 @@
 """
+To preface, the starting point of this code has been provided by Hans Ekkehard Plesser
+in his randvis_project which was provided as insipiration. We have further
+
 :mod:`randvis.graphics` provides graphics support for RandVis.
 
 .. note::
