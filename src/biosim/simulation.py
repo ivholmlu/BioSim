@@ -1,6 +1,21 @@
 """
-Template for BioSim class.
+:mod: `biosim.simulation` contains the user interface to the package.
+
+Each simulation is being done through the :class:`BioSim` object. However, to create
+the :class:`BioSim` object, users have to provide a valid map representing the geography of
+the island, as well as its starting population its location. Only after then can users
+initiate the simulation by using the :meth: `BioSim.simulate`, which simulates the island
+after given steps by the user.
+
+The island and its properties is visualized while the simulation is running. If wanted the
+user can visualize it at chosen intervals. This means that the user can choose how regularly they
+want the graphics to update.
+
+The graphics can be saved to a png files if wanted with given intervals, and by calling
+the :meth:`BioSim.make_movie` after a completed simulation, the graphics will be compiled
+into video file.
 """
+
 
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
@@ -18,11 +33,13 @@ import os
 
 
 class BioSim:
+    """
+    Biosim class, used to run a simulation of the island
+    """
     def __init__(self, island_map, ini_pop, seed=None,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
-
         """
         :param island_map: Multi-line string specifying island geography
         :param ini_pop: List of dictionaries specifying initial population
@@ -36,6 +53,36 @@ class BioSim:
         :param img_fmt: String with file type for figures, e.g. 'png'
         :param img_years: years between visualizations saved to files (default: vis_years)
         :param log_file: If given, write animal counts to this file
+
+        island_map should be written like the following by using textwrap.dedent to achieve
+        the correct string format which the code can read. ::
+
+            island_map = '''\
+                            WWW
+                            WLW
+                            WWW'''
+            island_map = textwrap.dedent(island_map)
+
+        ini_pop must be provided as a list with the following:
+        #. a list containing a dictionary with keys 'loc' and 'pop'
+        #. the value of 'pop' must contain a list of dictionaries
+            #. with a key 'species' with a string value of either 'Herbivore' or 'Carnivore',
+            #. a key with string 'age' with a integer value, and
+            #. a key with string 'weight' with an integer/float value. ::
+
+            initial_population = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
+                                    'weight': 20} for _ in range(200)]}]
+
+        Optionally you can make a list comprehension as in the example above and create multiple
+        copies with the same attributes, or write a list where the attributes varies.
+
+        ini_pop also supports combining two lists of the same format as shown above, i.e: ::
+
+            initial_herbivores = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
+                                    'weight': 20} for _ in range(200)]}]
+            initial_carnivores = [{'loc': (2, 7), 'pop': [{'species': 'Carnivore', 'age': 7,
+                                    'weight': 35} for _ in range(50)]}]
+            sim = BioSim(island_map, initial_herbivores + initial_carnivores)
 
         If ymax_animals is None, the y-axis limit should be adjusted automatically.
         If cmax_animals is None, sensible, fixed default values should be used.
@@ -81,8 +128,16 @@ class BioSim:
         """
         Set parameters for animal species.
 
-        :param species: String, name of animal species
-        :param params: Dictionary with valid parameter specification for species
+        Parameters
+        ----------
+        species
+            String, name of animal species
+        params
+            Dictionary with valid parameter specification for species
+
+        Returns
+        -------
+
         """
         if species == 'Herbivore':
             Herbivores.set_params(params)
@@ -95,8 +150,16 @@ class BioSim:
         """
         Set parameters for landscape type.
 
-        :param landscape: String, code letter for landscape
-        :param params: Dict with valid parameter specification for landscape
+        Parameters
+        ----------
+        landscape: str
+            String, code letter for the specific landscape
+        params: dict
+            Dictionary with valid parameter specification for landscape
+
+        Returns
+        -------
+        ValueError
         """
         if landscape == 'W':
             Water.set_params(params)
@@ -111,9 +174,18 @@ class BioSim:
 
     def simulate(self, num_years):
         """
-        Run simulation while visualizing the result.
+        Runs the simulation and retrieves data to visualize the results.
 
         :param num_years: number of years to simulate
+
+        If the method is called multiple times after creating the :class:`BioSim` object , i.e. ::
+
+            sim = BioSim(island_map, initial_population)
+            sim.simulate(30)
+            sim.simulate(50)
+
+        the simulation will be continued from where it last ended. So after simulating 30 years,
+        it will now continue simulating from year 30 and simulate onwards 50 more years.
         """
         self.island.assign_animals(self.ini_pop)
         self.final_year = num_years + self.years
@@ -167,12 +239,30 @@ class BioSim:
     def add_population(self, population):
         """
         Add a population to the island
-        :param population: List of dictionaries specifying population
+
+        Parameters
+        ----------
+        population : list
+            The population to add in the simulation
+
+        Returns
+        -------
+
         """
         self.island.assign_animals(population)
 
     def make_movie(self, img_fmt=None):
-        """Create MPEG4 movie from visualization images saved."""
+        """
+        Create MPEG4 movie from visualization images saved.
+
+        Parameters
+        ----------
+        img_fmt : string
+            string containing file to store images for the movie
+        Returns
+        -------
+
+        """
         self._graphics.make_movie(img_fmt)
 
     @property
@@ -183,19 +273,24 @@ class BioSim:
 
     @staticmethod
     def coord_animals(self):
+        """Return the amount of each species in each landscape object on island"""
         return self.island.get_coord_animals()
 
     @property
     def year(self):
+        """Return the current year in simulation"""
         return self.years
 
     @property
     def get_attributes(self):
+        """Return the attributes of all the animals"""
         return self.island.get_attributes()
 
     @property
     def num_animals_per_species(self):
-        """Number of animals per species in island, as dictionary."""
+        """
+        Number of animals per species in island, as dictionary.
+        """
         return self.island.get_animals_per_species()
 
     @staticmethod
@@ -208,10 +303,12 @@ class BioSim:
         log_filename: str
             Sets the name for the .csv file
         log_data: list
-            Takes in a list of nested
+            Takes in a list of nested lists containing what year is being simulated,
+                total amount of herbivores and total amount of carnivores on the island currently.
 
         Returns
         -------
+
         """
         save_path = './log_files'
         filename = log_filename

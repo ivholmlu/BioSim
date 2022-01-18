@@ -1,8 +1,14 @@
+"""
+Island module
+"""
 from .landscape import Lowland, Highland, Desert, Water
 import random
 
 
-class Island():
+class Island:
+    """
+    Island class, used to create the island
+    """
     def __init__(self, geogr=None):
         """
         Constructor for the island class, containing its different attributes.
@@ -11,7 +17,9 @@ class Island():
         ----------
         geogr : list
             List of strings containing L, W, D, H to specify each cell values
-            where each row is seperated by a newline (\n)
+            where each row is seperated by a newline
+
+
         """
         self.geogr = geogr.splitlines()
         self.t_geogr = geogr.replace('\n', '')
@@ -30,7 +38,7 @@ class Island():
 
         Return
         -------
-        None
+
         """
         for current_row, next_row in zip(self.geogr, self.geogr[1:]):
             if len(next_row) != len(current_row):
@@ -55,7 +63,6 @@ class Island():
                 self.cells[coord] = Water()
             else:
                 raise ValueError(f'"{landscape}" is an invalid landscape type.')
-        #self.cells = {coord: landscape for coord, landscape in self.cells.items() if landscape != 'W'}
 
     def assign_animals(self, list_of_animals=None):
         """
@@ -69,7 +76,7 @@ class Island():
 
         Returns
         -------
-        None
+
         """
         for animals in list_of_animals:
             coord = animals['loc']
@@ -89,7 +96,7 @@ class Island():
 
         Returns
         -------
-        None
+
         """
         for coord in self.cells.keys():
             if self.cells[coord].habitable is True:
@@ -140,8 +147,8 @@ class Island():
             Dictionary contains a dictionary for each species with a list
             for each of their attributes
         """
-        dict_attributes = {'Herbivores' : {'age' : [], 'weight' : [], 'fitness' : []},
-                           'Carnivores' : {'age' : [], 'weight' : [], 'fitness' : []}}
+        dict_attributes = {'Herbivores': {'age': [], 'weight': [], 'fitness': []},
+                           'Carnivores': {'age': [], 'weight': [], 'fitness': []}}
         for cell in self.cells:
             if self.cells[cell].habitable is True:
                 for herb in self.cells[cell].herbivores:

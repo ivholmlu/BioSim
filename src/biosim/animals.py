@@ -1,12 +1,14 @@
 """
-Class for herbivores. Will later on be merged into class for animals.
-There will herbivores be a subclass
+Animal module
 """
 import math
 import random
 
 
 class Animals:
+    """
+    Animal class, used to create animal objects
+    """
     param = None
     species = None
 
@@ -38,7 +40,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         q_age = 1 / (1 + math.exp(self.param['phi_age'] *
                                   (self.age - self.param['a_half'])))
@@ -52,7 +54,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         self.weight += self.param['beta'] * gain
         self.fitness_flux()
@@ -69,7 +71,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         phi = self.fitness
         p = min(1, self.param['gamma'] * phi * (n - 1))
@@ -104,7 +106,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         self.age += 1
         self.fitness_flux()
@@ -115,7 +117,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         self.weight -= self.weight * self.param['eta']
         self.fitness_flux()
@@ -126,7 +128,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         if self.alive is True:
             if self.weight <= 0:
@@ -149,7 +151,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         pos_params = [key for key in cls.param.keys() if key != 'DeltaPhiMax']
         for key in new_params.keys():

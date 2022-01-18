@@ -6,7 +6,6 @@ import random
 from biosim.island import Island
 from biosim.landscape import Lowland, Highland, Desert, Water
 
-
 amount_herbivores = 50
 amount_carnivores = 20
 loc = (2, 2)
@@ -62,7 +61,7 @@ class TestIslandCycleAndCreation:
         assigned loc = (2,2) to its correct object.
         """
 
-        assert type(self.island.cells[(2, 2)]) == type(Desert)
+        assert type(self.island.cells[(2, 2)]) == type(Desert())
 
     def test_get_animals_per_species(self):
         """
@@ -85,7 +84,7 @@ class TestIslandCycleAndCreation:
         Test that test_get_attributes returns dictionary containing expected list of attributes
         """
 
-        self.island.assign_animals(ini_herbs+ini_carns)
+        self.island.assign_animals(ini_herbs + ini_carns)
         dict_attributes = self.island.get_attributes()
         assert dict_attributes['Herbivores']['age'] == [5 for _ in range(amount_herbivores)]
         assert dict_attributes['Carnivores']['age'] == [5 for _ in range(amount_carnivores)]
@@ -123,10 +122,10 @@ def test_no_migration_to_water():
     geogr = 'WWW\nWLW\nWWW'
     island = Island(geogr)
     island.assign_animals([{'loc': (2, 2),
-                          'pop': [{'species': 'Herbivore',
-                                   'age': 5,
-                                   'weight': 20}
-                                  for _ in range(1000)]}])
+                            'pop': [{'species': 'Herbivore',
+                                     'age': 5,
+                                     'weight': 20}
+                                    for _ in range(1000)]}])
     island.cycle()
     neighbours = island.get_neighbours((2, 2))
     for neighbour in neighbours:
@@ -136,12 +135,13 @@ def test_no_migration_to_water():
 def test_migration():
     """
     Test if all neighbour cell are migrated to after one cycle. Placing many animals to ensure
-    migration
+    migration.
     """
     island = Island('WWWWW\nWLLLW\nWLLLW\nWLLLW\nWWWWW')
     island.assign()
     island.assign_animals([{'loc': (3, 3),
-                            'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(1000)]}])
+                            'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 100}
+                                    for _ in range(100)]}])
 
     island.cycle()
     neighbour_cells = island.get_neighbours((3, 3))
@@ -154,6 +154,7 @@ class TestMap:
     """
     Class to test creation of the map.
     """
+
     def test_map_boundaries_top_bottom(self, landscapes):
         """
         Test that invalid boundaries at top or bottom of the map raises ValueError
@@ -198,7 +199,8 @@ def test_map_invalid_landscape():
         Island(geogr)
 
 
-@pytest.mark.parametrize('landscape, symbol', [(Lowland, 'L'), (Desert, 'D'), (Highland, 'H'), (Water, 'W')])
+@pytest.mark.parametrize('landscape, symbol',
+                         [(Lowland, 'L'), (Desert, 'D'), (Highland, 'H'), (Water, 'W')])
 def test_right_landscape_in_cell(landscape, symbol):
     """
     Test that right landscape is assigned to the right cell
