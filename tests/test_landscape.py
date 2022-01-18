@@ -74,13 +74,6 @@ class TestPopulation:
         self.lowland.append_population(self.herbivores[0]['pop'])
         self.lowland.append_population(self.carnivores[0]['pop'])
 
-    @pytest.fixture
-    def set_animal_params(self):
-        yield
-
-        Carnivores.set_params(Carnivores.param)
-        Herbivores.set_params(Herbivores.param)
-
     def test_insert_animals(self, create_animals, insert_animals):
         """
         Test if the amount of inserted animals are as expected with the fixed value.
@@ -101,7 +94,7 @@ class TestPopulation:
         """
         Tests the certainty of death of every animal in the land by setting a fixed probability.
         """
-        mocker.patch('random.random', return_value=0)
+        mocker.patch('random.random', return_value=-1)
 
         self.lowland.calculate_fitness()
         self.lowland.deceased()

@@ -5,6 +5,7 @@ import pytest
 from biosim.simulation import BioSim
 import textwrap
 import matplotlib.pyplot as plt
+import os
 
 geogr = """\
            WWWWW
