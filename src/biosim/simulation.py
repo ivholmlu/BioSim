@@ -161,6 +161,7 @@ class BioSim:
             self.years += 1
 
             if self.log_filename is not None:
+                self.log_data.append([self.years, total_herbivores, total_carnivores])
                 self.write_log_data(self.log_filename, self.log_data)
 
     def add_population(self, population):
@@ -211,11 +212,17 @@ class BioSim:
 
         Returns
         -------
-
         """
+        save_path = './log_files'
+        filename = log_filename
+        complete_path = os.path.join(save_path, filename)
+
+        if not os.path.exists(complete_path):
+            os.makedirs(save_path)
+
         header = ['year', 'herbivore', 'carnivore']
-        with open(log_filename, 'w', encoding='UTF8', newline='') as f:
-            writer = csv.writer(f)
+        with open(complete_path, 'w', encoding='UTF8', newline='') as log_file:
+            writer = csv.writer(log_file)
             writer.writerow(header)
             writer.writerows(log_data)
 
