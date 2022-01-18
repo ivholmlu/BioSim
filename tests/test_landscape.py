@@ -195,6 +195,10 @@ def test_limited_fodder(f_max):
     set_f_max = highland.get_params()['f_max']
 
     highland.append_population(test_herbivores[0]['pop'])
+
+    for herbivore in highland.herbivores:
+        assert highland.current_fodder < herbivore.param['F']
+
     highland.replenish()
     highland.calculate_fitness()
 
