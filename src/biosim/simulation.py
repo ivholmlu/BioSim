@@ -75,6 +75,7 @@ class BioSim:
         self.log = []
         self.log_file = log_file
 
+
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
