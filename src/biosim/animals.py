@@ -116,8 +116,6 @@ class Animals:
         Calculates weight loss for each year.
 
         Returns
-        -------
-        None
         """
         self.weight -= self.weight * self.param['eta']
         self.fitness_flux()
@@ -126,7 +124,7 @@ class Animals:
         """
         Determines whether or not an animal is going to die.
 
-        Returns
+        Return: None
         -------
         None
         """
