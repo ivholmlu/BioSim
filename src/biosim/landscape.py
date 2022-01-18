@@ -99,12 +99,12 @@ class Landscape:
         -------
         None
         """
-        baby_herb = [baby for parent in self.herbivores if (baby := parent.birth(len(self.herbivores)))
-                     and parent.alive is True]
+        baby_herb = [baby for parent in self.herbivores
+                     if (baby := parent.birth(len(self.herbivores))) and parent.alive is True]
         self.herbivores += baby_herb
 
-        baby_carn = [baby for parent in self.carnivores if (baby := parent.birth(len(self.carnivores)))
-                     and parent.alive is True]
+        baby_carn = [baby for parent in self.carnivores
+                     if (baby := parent.birth(len(self.carnivores))) and parent.alive is True]
         self.carnivores += baby_carn
 
     def emigrants(self):
@@ -276,7 +276,7 @@ class Desert(Landscape):
 
 
 class Water(Landscape):
-     """
-     Subclass of Landscape
-     """
-     habitable = False
+    """
+    Subclass of Landscape
+    """
+    habitable = False

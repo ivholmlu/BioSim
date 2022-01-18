@@ -141,7 +141,8 @@ def test_migration():
     island = Island('WWWWW\nWLLLW\nWLLLW\nWLLLW\nWWWWW')
     island.assign()
     island.assign_animals([{'loc': (3, 3),
-                            'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(1000)]}])
+                            'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20}
+                                    for _ in range(1000)]}])
 
     island.cycle()
     neighbour_cells = island.get_neighbours((3, 3))
@@ -198,7 +199,8 @@ def test_map_invalid_landscape():
         Island(geogr)
 
 
-@pytest.mark.parametrize('landscape, symbol', [(Lowland, 'L'), (Desert, 'D'), (Highland, 'H'), (Water, 'W')])
+@pytest.mark.parametrize('landscape, symbol',
+                         [(Lowland, 'L'), (Desert, 'D'), (Highland, 'H'), (Water, 'W')])
 def test_right_landscape_in_cell(landscape, symbol):
     """
     Test that right landscape is assigned to the right cell
