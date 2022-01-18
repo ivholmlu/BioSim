@@ -59,7 +59,8 @@ def plot_fn():
     return _plot
 
 
-@pytest.mark.parametrize('landscape, f_max', [('H', {'f_max': 100}), ('L', {'f_max': 300}), ('D', {'f_max': 40})])
+@pytest.mark.parametrize('landscape, f_max', [('H', {'f_max': 100}), ('L', {'f_max': 300}),
+                                              ('D', {'f_max': 40})])
 def test_set_param_f_max(landscape, f_max):
     """
     Test to check that set parameters work for all existing landscapes and that
@@ -71,7 +72,8 @@ def test_set_param_f_max(landscape, f_max):
         sim.set_landscape_parameters('S', {'f_max': 100})
 
 
-@pytest.mark.parametrize('species, param', [('Herbivore', {'mu': 0.4}), ('Carnivore', {'w_half': 13})])
+@pytest.mark.parametrize('species, param', [('Herbivore', {'mu': 0.4}),
+                                            ('Carnivore', {'w_half': 13})])
 def test_set_animal_param(species, param):
     sim = BioSim(geogr, ini_herbs + ini_carns)
     sim.set_animal_parameters(species, param)
