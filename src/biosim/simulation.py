@@ -71,6 +71,16 @@ class BioSim:
 
             island_map = textwrap.dedent(island_map)
 
+        ini_pop must be provided as a list with the following:
+        #. a list containing a dictionary with keys 'loc' and 'pop'
+        #. the value of 'pop' must contain a list of dictionaries
+            *
+        ::
+            initial_population = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
+                                    'weight': 20} for _ in range(200)]}]
+
+
+
         If ymax_animals is None, the y-axis limit should be adjusted automatically.
         If cmax_animals is None, sensible, fixed default values should be used.
         cmax_animals is a dict mapping species names to numbers, e.g.,
