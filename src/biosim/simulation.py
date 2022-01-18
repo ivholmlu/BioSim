@@ -199,6 +199,12 @@ class BioSim:
 
     @staticmethod
     def log_data():
+        """
+
+        Returns
+        -------
+
+        """
         header = ['year', 'herbivore', 'carnivore']
         with open(self.log_file, 'w', encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
