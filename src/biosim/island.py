@@ -1,3 +1,6 @@
+"""
+Island module
+"""
 from .landscape import Lowland, Highland, Desert, Water
 import random
 
