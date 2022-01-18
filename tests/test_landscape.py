@@ -9,14 +9,16 @@ import numpy as np
 
 def test_create_landscapes():
     """
-    A test to check if the different landscapes are created, and to ensure the default value of fodder is inherited
-    from the main class, which in this case is 0.
+    A test to check if the different landscapes are created, and to ensure the default value
+    of fodder are inherited from the main class, which in this case is 0.
     """
     lowland = Lowland()
     highland = Highland()
     desert = Desert()
     water = Water()
-    assert lowland.current_fodder == highland.current_fodder == desert.current_fodder == water.current_fodder == 0
+    assert lowland.current_fodder == highland.current_fodder\
+           == desert.current_fodder\
+           == water.current_fodder == 0
 
 
 @pytest.mark.parametrize('f_max, habitable', [[100, True], [23, False], [700, True]])
@@ -42,7 +44,7 @@ def test_set_faulty_f_max(f_max):
 @pytest.mark.parametrize('habitable', ['False', 'True', None])
 def test_set_faulty_habitable(habitable):
     """
-    A test to check if setting a incompatible habitable value raises a ValueError.
+    A test to check if setting an incompatible habitable value raises a ValueError.
     """
     with pytest.raises(ValueError):
         Highland.set_params({'habitable': habitable})
@@ -53,8 +55,10 @@ m = 20
 
 
 @pytest.mark.parametrize('herbivores, carnivores',
-                         [([{'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(n)]}],
-                           [{'pop': [{'species': 'Carnivore', 'age': 7, 'weight': 22} for _ in range(m)]}])])
+                         [([{'pop': [{'species': 'Herbivore',
+                                      'age': 5, 'weight': 20} for _ in range(n)]}],
+                           [{'pop': [{'species': 'Carnivore',
+                                      'age': 7, 'weight': 22} for _ in range(m)]}])])
 class TestPopulation:
     @pytest.fixture(autouse=True)
     def create_lowland(self):
@@ -85,7 +89,7 @@ class TestPopulation:
 
     def test_fitness_calculation(self, create_animals, insert_animals):
         """
-        Test if every animals fitness get calculated after being inserted into the landscape.
+        Test if every animal's fitness get calculated after being inserted into the landscape.
         """
         self.lowland.calculate_fitness()
         carn_fitness = [carnivore.fitness for carnivore in self.lowland.carnivores]
@@ -106,8 +110,8 @@ class TestPopulation:
 
     def test_feeding(self, create_animals, insert_animals):
         """
-        Tests that fodder available goes down as herbivores starts eating, as well as the total herbivore population
-        decreases due to the carnivores eating.
+        Tests that fodder available goes down as herbivores starts eating, as well as the total
+        herbivore population decreases due to the carnivores eating.
         """
         self.lowland.replenish()
         self.lowland.calculate_fitness()
@@ -125,8 +129,9 @@ class TestPopulation:
 
     def test_age_and_weight_loss(self, create_animals, insert_animals, mocker):
         """
-        Test to check if the amount of calls made to the ages and weight_loss is equal to the amount of animals in
-        the landscape, as well as checking that the age and weight has increased.
+        Test to check if the amount of calls made to the ages and weight_loss is equal to the
+        amount of animals in the landscape,
+        as well as checking that the age and weight has increased.
         """
         mocker.spy(Carnivores, 'ages')
         mocker.spy(Carnivores, 'weight_loss')
@@ -143,7 +148,8 @@ class TestPopulation:
         assert all(np.array(carn_weight_post) < np.array(carn_weight_pre)) and \
                all(np.array(carn_age_post) > np.array(carn_age_pre))
 
-        assert Carnivores.ages.call_count == Carnivores.weight_loss.call_count == len(self.lowland.carnivores)
+        assert Carnivores.ages.call_count == Carnivores.weight_loss.call_count\
+               == len(self.lowland.carnivores)
 
     def test_procreation(self, create_animals, insert_animals, mocker):
         """
@@ -171,7 +177,7 @@ class TestPopulation:
 
 def test_reject_unrecognizable_animal():
     """
-    Test to check if inserting a unspecified type of animal raises a ValueError.
+    Test to check if inserting an unspecified type of animal raises a ValueError.
     """
     highland = Highland()
     with pytest.raises(ValueError):
@@ -184,16 +190,23 @@ def test_reject_unrecognizable_animal():
 @pytest.mark.parametrize('f_max', [2.1, 8.3, 3.9, 9.0])
 def test_limited_fodder(f_max):
     """
-    Test to check if the fodder available is eaten up, leaving the next herbivore to eat with no food left.
+    Test to check if the fodder available is eaten up, which in these cases which is less than F
+    (the desired amount for a herbivore to eat),
+    leaving the next herbivore to eat with no food left.
     """
     test_herbivores = [{'loc': (2, 7),
-                        'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 25} for _ in range(2)]}]
+                        'pop': [{'species': 'Herbivore',
+                                 'age': 6, 'weight': 25} for _ in range(2)]}]
 
     Highland.set_params({'f_max': f_max})
     highland = Highland()
     set_f_max = highland.get_params()['f_max']
 
     highland.append_population(test_herbivores[0]['pop'])
+
+    for herbivore in highland.herbivores:
+        assert highland.current_fodder < herbivore.param['F']
+
     highland.replenish()
     highland.calculate_fitness()
 
@@ -201,7 +214,9 @@ def test_limited_fodder(f_max):
     herbivore2 = highland.herbivores[1]
     weight_pre_feeding1 = herbivore1.weight
     weight_pre_feeding2 = herbivore2.weight
+
     highland.feed()
+
     weight_post_feeding1 = herbivore1.weight
     weight_post_feeding2 = herbivore2.weight
 

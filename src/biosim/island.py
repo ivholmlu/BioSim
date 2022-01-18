@@ -24,8 +24,9 @@ class Island():
 
     def assign(self):
         """
-        Assigns each coordinate a landscape object depending on the geography depicted by geogr in the constructor.
-        The method has 3 different if-tests to ensure that a valid map geography is being mapped.
+        Assigns each coordinate a landscape object depending on the geography depicted by geogr
+            in the constructor. The method has 3 different if-tests to ensure that a valid map
+            geography is being mapped.
 
         Return
         -------
@@ -36,7 +37,8 @@ class Island():
                 raise ValueError('Inconsistent row length. All rows must be of the same length.')
 
         for row in self.geogr[1:-1]:
-            if self.geogr[0].count('W') != len(self.geogr[0]) or self.geogr[-1].count('W') != len(self.geogr[-1]):
+            if self.geogr[0].count('W') != len(self.geogr[0]) or \
+                    self.geogr[-1].count('W') != len(self.geogr[-1]):
                 raise ValueError('Edges of the island must be water.')
 
             if row[0] != 'W' or row[-1] != 'W':
@@ -55,7 +57,6 @@ class Island():
                 raise ValueError(f'"{landscape}" is an invalid landscape type.')
         #self.cells = {coord: landscape for coord, landscape in self.cells.items() if landscape != 'W'}
 
-
     def assign_animals(self, list_of_animals=None):
         """
         Assigns animals to specific coordinates provided by its input list_of_animals.
@@ -63,7 +64,8 @@ class Island():
         Parameters
         ----------
         list_of_animals : list
-            List containing dictionaries with animal objects containing its position of where its being assigned
+            List containing dictionaries with animal objects containing its position of where
+                its being assigned.
 
         Returns
         -------

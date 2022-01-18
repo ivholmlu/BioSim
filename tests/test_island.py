@@ -2,11 +2,16 @@
 Test file to test island module in biosim
 """
 import pytest
+import random
 from biosim.island import Island
 from biosim.landscape import Lowland, Highland, Desert, Water
+
+
 amount_herbivores = 50
 amount_carnivores = 20
 loc = (2, 2)
+SEED = 21
+random.seed(SEED)
 
 ini_herbs = [{'loc': loc,
               'pop': [{'species': 'Herbivore',
@@ -57,8 +62,7 @@ class TestIslandCycleAndCreation:
         assigned loc = (2,2) to its correct object.
         """
 
-        #assert type(self.island.cells[(2, 2)]) == type(Desert())  #Hvilken er best
-        assert isinstance(self.island.cells[(2, 2)], Desert)
+        assert type(self.island.cells[(2, 2)]) == type(Desert)
 
     def test_get_animals_per_species(self):
         """

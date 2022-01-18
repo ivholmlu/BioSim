@@ -65,7 +65,7 @@ class Animals:
         Parameters
         ----------
         n : int
-            Number of individuals of the same species within the same cell
+            Number of individuals of the same species within the cell
 
         Returns
         -------
@@ -122,7 +122,7 @@ class Animals:
 
     def death(self):
         """
-        Determines whether or not an animal is going to die by the end of the year.
+        Determines whether or not an animal is going to die.
 
         Returns
         -------
@@ -144,8 +144,8 @@ class Animals:
         Parameters
         ----------
         new_params: dict
-            Dictionary containing new parameters for animal object. See params in either of the subclasses
-            Carnivore or Herbivore to see valid parameters.
+            Dictionary containing new parameters for animal object. Sets parameters
+            to either  of the subclasses Carnivores or Herbivores to see valid parameters.
 
         Returns
         -------
