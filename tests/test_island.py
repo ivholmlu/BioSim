@@ -195,14 +195,15 @@ def test_map_invalid_landscape():
     with pytest.raises(ValueError):
         island = Island(map)
 
-def test_right_landscape_in_cell():
+@pytest.mark.parametrize('Landscape, symbol', [(Lowland,'L'), (Desert, 'D'), (Highland, 'H')])
+def test_right_landscape_in_cell(Landscape, symbol):
     """
     Test that right landscape is assigned to the right cell
     """
-    map = 'WWW\nWLW\nWWW'
+    map = f'WWW\nW{symbol}W\nWWW'
     island = Island(map)
 
-    assert type(island.cells[(2,2)]) == Lowland
+    assert type(island.cells[(2,2)]) == Landscape
 
 
 
