@@ -2,7 +2,7 @@ from .landscape import Lowland, Highland, Desert, Water
 import random
 
 
-class Island():
+class Island:
     def __init__(self, geogr=None):
         """
         Constructor for the island class, containing its different attributes.
