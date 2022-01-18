@@ -184,7 +184,8 @@ def test_reject_unrecognizable_animal():
 @pytest.mark.parametrize('f_max', [2.1, 8.3, 3.9, 9.0])
 def test_limited_fodder(f_max):
     """
-    Test to check if the fodder available is eaten up, leaving the next herbivore to eat with no food left.
+    Test to check if the fodder available is eaten up, which in these cases which is less than F
+    (the desired amount for a herbivore to eat), leaving the next herbivore to eat with no food left.
     """
     test_herbivores = [{'loc': (2, 7),
                         'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 25} for _ in range(2)]}]
@@ -201,7 +202,9 @@ def test_limited_fodder(f_max):
     herbivore2 = highland.herbivores[1]
     weight_pre_feeding1 = herbivore1.weight
     weight_pre_feeding2 = herbivore2.weight
+
     highland.feed()
+
     weight_post_feeding1 = herbivore1.weight
     weight_post_feeding2 = herbivore2.weight
 

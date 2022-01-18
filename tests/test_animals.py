@@ -230,3 +230,11 @@ class TestSetWrongParameters:
 
         assert self.animal.param == self.animal.get_params()
 
+
+@pytest.mark.parametrize('age, weight', [[4.8, -7.5], [-9, 23.], [-33, -41.3]])
+def test_reject_faulty_attributes(age, weight):
+    """
+    Test to check that the constructor rejects faulty age and weight parameters when assigning an animal.
+    """
+    with pytest.raises(ValueError):
+        Herbivores({'age': age, 'weight': weight})
