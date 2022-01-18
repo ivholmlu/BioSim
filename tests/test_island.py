@@ -90,14 +90,17 @@ class Test_island_cycle_and_creation:
         assert dict_animals['Herbivore'] == amount_herbivores
 
     def test_get_coord_animals(self):
-    """
-
-    """
+        """
+        Test that test_get_coord_animals returns right amount of animals from a cell
+        """
         self.island.assign_animals(ini_herbs)
         coord_animals = self.island.get_coord_animals()
         assert coord_animals[(2,2)]['Herbivores'] == amount_herbivores
 
     def test_get_attributes(self):
+        """
+        Test that test_get_attributes returns dictionary containing expected list of attributes
+        """
 
         self.island.assign_animals(ini_herbs+ini_carns)
         dict_attributes = self.island.get_attributes()
@@ -112,6 +115,14 @@ def test_get_neighbours():
 
 @pytest.mark.parametrize('Invalid_cells', [(-3, 1), (1,1)])
 def test_assign_animals_to_invalid_cell(Invalid_cells):
+    """
+    Test that checks if ValueError are raised if animals are assigned to an inhabitable coord
+    or an invalid coord
+
+    Parameters
+    ----------
+    Invalid_cells : list of tuples
+    """
     map = 'WWW\nWLW\nWWW'
     island = Island(map)
     island.assign()
@@ -123,6 +134,9 @@ def test_assign_animals_to_invalid_cell(Invalid_cells):
                                         for _ in range(1000)]}])
 
 def test_no_migration_to_water():
+    """
+    Test that no animals have migrated to any of the water neighbour cells
+    """
     map = 'WWW\nWLW\nWWW'
     island = Island(map)
     island.assign_animals([{'loc': (2,2),
@@ -156,30 +170,59 @@ def test_migration(mocker):
 
 @pytest.mark.parametrize('landscapes', ['D', 'L', 'H'])
 class TestMap:
+    """
+    Class to test creation of the map.
+    """
     def test_map_boundaries_top_bottom(self, landscapes):
+        """
+        Test that invalid boundaries at top or bottom of the map raises ValueError
+
+        Parameters
+        ----------
+        landscapes : list of strings
+
+        """
         map = f'WWW\nWDW\nWW{landscapes}'
         with pytest.raises(ValueError):
             island = Island(map)
 
     def test_map_boundaries_sides(self, landscapes):
+        """
+        Test that invalid boundaries at the sides of the map raises ValueError
+        Parameters
+        ----------
+        landscapes : list of strings
+
+        """
         map = f'WWW\nWD{landscapes}\nWWW'
         with pytest.raises(ValueError):
             island = Island(map)
 
 
-def test_map_unequal_lengths():
+def test_map_unequal_rows_or_columns():
+    """
+    Test if unequal lengths or columns raises ValueError
+    """
     map = 'WWW\nWDWW\nWWW'
     with pytest.raises(ValueError):
         island = Island(map)
 
 def test_map_invalid_landscape():
+    """
+    Test if invalid landscape name raises ValueError
+    """
     map = 'WWW\nWXW\nWWW'
     with pytest.raises(ValueError):
         island = Island(map)
 
 def test_right_landscape_in_cell():
+    """
+    Test that right landscape is assigned to the right cell
+    """
     map = 'WWW\nWLW\nWWW'
     island = Island(map)
+    landscape = Lowland()
+    assert island.cells[(2,2)] == type(landscape)
 
 
 
