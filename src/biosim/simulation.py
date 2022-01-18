@@ -17,7 +17,7 @@ import csv
 
 
 class BioSim:
-    def __init__(self, island_map, ini_pop, seed,
+    def __init__(self, island_map, ini_pop, seed=None,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
@@ -55,7 +55,8 @@ class BioSim:
 
         img_dir and img_base must either be both None or both strings.
         """
-        random.seed(seed)
+        if seed is not None:
+            random.seed(seed)
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
