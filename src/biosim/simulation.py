@@ -54,20 +54,21 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         :param log_file: If given, write animal counts to this file
 
-        island_map must be provided provided as a string in the following format:
-        ::
-            island_map = 'WWW\nWLW\nWWW'
+        island_map must be provided provided as a string in the following format
+        .. code-block::
+            island_map = r'WWW\nWLW\nWWW'
 
         This can be achieved several ways. You can write the string sa above, but we recommend
         writing the string as following, and using textwrap.dedent to achieve
         the same string format.
 
-        ::
+        .. code-block::
             island_map = '''\
                             WWW
                             WLW
                             WWW'''
             island_map = textwrap.dedent(island_map)
+
 
         ini_pop must be provided as a list with the following:
         #. a list containing a dictionary with keys 'loc' and 'pop'
@@ -75,7 +76,8 @@ class BioSim:
             #. with a key 'species' with a string value of either 'Herbivore' or 'Carnivore',
             #. a key with string 'age' with a integer value, and
             #. a key with string 'weight' with an integer/float value.
-        ::
+
+        .. code-block::
             initial_population = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
                                     'weight': 20} for _ in range(200)]}]
 
@@ -84,7 +86,7 @@ class BioSim:
 
         ini_pop also supports combining two lists of the same format as shown above, i.e:
 
-        ::
+        .. code-block::
             initial_herbivores = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
                                     'weight': 20} for _ in range(200)]}]
             initial_carnivores = [{'loc': (2, 7), 'pop': [{'species': 'Carnivore', 'age': 7,
@@ -178,9 +180,7 @@ class BioSim:
         :param num_years: number of years to simulate
 
         If the method is called multiple times after creating the :class:`BioSim` object , i.e.
-        --------
-        ::
-
+        .. code-block::
         sim = BioSim(island_map, initial_population)
         sim.simulate(30)
         sim.simulate(50)
