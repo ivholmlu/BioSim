@@ -136,7 +136,8 @@ class Graphics:
             for ix, name in enumerate(('Water', 'Lowland',
                                        'Highland', 'Desert')):
                 self._map_ax.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                       edgecolor='none', facecolor=rgb_value[name[0]]))
+                                                     edgecolor='none',
+                                                     facecolor=rgb_value[name[0]]))
 
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
@@ -159,7 +160,8 @@ class Graphics:
             self._heat1_ax.set_yticks([1, 5, 11, 16, 21])
             vmax_herb = cmax_animals['Herbivore']
             self._heat1_img = self._heat1_ax.imshow(self._heat1_map,
-                              interpolation='nearest', vmin=0, vmax=vmax_herb, cmap='plasma')
+                                                    interpolation='nearest', vmin=0, vmax=vmax_herb,
+                                                    cmap='plasma')
             plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
 
         if self._heat2_ax is None:
@@ -169,7 +171,8 @@ class Graphics:
 
             vmax_carn = cmax_animals['Carnivore']
             self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
-                              interpolation='nearest', vmin=0, vmax=vmax_carn, cmap='plasma')
+                                                    interpolation='nearest', vmin=0, vmax=vmax_carn,
+                                                    cmap='plasma')
             plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
         if self._hist1_ax is None:
