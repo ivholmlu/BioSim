@@ -51,6 +51,22 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         :param log_file: If given, write animal counts to this file
 
+        island_map must be provided provided as a string in the following format:
+        ::
+            island_map = 'WWW\nWLW\nWWW'
+
+        This can be achieved several ways. You can write the string sa above, but we recommend
+        writing the string as following, and using textwrap.dedent to achieve
+        the same string format.
+
+        ::
+            island_map = '''\
+                            WWW
+                            WLW
+                            WWW'''
+
+            island_map = textwrap.dedent(island_map)
+
         If ymax_animals is None, the y-axis limit should be adjusted automatically.
         If cmax_animals is None, sensible, fixed default values should be used.
         cmax_animals is a dict mapping species names to numbers, e.g.,

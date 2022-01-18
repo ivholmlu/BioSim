@@ -1,7 +1,9 @@
 """
-To preface, the starting point of this code has been provided by Hans Ekkehard Plesser
-in his randvis_project which was provided as inspiration. We have further tailored this code to
-be in line with our code and provide the graphics we want to show.
+.. note::
+    To preface, the starting point of this code has been provided by Hans Ekkehard Plesser
+    in his randvis_project which was provided as inspiration at the start of our projects.
+    We have further tailored this code to be in line with our code to provide the graphics
+    we want to show.
 
 :mod:`randvis.graphics` provides graphics support for RandVis.
 

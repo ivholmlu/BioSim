@@ -12,6 +12,8 @@ class Island:
         geogr : list
             List of strings containing L, W, D, H to specify each cell values
             where each row is seperated by a newline (\n)
+
+
         """
         self.geogr = geogr.splitlines()
         self.t_geogr = geogr.replace('\n', '')
