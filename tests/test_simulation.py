@@ -2,7 +2,6 @@
 Test file to test simulation for biosim
 """
 import pytest
-SEEED = 100
 from biosim.simulation import BioSim
 import textwrap
 import matplotlib.pyplot as plt
@@ -29,6 +28,7 @@ ini_carns = [{'loc': (2, 3),
 num_years = 10
 seed = 100
 
+
 def test_simulation():
     """
     Test that Biosim runs without problems
@@ -36,6 +36,7 @@ def test_simulation():
     """
     sim = BioSim(geogr, ini_herbs + ini_carns, seed=seed, vis_years=10)
     sim.simulate(num_years)
+
 
 def test_no_plot_simulation():
     """
@@ -47,9 +48,8 @@ def test_no_plot_simulation():
     sim.simulate(50)
 
 
-
-@pytest.fixture(scope='function') #Taken from
-                                # https://stackoverflow.com/questions/60127165/pytest-test-function-that-creates-plots
+@pytest.fixture(scope='function')
+# Taken from https://stackoverflow.com/questions/60127165/pytest-test-function-that-creates-plots
 def plot_fn():
     def _plot(points):
         plt.plot(points)
@@ -57,7 +57,8 @@ def plot_fn():
         plt.close('all')
     return _plot
 
-@pytest.mark.parametrize('landscape, f_max',[('H', {'f_max': 100}), ('L', {'f_max': 300}), ('D', {'f_max': 40})])
+
+@pytest.mark.parametrize('landscape, f_max', [('H', {'f_max': 100}), ('L', {'f_max': 300}), ('D', {'f_max': 40})])
 def test_set_param_f_max(landscape, f_max):
     """
     Test to check that set parameters work for all existing landscapes and that
@@ -66,17 +67,12 @@ def test_set_param_f_max(landscape, f_max):
     sim = BioSim(geogr, ini_herbs + ini_carns, img_dir='None')
     sim.set_landscape_parameters(landscape, f_max)
     with pytest.raises(ValueError):
-        sim.set_landscape_parameters('S', {'f_max' : 100})
+        sim.set_landscape_parameters('S', {'f_max': 100})
 
-@pytest.mark.parametrize('species, param',[('Herbivore', {'mu': 0.4}), ('Carnivore', {'w_half': 13})])
+
+@pytest.mark.parametrize('species, param', [('Herbivore', {'mu': 0.4}), ('Carnivore', {'w_half': 13})])
 def test_set_animal_param(species, param):
     sim = BioSim(geogr, ini_herbs + ini_carns)
     sim.set_animal_parameters(species, param)
     with pytest.raises(ValueError):
-        sim.set_animal_parameters('Bird', {'mu' : 0.4})
-
-
-
-
-
-
+        sim.set_animal_parameters('Bird', {'mu': 0.4})
