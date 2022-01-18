@@ -5,6 +5,7 @@ import pytest
 SEEED = 100
 from biosim.simulation import BioSim
 import textwrap
+import matplotlib.pyplot as plt
 geogr = """\
            WWWWW
            WLLLW
@@ -47,6 +48,14 @@ def test_no_plot_simulation():
 
 
 
+@pytest.fixture(scope='function') #Taken from
+                                # https://stackoverflow.com/questions/60127165/pytest-test-function-that-creates-plots
+def plot_fn():
+    def _plot(points):
+        plt.plot(points)
+        yield plt.show()
+        plt.close('all')
+    return _plot
 
 @pytest.mark.parametrize('landscape, f_max',[('H', {'f_max': 100}), ('L', {'f_max': 300}), ('D', {'f_max': 40})])
 def test_set_param_f_max(landscape, f_max):
@@ -54,10 +63,20 @@ def test_set_param_f_max(landscape, f_max):
     Test to check that set parameters work for all existing landscapes and that
     non existing landscapes return ValueError
     """
-    sim = BioSim(geogr, ini_herbs + ini_carns)
+    sim = BioSim(geogr, ini_herbs + ini_carns, img_dir='None')
     sim.set_landscape_parameters(landscape, f_max)
     with pytest.raises(ValueError):
         sim.set_landscape_parameters('S', {'f_max' : 100})
+
+@pytest.mark.parametrize('species, param',[('Herbivore', {'mu': 0.4}), ('Carnivore', {'w_half': 13})])
+def test_set_animal_param(species, param):
+    sim = BioSim(geogr, ini_herbs + ini_carns)
+    sim.set_animal_parameters(species, param)
+    with pytest.raises(ValueError):
+        sim.set_animal_parameters('Bird', {'mu' : 0.4})
+
+
+
 
 
 
