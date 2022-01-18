@@ -80,6 +80,7 @@ class Island():
             else:
                 raise ValueError(f'Coordinate {coord} is an invalid place to assign animals')
 
+
     def cycle(self):
         """
         Function to simulate a cycle on island. Runs through every function in
