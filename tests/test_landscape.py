@@ -207,3 +207,4 @@ def test_limited_fodder(f_max):
 
     assert weight_post_feeding1 == weight_pre_feeding1 + herbivore1.param['beta'] * set_f_max \
            and weight_pre_feeding2 == weight_post_feeding2 and highland.current_fodder == 0
+
