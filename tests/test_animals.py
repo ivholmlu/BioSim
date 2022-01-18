@@ -66,8 +66,8 @@ class TestCreationAndFunc:
     @pytest.mark.parametrize('species', [Herbivores, Carnivores])
     def test_certain_death(self, species, test_animal):
         """
-        Creates a certain death scenario for all N animals. Checks if all objects alive attributes
-        have been set to False
+        Creates a certain death scenario for all N animals.
+        Checks if all objects alive attributes have been set to False
         """
         # noinspection PyPep8Naming
         N = 50
@@ -168,7 +168,8 @@ def test_fitness_flux(expected_fitness, weigth_age_parameters):
     Tests if the fitness_flux function calculates right values.
     40 and 10 are the 'a_half' and 'w_half' parameters. If inserted for herbivores
     they will return 0.250
-    The others are values calculated by Ivar using CAS from Geogebra and the formula given in the task
+    The others are values calculated by Ivar
+    using CAS from Geogebra and the formula given in the task
     """
     herb = Herbivores(weigth_age_parameters)
     herb.fitness_flux()
@@ -231,7 +232,8 @@ class TestSetWrongParameters:
 @pytest.mark.parametrize('age, weight', [[4.8, -7.5], [-9, 23.], [-33, -41.3]])
 def test_reject_faulty_attributes(age, weight):
     """
-    Test to check that the constructor rejects faulty age and weight parameters when assigning an animal.
+    Test to check that the constructor rejects faulty
+    age and weight parameters when assigning an animal.
     """
     with pytest.raises(ValueError):
         Herbivores({'age': age, 'weight': weight})
