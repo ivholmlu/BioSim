@@ -40,7 +40,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         q_age = 1 / (1 + math.exp(self.param['phi_age'] *
                                   (self.age - self.param['a_half'])))
@@ -54,7 +54,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         self.weight += self.param['beta'] * gain
         self.fitness_flux()
@@ -71,7 +71,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         phi = self.fitness
         p = min(1, self.param['gamma'] * phi * (n - 1))
@@ -106,7 +106,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         self.age += 1
         self.fitness_flux()
@@ -116,6 +116,8 @@ class Animals:
         Calculates weight loss for each year.
 
         Returns
+        -------
+
         """
         self.weight -= self.weight * self.param['eta']
         self.fitness_flux()
@@ -124,9 +126,9 @@ class Animals:
         """
         Determines whether or not an animal is going to die.
 
-        Return: None
+        Returns
         -------
-        None
+
         """
         if self.alive is True:
             if self.weight <= 0:
@@ -149,7 +151,7 @@ class Animals:
 
         Returns
         -------
-        None
+
         """
         pos_params = [key for key in cls.param.keys() if key != 'DeltaPhiMax']
         for key in new_params.keys():

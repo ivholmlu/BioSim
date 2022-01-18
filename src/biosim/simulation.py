@@ -240,7 +240,15 @@ class BioSim:
     def add_population(self, population):
         """
         Add a population to the island
-        :param population: List of dictionaries specifying population
+
+        Parameters
+        ----------
+        population : list
+            The population to add in the simulation
+
+        Returns
+        -------
+
         """
         self.island.assign_animals(population)
 
@@ -291,6 +299,7 @@ class BioSim:
 
         Returns
         -------
+
         """
         save_path = './log_files'
         filename = log_filename

@@ -17,7 +17,7 @@ class Island:
         ----------
         geogr : list
             List of strings containing L, W, D, H to specify each cell values
-            where each row is seperated by a newline (\n)
+            where each row is seperated by a newline
 
 
         """
@@ -38,7 +38,7 @@ class Island:
 
         Return
         -------
-        None
+
         """
         for current_row, next_row in zip(self.geogr, self.geogr[1:]):
             if len(next_row) != len(current_row):
@@ -76,7 +76,7 @@ class Island:
 
         Returns
         -------
-        None
+
         """
         for animals in list_of_animals:
             coord = animals['loc']
@@ -96,7 +96,7 @@ class Island:
 
         Returns
         -------
-        None
+
         """
         for coord in self.cells.keys():
             if self.cells[coord].habitable is True:
