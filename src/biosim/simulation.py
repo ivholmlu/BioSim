@@ -16,6 +16,7 @@ import random
 import csv
 import os
 
+
 class BioSim:
     def __init__(self, island_map, ini_pop, seed=None,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
