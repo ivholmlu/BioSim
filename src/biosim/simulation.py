@@ -135,10 +135,18 @@ class BioSim:
 
     def set_animal_parameters(self, species, params):
         """
-        Set parameters for animal species.
+         Set parameters for animal species.
 
-        :param species: String, name of animal species
-        :param params: Dictionary with valid parameter specification for species
+        Parameters
+        ----------
+        species
+            String, name of animal species
+        params
+            Dictionary with valid parameter specification for species
+
+        Returns
+        -------
+
         """
         if species == 'Herbivore':
             Herbivores.set_params(params)
