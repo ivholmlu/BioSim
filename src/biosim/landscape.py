@@ -51,6 +51,9 @@ class Landscape:
     def sort_fitness(self):
         """
         Sort the herbivores after fitness. Highest fitness first
+
+        Returns
+        -------
         """
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=True)
 
@@ -60,6 +63,9 @@ class Landscape:
         Carnivores eat the herbivores starting with the least fit.
         Each carnivore tries to eat each herbivore once
         At the end, the dead herbivores are removed from list of herbivores
+
+        Returns
+        -------
 
         """
         for herbivore in self.herbivores:
@@ -103,7 +109,7 @@ class Landscape:
         If a paren has given birth, the baby attribute is added to baby_herb.
         Returns
         -------
-        None
+
         """
         baby_herb = [baby for parent in self.herbivores
                      if (baby := parent.birth(len(self.herbivores))) and parent.alive is True]
@@ -141,7 +147,7 @@ class Landscape:
 
         Returns
         -------
-        None
+
         """
         self.migrants.append(animal)
 
@@ -151,7 +157,7 @@ class Landscape:
         their respective species attribute list
         Returns
         -------
-        None
+
         """
         for migrant in self.migrants:
             if type(migrant) is Carnivores:
@@ -173,7 +179,7 @@ class Landscape:
 
         Returns
         -------
-        None
+
         """
         if type(animal) is Herbivores:
             self.herbivores.append(animal)
@@ -186,7 +192,7 @@ class Landscape:
         in landscape object.
         Returns
         -------
-        None
+
         """
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.ages()
@@ -198,7 +204,7 @@ class Landscape:
         Iterate over each animal and only keep those who are alive.
         Returns
         -------
-        None
+
         """
         for animal in itertools.chain(self.carnivores, self.herbivores):
             animal.death()
@@ -229,7 +235,7 @@ class Landscape:
 
         Returns
         -------
-        None
+
         """
         for key in new_params:
             if key not in ['habitable', 'f_max']:
