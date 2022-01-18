@@ -2,11 +2,14 @@
 Test file to test island module in biosim
 """
 import pytest
+import random
 from biosim.island import Island
 from biosim.landscape import Lowland, Highland, Desert, Water
 amount_herbivores = 50
 amount_carnivores = 20
 loc = (2, 2)
+SEED = 21
+random.seed(SEED)
 
 ini_herbs = [{'loc': loc,
               'pop': [{'species': 'Herbivore',
