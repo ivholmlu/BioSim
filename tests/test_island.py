@@ -221,8 +221,8 @@ def test_right_landscape_in_cell():
     """
     map = 'WWW\nWLW\nWWW'
     island = Island(map)
-    landscape = Lowland()
-    assert island.cells[(2,2)] == type(landscape)
+
+    assert type(island.cells[(2,2)]) == Lowland
 
 
 
