@@ -65,7 +65,7 @@ class Animals:
         Parameters
         ----------
         n : int
-            Number of individuals of the same species within the same cell
+            Number of individuals of the same species within the cell
 
         Returns
         -------
@@ -122,7 +122,7 @@ class Animals:
 
     def death(self):
         """
-        Determines whether or not an animal is going to die by the end of the year.
+        Determines whether or not an animal is going to die.
 
         Returns
         -------
