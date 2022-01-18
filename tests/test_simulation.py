@@ -28,6 +28,7 @@ ini_carns = [{'loc': (2, 3),
 num_years = 10
 seed = 100
 
+
 def test_simulation():
     """
     Test that Biosim runs without problems
@@ -35,6 +36,7 @@ def test_simulation():
     """
     sim = BioSim(geogr, ini_herbs + ini_carns, seed=seed, vis_years=10)
     sim.simulate(num_years)
+
 
 def test_no_plot_simulation():
     """
@@ -44,8 +46,6 @@ def test_no_plot_simulation():
     sim.simulate(50)
     sim.add_population(ini_carns)
     sim.simulate(50)
-
-
 
 
 @pytest.mark.parametrize('landscape, f_max',[('H', {'f_max': 100}), ('L', {'f_max': 300}), ('D', {'f_max': 40})])
