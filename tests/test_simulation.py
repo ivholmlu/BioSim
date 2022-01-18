@@ -5,6 +5,7 @@ import pytest
 from biosim.simulation import BioSim
 import textwrap
 import matplotlib.pyplot as plt
+
 geogr = """\
            WWWWW
            WLLLW
@@ -62,7 +63,7 @@ def plot_fn():
 def test_set_param_f_max(landscape, f_max):
     """
     Test to check that set parameters work for all existing landscapes and that
-    non existing landscapes return ValueError
+    non-existing landscapes return ValueError
     """
     sim = BioSim(geogr, ini_herbs + ini_carns, img_dir='None')
     sim.set_landscape_parameters(landscape, f_max)
