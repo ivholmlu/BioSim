@@ -35,12 +35,6 @@ Island2 = """\
            WWWWW"""
 Island2 = textwrap.dedent(Island2)
 
-Island3 = """\
-           WWW
-           WDW
-           WWW"""
-Island3 = textwrap.dedent(Island3)
-
 
 
 class Test_island_cycle_and_creation:
