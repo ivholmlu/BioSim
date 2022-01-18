@@ -16,7 +16,6 @@ import random
 import csv
 import os
 
-
 class BioSim:
     def __init__(self, island_map, ini_pop, seed=None,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
@@ -117,7 +116,8 @@ class BioSim:
         """
         self.island.assign_animals(self.ini_pop)
         self.final_year = num_years + self.years
-        self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals, self.cmax_animals, self.hist_specs)
+        self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals,
+                             self.cmax_animals, self.hist_specs)
 
         if self.img_years is None:
             self.img_years = self.vis_years
@@ -148,8 +148,8 @@ class BioSim:
                     self.heat_map1[x, y] = n_animals['Herbivores']
                     self.heat_map2[x, y] = n_animals['Carnivores']
 
-                self._graphics.update(self.years, self.heat_map1, self.heat_map2, total_herbivores, total_carnivores,
-                                      histogram_dict['Herbivores']['fitness'],
+                self._graphics.update(self.years, self.heat_map1, self.heat_map2, total_herbivores,
+                                      total_carnivores, histogram_dict['Herbivores']['fitness'],
                                       histogram_dict['Carnivores']['fitness'],
                                       histogram_dict['Herbivores']['age'],
                                       histogram_dict['Carnivores']['age'],

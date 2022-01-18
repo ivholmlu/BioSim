@@ -144,8 +144,8 @@ class Animals:
         Parameters
         ----------
         new_params: dict
-            Dictionary containing new parameters for animal object. See params in either of the subclasses
-            Carnivore or Herbivore to see valid parameters.
+            Dictionary containing new parameters for animal object. Sets parameters
+            to either  of the subclasses Carnivores or Herbivores to see valid parameters.
 
         Returns
         -------

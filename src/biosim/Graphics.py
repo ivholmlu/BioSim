@@ -136,7 +136,7 @@ class Graphics:
             for ix, name in enumerate(('Water', 'Lowland',
                                        'Highland', 'Desert')):
                 self._map_ax.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                                     edgecolor='none', facecolor=rgb_value[name[0]]))
+                                       edgecolor='none', facecolor=rgb_value[name[0]]))
 
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
@@ -159,7 +159,7 @@ class Graphics:
             self._heat1_ax.set_yticks([1, 5, 11, 16, 21])
             vmax_herb = cmax_animals['Herbivore']
             self._heat1_img = self._heat1_ax.imshow(self._heat1_map,
-                                                    interpolation='nearest', vmin=0, vmax=vmax_herb, cmap='plasma')
+                              interpolation='nearest', vmin=0, vmax=vmax_herb, cmap='plasma')
             plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
 
         if self._heat2_ax is None:
@@ -169,7 +169,7 @@ class Graphics:
 
             vmax_carn = cmax_animals['Carnivore']
             self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
-                                                    interpolation='nearest', vmin=0, vmax=vmax_carn, cmap='plasma')
+                              interpolation='nearest', vmin=0, vmax=vmax_carn, cmap='plasma')
             plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
 
         if self._hist1_ax is None:
@@ -236,7 +236,8 @@ class Graphics:
         Parameters
         ----------
         year: int
-            Sets the x-value, the current year, for the incoming y-values, total_herbivores and total_carnivores.
+            Sets the x-value, the current year, for the incoming y-values:
+                total_herbivores and total_carnivores.
         total_herbivores: int
             Sets the y-value for the herbivore line.
         total_carnivores: int
@@ -255,7 +256,8 @@ class Graphics:
     def _update_histograms(self, herbi_fitness, carni_fitness, herbi_age, carni_age,
                            herbi_weight, carni_weight):
         """
-        Updates the histogram by inserting the fitness, age and weight of both carnivores and herbivores.
+        Updates the histogram by inserting the fitness, age and weight
+            of both carnivores and herbivores.
 
         Parameters
         ----------
@@ -294,9 +296,9 @@ class Graphics:
         self._hist2_ax.set_title('Age')
         self._hist3_ax.set_title('Weight')
 
-    def update(self, year, herbivores_arr=None, carnivores_arr=None, n_herbivores=None, n_carnivores=None,
-               herbi_fitness=None, carni_fitness=None, herbi_age=None, carni_age=None, herbi_weight=None,
-               carni_weight=None):
+    def update(self, year, herbivores_arr=None, carnivores_arr=None, n_herbivores=None,
+               n_carnivores=None, herbi_fitness=None, carni_fitness=None, herbi_age=None,
+               carni_age=None, herbi_weight=None, carni_weight=None):
         """
         Updates graphics with current data and save to file if necessary.
 
@@ -305,11 +307,13 @@ class Graphics:
         year: int
             The year which the incoming values are coming from.
         herbivores_arr: numpy array
-            A 2D numpy array in which its indices [row, column], which is mapped after the geography of the map and is
-            analogous to the coordinates of the map, contains the specific amount herbivores in the coordinate.
+            A 2D numpy array in which its indices [row, column], which is mapped after the geography
+                of the map and is analogous to the coordinates of the map, contains the specific
+                amount herbivores in the coordinate.
         carnivores_arr: numpy array
-            A 2D numpy array in which its indices [row, column], which is mapped after the geography of the map and is
-            analogous to the coordinates of the map, contains the specific amount herbivores in the coordinate.
+            A 2D numpy array in which its indices [row, column], which is mapped after the geography
+                of the map and is analogous to the coordinates of the map, contains the specific
+                amount carnivores in the coordinate.
         n_herbivores: int
             Total herbivores on the island
         n_carnivores: int
