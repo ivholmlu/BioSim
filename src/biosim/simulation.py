@@ -67,7 +67,6 @@ class BioSim:
                             WWW
                             WLW
                             WWW'''
-
             island_map = textwrap.dedent(island_map)
 
         ini_pop must be provided as a list with the following:
@@ -79,6 +78,7 @@ class BioSim:
         ::
             initial_population = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
                                     'weight': 20} for _ in range(200)]}]
+
         Optionally you can make a list comprehension as in the example above and create multiple
         copies with the same attributes, or write a list where the attributes varies.
 
