@@ -107,7 +107,7 @@ class BioSim:
         elif landscape == 'H':
             Highland.set_params(params)
         else:
-            raise ValueError('Code letter for landscape must be one of the following: W, D, L or H.')
+            raise ValueError('Code letter for landscape must of the following: W, D, L or H.')
 
     def simulate(self, num_years):
         """
