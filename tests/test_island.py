@@ -92,7 +92,12 @@ class Test_island_cycle_and_creation:
         coord_animals = self.island.get_coord_animals()
         assert coord_animals[(2,2)]['Herbivores'] == amount_herbivores
 
+    def test_get_attributes(self):
 
+        self.island.assign_animals(ini_herbs+ini_carns)
+        dict_attributes = self.island.get_attributes()
+        assert dict_attributes['Herbivores']['age'] == [5 for i in range(amount_herbivores)]
+        assert dict_attributes['Carnivores']['age'] == [5 for i in range(amount_carnivores)]
 def test_get_neighbours():
     """
     Test if get neighbour function returns the correct coordinates for a
