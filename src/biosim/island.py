@@ -55,7 +55,6 @@ class Island:
                 self.cells[coord] = Water()
             else:
                 raise ValueError(f'"{landscape}" is an invalid landscape type.')
-        #self.cells = {coord: landscape for coord, landscape in self.cells.items() if landscape != 'W'}
 
     def assign_animals(self, list_of_animals=None):
         """
@@ -140,8 +139,8 @@ class Island:
             Dictionary contains a dictionary for each species with a list
             for each of their attributes
         """
-        dict_attributes = {'Herbivores' : {'age' : [], 'weight' : [], 'fitness' : []},
-                           'Carnivores' : {'age' : [], 'weight' : [], 'fitness' : []}}
+        dict_attributes = {'Herbivores': {'age': [], 'weight': [], 'fitness': []},
+                           'Carnivores': {'age': [], 'weight': [], 'fitness': []}}
         for cell in self.cells:
             if self.cells[cell].habitable is True:
                 for herb in self.cells[cell].herbivores:
