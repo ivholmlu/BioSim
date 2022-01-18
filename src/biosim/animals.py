@@ -1,6 +1,5 @@
 """
-Class for herbivores. Will later on be merged into class for animals.
-There will herbivores be a subclass
+Animal module
 """
 import math
 import random

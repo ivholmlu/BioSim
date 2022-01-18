@@ -14,8 +14,8 @@ want the graphics to update.
 The graphics can be saved to a png files if wanted with given intervals, and by calling
 the :meth:`BioSim.make_movie` after a completed simulation, the graphics will be compiled
 into video file.
-
 """
+
 
 # The material in this file is licensed under the BSD 3-clause license
 # https://opensource.org/licenses/BSD-3-Clause
@@ -40,7 +40,6 @@ class BioSim:
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
-
         """
         :param island_map: Multi-line string specifying island geography
         :param ini_pop: List of dictionaries specifying initial population
