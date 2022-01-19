@@ -105,8 +105,7 @@ class BioSim:
         """
         if seed is not None:
             random.seed(seed)
-        if self.img_years is None:
-            self.img_years = self.vis_years
+
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
@@ -125,6 +124,8 @@ class BioSim:
         self.final_year = None
         self.log_data = []
         self.log_filename = log_file
+        if self.img_years is None:
+            self.img_years = self.vis_years
 
     def set_animal_parameters(self, species, params):
         """
@@ -270,11 +271,6 @@ class BioSim:
         ani_dict = self.island.get_animals_per_species()
         return ani_dict['Herbivore'] + ani_dict['Carnivore']
 
-    @staticmethod
-    def coord_animals(self):
-        """Return the amount of each species in each landscape object on island"""
-        return self.island.get_coord_animals()
-
     @property
     def year(self):
         """Return the current year in simulation"""
@@ -291,6 +287,11 @@ class BioSim:
         Number of animals per species in island, as dictionary.
         """
         return self.island.get_animals_per_species()
+
+    @staticmethod
+    def coord_animals(self):
+        """Return the amount of each species in each landscape object on island"""
+        return self.island.get_coord_animals()
 
     @staticmethod
     def write_log_data(log_filename, log_data):
