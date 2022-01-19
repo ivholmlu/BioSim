@@ -106,9 +106,13 @@ class BioSim:
         if seed is not None:
             random.seed(seed)
 
+        if vis_years == 0:
+            self.img_years = 1
+
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
+        self.island.assign_animals(self.ini_pop)
         self.vis_years = vis_years
         self.img_years = img_years
         self.ymax_animals = ymax_animals
@@ -190,7 +194,7 @@ class BioSim:
         the simulation will be continued from where it last ended. So after simulating 30 years,
         it will now continue simulating from year 30 and simulate onwards 50 more years.
         """
-        self.island.assign_animals(self.ini_pop)
+
         self.final_year = num_years + self.year
         self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals,
                              self.cmax_animals, self.hist_specs)
