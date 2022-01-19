@@ -68,17 +68,12 @@ class Landscape:
         -------
 
         """
+
         for herbivore in self.herbivores:
-            if self.current_fodder >= herbivore.param['F']:
-                herbivore.weight_gain(herbivore.param['F'])
-                self.current_fodder -= herbivore.param['F']
+            if self.current_fodder != 0:
+                herbivore.weight_gain(min(self.current_fodder, herbivore.param['F']))
+                self.current_fodder -= min((self.current_fodder, herbivore.param['F']))
 
-            elif self.current_fodder < herbivore.param['F']:
-                herbivore.weight_gain(self.current_fodder)
-                self.current_fodder -= self.current_fodder
-
-            elif self.current_fodder == 0:
-                break
 
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=False)
         random.shuffle(self.carnivores)
