@@ -23,7 +23,7 @@ class Animals:
         """
         self.fitness = 0
         self.alive = True
-        self.baby = {'age': 0, 'weight': 0.0, 'species': self.species}
+        self.baby = {'age': 0, 'weight': 0.0}
 
         if attr is not None:
             if not attr['age'] >= 0:
