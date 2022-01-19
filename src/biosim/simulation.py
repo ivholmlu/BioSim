@@ -67,7 +67,7 @@ class BioSim:
         #. a list containing a dictionary with keys 'loc' and 'pop'
         #. the value of 'pop' must contain a list of dictionaries
             #. with a key 'species' with a string value of either 'Herbivore' or 'Carnivore',
-            #. a key with string 'age' with a integer value, and
+            #. a key with string 'age' with an integer value, and
             #. a key with string 'weight' with an integer/float value. ::
 
             initial_population = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
@@ -105,6 +105,7 @@ class BioSim:
         """
         if seed is not None:
             random.seed(seed)
+
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)

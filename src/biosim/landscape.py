@@ -262,8 +262,9 @@ class Lowland(Landscape):
     """
     Subclass of Landscape
     """
-    habitable = True
-    f_max = 800
+    param = {'f_max': 800, 'habitable': True}
+    habitable = param['habitable']
+    f_max = param['f_max']
 
 
 class Highland(Landscape):

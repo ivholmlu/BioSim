@@ -20,6 +20,7 @@
 """
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 import subprocess
 import os
@@ -150,6 +151,9 @@ class Graphics:
             self._line_ax.set_xlim(0, 300)
             self._line_ax.set_ylim(0, y_max)
             self._line_ax.set_title('Number of each species')
+            carnivores = mpatches.Patch(color='red', label='Carnivores')
+            herbivores = mpatches.Patch(color='blue', label='Herbivores')
+            plt.legend(handles=[carnivores, herbivores], loc='upper left')
 
         if self._time_ax is None:
             self._time_ax = self._fig.add_axes([0.4, 0.83, 0.2, 0.2])
@@ -163,23 +167,29 @@ class Graphics:
         if self._heat1_ax is None:
             self._heat1_ax = self._fig.add_subplot(2, 3, 4)
             self._heat1_ax.set_title('Herbivore distribution')
-            self._heat1_ax.set_yticks([1, 5, 11, 16, 21])
+            self._heat1_ax.set_yticks([1, 6, 11, 16, 21])
+            self._heat1_ax.set_xticks([1, 6, 11, 16, 21])
             vmax_herb = cmax_animals['Herbivore']
             self._heat1_img = self._heat1_ax.imshow(self._heat1_map,
                                                     interpolation='nearest', vmin=0, vmax=vmax_herb,
                                                     cmap='plasma')
-            plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
+            colorbar_1 = plt.colorbar(self._heat1_img, ax=self._heat1_ax,
+                                      orientation='vertical', cmap='plasma')
+            colorbar_1.ax.set_ylabel('Number of herbivores')
 
         if self._heat2_ax is None:
             self._heat2_ax = self._fig.add_subplot(2, 3, 5)
             self._heat2_ax.set_title('Carnivore distribution')
-            self._heat2_ax.set_yticks([1, 5, 11, 16, 21])
+            self._heat2_ax.set_yticks([1, 6, 11, 16, 21])
+            self._heat2_ax.set_xticks([1, 6, 11, 16, 21])
 
             vmax_carn = cmax_animals['Carnivore']
             self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
                                                     interpolation='nearest', vmin=0, vmax=vmax_carn,
                                                     cmap='plasma')
-            plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
+            colorbar_2 = plt.colorbar(self._heat2_img, ax=self._heat2_ax,
+                                      orientation='vertical', cmap='plasma')
+            colorbar_2.ax.set_ylabel('Number of carnivores')
 
         if self._hist1_ax is None:
             self._hist1_ax = self._fig.add_subplot(3, 3, 3)

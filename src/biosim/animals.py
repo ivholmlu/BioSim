@@ -48,6 +48,7 @@ class Animals:
                                      (self.weight - self.param['w_half'])))
         self.fitness = q_age * q_weight
 
+
     def weight_gain(self, gain=0.0):
         """
         Calculates the weight gained from food
