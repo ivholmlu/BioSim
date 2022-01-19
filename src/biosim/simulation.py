@@ -120,7 +120,7 @@ class BioSim:
 
         self._graphics = Graphics(img_dir, img_base, img_fmt, self.island_map,
                                   self.heat_map1, self.heat_map2)
-        self.years = 0
+        self.year = 0
         self.final_year = None
         self.log_data = []
         self.log_filename = log_file
@@ -191,7 +191,7 @@ class BioSim:
         it will now continue simulating from year 30 and simulate onwards 50 more years.
         """
         self.island.assign_animals(self.ini_pop)
-        self.final_year = num_years + self.years
+        self.final_year = num_years + self.year
         self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals,
                              self.cmax_animals, self.hist_specs)
 
@@ -201,19 +201,19 @@ class BioSim:
         except ZeroDivisionError:
             pass
 
-        while self.years < self.final_year:
+        while self.year < self.final_year:
             self.island.cycle()
             histogram_dict = self.get_attributes
             total_herbivores = len(histogram_dict['Herbivores']['fitness'])
             total_carnivores = len(histogram_dict['Carnivores']['fitness'])
 
             if self.vis_years != 0:
-                self._graphics.update_line_graph(self.years, total_herbivores, total_carnivores)
+                self._graphics.update_line_graph(self.year, total_herbivores, total_carnivores)
 
             if self.vis_years == 0:
                 plt.close()
 
-            if self.vis_years != 0 and self.years % self.vis_years == 0:
+            if self.vis_years != 0 and self.year % self.vis_years == 0:
                 animal_coords = self.island.get_coord_animals()
                 for coord, n_animals in animal_coords.items():
                     x = list(coord)[0]
@@ -221,7 +221,7 @@ class BioSim:
                     self.heat_map1[x, y] = n_animals['Herbivores']
                     self.heat_map2[x, y] = n_animals['Carnivores']
 
-                self._graphics.update(self.years, self.heat_map1, self.heat_map2, total_herbivores,
+                self._graphics.update(self.year, self.heat_map1, self.heat_map2, total_herbivores,
                                       total_carnivores, histogram_dict['Herbivores']['fitness'],
                                       histogram_dict['Carnivores']['fitness'],
                                       histogram_dict['Herbivores']['age'],
@@ -230,10 +230,10 @@ class BioSim:
                                       histogram_dict['Carnivores']['weight'])
                 plt.pause(0.001)
 
-            self.years += 1
+            self.year += 1
 
             if self.log_filename is not None:
-                self.log_data.append([self.years, total_herbivores, total_carnivores])
+                self.log_data.append([self.year, total_herbivores, total_carnivores])
                 self.write_log_data(self.log_filename, self.log_data)
 
     def add_population(self, population):
