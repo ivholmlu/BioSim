@@ -105,7 +105,8 @@ class BioSim:
         """
         if seed is not None:
             random.seed(seed)
-
+        if self.img_years is None:
+            self.img_years = self.vis_years
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
@@ -192,9 +193,6 @@ class BioSim:
         self.final_year = num_years + self.years
         self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals,
                              self.cmax_animals, self.hist_specs)
-
-        if self.img_years is None:
-            self.img_years = self.vis_years
 
         try:
             if self.img_years % self.vis_years != 0:
