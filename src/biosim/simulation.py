@@ -272,9 +272,9 @@ class BioSim:
         return ani_dict['Herbivore'] + ani_dict['Carnivore']
 
     @property
-    def year(self):
+    def current_year(self):
         """Return the current year in simulation"""
-        return self.years
+        return self.year
 
     @property
     def get_attributes(self):
