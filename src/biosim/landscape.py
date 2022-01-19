@@ -82,7 +82,7 @@ class Landscape:
             delta_phi_max = carnivore.param['DeltaPhiMax']
             carnivore.eaten = 0
 
-            for attempts, herbivore in enumerate(self.herbivores, 1):
+            for herbivore in self.herbivores:
                 p = (carnivore.fitness - herbivore.fitness)/delta_phi_max
                 prev_eaten = carnivore.eaten
                 if random.random() < p and herbivore.alive is True:
@@ -93,8 +93,7 @@ class Landscape:
                         break
                     else:
                         carnivore.weight_gain(herbivore.weight)
-                elif attempts == len(self.herbivores):
-                    break
+
 
         self.herbivores = [herbivore for herbivore in self.herbivores if herbivore.alive is True]
 
