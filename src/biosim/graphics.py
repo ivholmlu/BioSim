@@ -149,7 +149,7 @@ class Graphics:
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
             self._line_ax.set_xlim(0, 300)
-            self._line_ax.set_ylim(0, y_max)
+            self._line_ax.set_ylim(0, 10000)
             self._line_ax.set_title('Number of each species')
             carnivores = mpatches.Patch(color='red', label='Carnivores')
             herbivores = mpatches.Patch(color='blue', label='Herbivores')
@@ -265,6 +265,8 @@ class Graphics:
         -------
             None
         """
+        max_amount = max(total_carnivores, total_herbivores)
+        self._line_ax.set_ylim(0, max_amount+1.1*max_amount)
         ydata_line1 = self._line1.get_ydata()
         ydata_line2 = self._line2.get_ydata()
         ydata_line1[year] = total_herbivores
