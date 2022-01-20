@@ -124,6 +124,7 @@ class Graphics:
         # create new figure window
         if self._fig is None:
             self._fig = plt.figure()
+
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
@@ -155,7 +156,7 @@ class Graphics:
             self._line_ax.set_title('Number of each species')
             carnivores = mpatches.Patch(color='red', label='Carnivores')
             herbivores = mpatches.Patch(color='blue', label='Herbivores')
-            plt.legend(handles=[herbivores, carnivores], loc='upper left')
+            plt.legend(handles=[herbivores, carnivores], loc='upper right')
 
         if self._time_ax is None:
             self._time_ax = self._fig.add_axes([0.4, 0.83, 0.2, 0.2])
