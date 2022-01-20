@@ -91,6 +91,7 @@ class Graphics:
         self._hist3_bins = None
         self.txt = None
         self.y_max = None
+        self.max = 0
 
     def setup(self, final_step, img_step, y_max=None, cmax_animals=None, hist_specs=None):
         """
@@ -268,9 +269,13 @@ class Graphics:
         -------
             None
         """
+
         if self.y_max is None:
             max_amount = max(total_carnivores, total_herbivores)
-            self._line_ax.set_ylim(0, max_amount * 1.1)
+            if max_amount > self.max:
+                self.max = max_amount
+            self._line_ax.set_ylim(0, self.max * 1.1)
+
         else:
             self._line_ax.set_ylim(0, self.y_max)
         ydata_line1 = self._line1.get_ydata()
