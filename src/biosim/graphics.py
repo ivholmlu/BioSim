@@ -153,7 +153,7 @@ class Graphics:
             self._line_ax.set_title('Number of each species')
             carnivores = mpatches.Patch(color='red', label='Carnivores')
             herbivores = mpatches.Patch(color='blue', label='Herbivores')
-            plt.legend(handles=[carnivores, herbivores], loc='upper left')
+            plt.legend(handles=[herbivores, carnivores], loc='upper left')
 
         if self._time_ax is None:
             self._time_ax = self._fig.add_axes([0.4, 0.83, 0.2, 0.2])
@@ -374,7 +374,7 @@ class Graphics:
         if self._img_base is None or step % self._img_step != 0:
             return
         fig = plt.gcf()
-        fig.set_size_inches(19.2, 10.8)  # (38.4, 21.6), (25.6, 14.4)
+        fig.set_size_inches(38.4, 21.6)  # (38.4, 21.6), (25.6, 14.4)
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))
