@@ -380,7 +380,7 @@ class Graphics:
         if self._img_base is None or step % self._img_step != 0:
             return
         fig = plt.gcf()
-        fig.set_size_inches(38.4, 21.6)  # (38.4, 21.6), (25.6, 14.4)
+        fig.set_size_inches(25.6, 14.4)  # (38.4, 21.6), (25.6, 14.4)
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))
