@@ -90,6 +90,7 @@ class Graphics:
         self._hist3_ax = None
         self._hist3_bins = None
         self.txt = None
+        self.y_max = None
 
     def setup(self, final_step, img_step, y_max=None, cmax_animals=None, hist_specs=None):
         """
@@ -108,8 +109,10 @@ class Graphics:
         if cmax_animals is None:
             cmax_animals = {'Herbivore': 200, 'Carnivore': 50}
 
-        if y_max is None:
-            y_max = 10 ** 4
+        if y_max is not None:
+            self.y_max = y_max
+        else:
+            self.y_max = None
 
         if hist_specs is None:
             hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
@@ -149,7 +152,6 @@ class Graphics:
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
             self._line_ax.set_xlim(0, 300)
-            self._line_ax.set_ylim(0, 10000)
             self._line_ax.set_title('Number of each species')
             carnivores = mpatches.Patch(color='red', label='Carnivores')
             herbivores = mpatches.Patch(color='blue', label='Herbivores')
@@ -265,8 +267,11 @@ class Graphics:
         -------
             None
         """
-        max_amount = max(total_carnivores, total_herbivores)
-        self._line_ax.set_ylim(0, max_amount*1.1)
+        if self.y_max is None:
+            max_amount = max(total_carnivores, total_herbivores)
+            self._line_ax.set_ylim(0, max_amount * 1.1)
+        else:
+            self._line_ax.set_ylim(0, self.y_max)
         ydata_line1 = self._line1.get_ydata()
         ydata_line2 = self._line2.get_ydata()
         ydata_line1[year] = total_herbivores
@@ -303,8 +308,8 @@ class Graphics:
         self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step')
         self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step')
         self._hist2_ax.hist(carni_age, self._hist2_bins, color='r', histtype='step')
-        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='r', histtype='step')
-        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step')
+        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='b', histtype='step')
+        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='r', histtype='step')
 
     def _update_headers(self):
         """
