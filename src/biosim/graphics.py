@@ -266,7 +266,7 @@ class Graphics:
             None
         """
         max_amount = max(total_carnivores, total_herbivores)
-        self._line_ax.set_ylim(0, max_amount+1.1*max_amount)
+        self._line_ax.set_ylim(0, max_amount*1.1)
         ydata_line1 = self._line1.get_ydata()
         ydata_line2 = self._line2.get_ydata()
         ydata_line1[year] = total_herbivores
