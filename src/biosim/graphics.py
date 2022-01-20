@@ -156,7 +156,7 @@ class Graphics:
             self._line_ax.set_title('Number of each species')
             carnivores = mpatches.Patch(color='red', label='Carnivores')
             herbivores = mpatches.Patch(color='blue', label='Herbivores')
-            plt.legend(handles=[herbivores, carnivores], loc='upper right')
+            plt.legend(handles=[herbivores, carnivores], loc='upper left')
 
         if self._time_ax is None:
             self._time_ax = self._fig.add_axes([0.4, 0.83, 0.2, 0.2])
