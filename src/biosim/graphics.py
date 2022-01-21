@@ -188,7 +188,7 @@ class Graphics:
             self._heat2_ax.set_xticks([1, 6, 11, 16, 21])
 
             vmax_carn = cmax_animals['Carnivore']
-            self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
+            self._heat2_img = self._heat2_ax.imshow(self._heat2_map,    
                                                     interpolation='nearest', vmin=0, vmax=vmax_carn,
                                                     cmap='plasma')
             colorbar_2 = plt.colorbar(self._heat2_img, ax=self._heat2_ax,
