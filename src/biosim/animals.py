@@ -23,7 +23,7 @@ class Animals:
         """
         self.fitness = 0
         self.alive = True
-        self.baby = {'age': 0, 'weight': 0.0, 'species': self.species}
+        self.baby = {'age': 0, 'weight': 0.0}
 
         if attr is not None:
             if not attr['age'] >= 0:
@@ -47,6 +47,7 @@ class Animals:
         q_weight = 1 / (1 + math.exp(-self.param['phi_weight'] *
                                      (self.weight - self.param['w_half'])))
         self.fitness = q_age * q_weight
+
 
     def weight_gain(self, gain=0.0):
         """
@@ -188,7 +189,6 @@ class Herbivores(Animals):
     """
     Herbivore subclass with inherited properties from the parent class.
     """
-    species = 'Herbivore'
     param = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
              'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
              'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
@@ -201,7 +201,6 @@ class Carnivores(Animals):
     Carnivore subclass with inherited properties from the parent class.
     """
     eaten = 0
-    species = 'Carnivore'
     param = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
              'eta': 0.125, 'a_half': 40.0, 'phi_age': 0.3,
              'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4,

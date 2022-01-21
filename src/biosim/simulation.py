@@ -67,7 +67,7 @@ class BioSim:
         #. a list containing a dictionary with keys 'loc' and 'pop'
         #. the value of 'pop' must contain a list of dictionaries
             #. with a key 'species' with a string value of either 'Herbivore' or 'Carnivore',
-            #. a key with string 'age' with a integer value, and
+            #. a key with string 'age' with an integer value, and
             #. a key with string 'weight' with an integer/float value. ::
 
             initial_population = [{'loc': (2, 7), 'pop': [{'species': 'Herbivore', 'age': 5,
@@ -105,9 +105,14 @@ class BioSim:
         """
         if seed is not None:
             random.seed(seed)
+
+        if vis_years == 0:
+            self.img_years = 1
+
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.island = Island(island_map)
+        self.island.assign_animals(self.ini_pop)
         self.vis_years = vis_years
         self.img_years = img_years
         self.ymax_animals = ymax_animals
@@ -119,10 +124,12 @@ class BioSim:
 
         self._graphics = Graphics(img_dir, img_base, img_fmt, self.island_map,
                                   self.heat_map1, self.heat_map2)
-        self.years = 0
+        self.year = 0
         self.final_year = None
         self.log_data = []
         self.log_filename = log_file
+        if self.img_years is None:
+            self.img_years = self.vis_years
 
     def set_animal_parameters(self, species, params):
         """
@@ -187,13 +194,10 @@ class BioSim:
         the simulation will be continued from where it last ended. So after simulating 30 years,
         it will now continue simulating from year 30 and simulate onwards 50 more years.
         """
-        self.island.assign_animals(self.ini_pop)
-        self.final_year = num_years + self.years
+
+        self.final_year = num_years + self.year
         self._graphics.setup(self.final_year, self.vis_years, self.ymax_animals,
                              self.cmax_animals, self.hist_specs)
-
-        if self.img_years is None:
-            self.img_years = self.vis_years
 
         try:
             if self.img_years % self.vis_years != 0:
@@ -201,19 +205,19 @@ class BioSim:
         except ZeroDivisionError:
             pass
 
-        while self.years < self.final_year:
+        while self.year < self.final_year:
             self.island.cycle()
             histogram_dict = self.get_attributes
             total_herbivores = len(histogram_dict['Herbivores']['fitness'])
             total_carnivores = len(histogram_dict['Carnivores']['fitness'])
 
             if self.vis_years != 0:
-                self._graphics.update_line_graph(self.years, total_herbivores, total_carnivores)
+                self._graphics.update_line_graph(self.year, total_herbivores, total_carnivores)
 
             if self.vis_years == 0:
                 plt.close()
 
-            if self.vis_years != 0 and self.years % self.vis_years == 0:
+            if self.vis_years != 0 and self.year % self.vis_years == 0:
                 animal_coords = self.island.get_coord_animals()
                 for coord, n_animals in animal_coords.items():
                     x = list(coord)[0]
@@ -221,7 +225,7 @@ class BioSim:
                     self.heat_map1[x, y] = n_animals['Herbivores']
                     self.heat_map2[x, y] = n_animals['Carnivores']
 
-                self._graphics.update(self.years, self.heat_map1, self.heat_map2, total_herbivores,
+                self._graphics.update(self.year, self.heat_map1, self.heat_map2, total_herbivores,
                                       total_carnivores, histogram_dict['Herbivores']['fitness'],
                                       histogram_dict['Carnivores']['fitness'],
                                       histogram_dict['Herbivores']['age'],
@@ -230,10 +234,10 @@ class BioSim:
                                       histogram_dict['Carnivores']['weight'])
                 plt.pause(0.001)
 
-            self.years += 1
+            self.year += 1
 
             if self.log_filename is not None:
-                self.log_data.append([self.years, total_herbivores, total_carnivores])
+                self.log_data.append([self.year, total_herbivores, total_carnivores])
                 self.write_log_data(self.log_filename, self.log_data)
 
     def add_population(self, population):
@@ -271,15 +275,10 @@ class BioSim:
         ani_dict = self.island.get_animals_per_species()
         return ani_dict['Herbivore'] + ani_dict['Carnivore']
 
-    @staticmethod
-    def coord_animals(self):
-        """Return the amount of each species in each landscape object on island"""
-        return self.island.get_coord_animals()
-
     @property
-    def year(self):
+    def current_year(self):
         """Return the current year in simulation"""
-        return self.years
+        return self.year
 
     @property
     def get_attributes(self):
@@ -292,6 +291,11 @@ class BioSim:
         Number of animals per species in island, as dictionary.
         """
         return self.island.get_animals_per_species()
+
+    @staticmethod
+    def coord_animals(self):
+        """Return the amount of each species in each landscape object on island"""
+        return self.island.get_coord_animals()
 
     @staticmethod
     def write_log_data(log_filename, log_data):

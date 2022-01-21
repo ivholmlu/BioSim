@@ -50,7 +50,7 @@ def test_no_plot_simulation():
     sim.simulate(50)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(autouse=True)
 # Taken from https://stackoverflow.com/questions/60127165/pytest-test-function-that-creates-plots
 def plot_fn():
     def _plot(points):

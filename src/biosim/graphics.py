@@ -20,6 +20,7 @@
 """
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 import subprocess
 import os
@@ -89,6 +90,8 @@ class Graphics:
         self._hist3_ax = None
         self._hist3_bins = None
         self.txt = None
+        self.y_max = None
+        self.max = 0
 
     def setup(self, final_step, img_step, y_max=None, cmax_animals=None, hist_specs=None):
         """
@@ -105,10 +108,12 @@ class Graphics:
 
         """
         if cmax_animals is None:
-            cmax_animals = {'Herbivore': 200, 'Carnivore': 50}
+            cmax_animals = {'Herbivore': 180, 'Carnivore': 75}
 
-        if y_max is None:
-            y_max = 10 ** 4
+        if y_max is not None:
+            self.y_max = y_max
+        else:
+            self.y_max = None
 
         if hist_specs is None:
             hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
@@ -120,6 +125,7 @@ class Graphics:
         # create new figure window
         if self._fig is None:
             self._fig = plt.figure()
+
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
@@ -148,8 +154,10 @@ class Graphics:
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(2, 3, 2)
             self._line_ax.set_xlim(0, 300)
-            self._line_ax.set_ylim(0, y_max)
             self._line_ax.set_title('Number of each species')
+            carnivores = mpatches.Patch(color='red', label='Carnivores')
+            herbivores = mpatches.Patch(color='blue', label='Herbivores')
+            plt.legend(handles=[herbivores, carnivores], loc='lower right')
 
         if self._time_ax is None:
             self._time_ax = self._fig.add_axes([0.4, 0.83, 0.2, 0.2])
@@ -163,23 +171,29 @@ class Graphics:
         if self._heat1_ax is None:
             self._heat1_ax = self._fig.add_subplot(2, 3, 4)
             self._heat1_ax.set_title('Herbivore distribution')
-            self._heat1_ax.set_yticks([1, 5, 11, 16, 21])
+            self._heat1_ax.set_yticks([1, 6, 11, 16, 21])
+            self._heat1_ax.set_xticks([1, 6, 11, 16, 21])
             vmax_herb = cmax_animals['Herbivore']
             self._heat1_img = self._heat1_ax.imshow(self._heat1_map,
                                                     interpolation='nearest', vmin=0, vmax=vmax_herb,
                                                     cmap='plasma')
-            plt.colorbar(self._heat1_img, ax=self._heat1_ax, orientation='vertical', cmap='plasma')
+            colorbar_1 = plt.colorbar(self._heat1_img, ax=self._heat1_ax,
+                                      orientation='vertical', cmap='plasma')
+            colorbar_1.ax.set_ylabel('Number of herbivores')
 
         if self._heat2_ax is None:
             self._heat2_ax = self._fig.add_subplot(2, 3, 5)
             self._heat2_ax.set_title('Carnivore distribution')
-            self._heat2_ax.set_yticks([1, 5, 11, 16, 21])
+            self._heat2_ax.set_yticks([1, 6, 11, 16, 21])
+            self._heat2_ax.set_xticks([1, 6, 11, 16, 21])
 
             vmax_carn = cmax_animals['Carnivore']
-            self._heat2_img = self._heat2_ax.imshow(self._heat2_map,
+            self._heat2_img = self._heat2_ax.imshow(self._heat2_map,    
                                                     interpolation='nearest', vmin=0, vmax=vmax_carn,
                                                     cmap='plasma')
-            plt.colorbar(self._heat2_img, ax=self._heat2_ax, orientation='vertical', cmap='plasma')
+            colorbar_2 = plt.colorbar(self._heat2_img, ax=self._heat2_ax,
+                                      orientation='vertical', cmap='plasma')
+            colorbar_2.ax.set_ylabel('Number of carnivores')
 
         if self._hist1_ax is None:
             self._hist1_ax = self._fig.add_subplot(3, 3, 3)
@@ -255,6 +269,15 @@ class Graphics:
         -------
             None
         """
+
+        if self.y_max is None:
+            max_amount = max(total_carnivores, total_herbivores)
+            if max_amount > self.max:
+                self.max = max_amount
+            self._line_ax.set_ylim(0, self.max * 1.1)
+
+        else:
+            self._line_ax.set_ylim(0, self.y_max)
         ydata_line1 = self._line1.get_ydata()
         ydata_line2 = self._line2.get_ydata()
         ydata_line1[year] = total_herbivores
@@ -291,8 +314,8 @@ class Graphics:
         self._hist1_ax.hist(carni_fitness, self._hist1_bins, color='r', histtype='step')
         self._hist2_ax.hist(herbi_age, self._hist2_bins, color='b', histtype='step')
         self._hist2_ax.hist(carni_age, self._hist2_bins, color='r', histtype='step')
-        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='r', histtype='step')
-        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='b', histtype='step')
+        self._hist3_ax.hist(herbi_weight, self._hist3_bins, color='b', histtype='step')
+        self._hist3_ax.hist(carni_weight, self._hist3_bins, color='r', histtype='step')
 
     def _update_headers(self):
         """
@@ -362,7 +385,7 @@ class Graphics:
         if self._img_base is None or step % self._img_step != 0:
             return
         fig = plt.gcf()
-        fig.set_size_inches(19.2, 10.8)  # (38.4, 21.6), (25.6, 14.4)
+        fig.set_size_inches(25.6, 14.4)  # (38.4, 21.6), (25.6, 14.4)
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))

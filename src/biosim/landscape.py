@@ -68,17 +68,12 @@ class Landscape:
         -------
 
         """
+
         for herbivore in self.herbivores:
-            if self.current_fodder >= herbivore.param['F']:
-                herbivore.weight_gain(herbivore.param['F'])
-                self.current_fodder -= herbivore.param['F']
+            if self.current_fodder != 0:
+                herbivore.weight_gain(min(self.current_fodder, herbivore.param['F']))
+                self.current_fodder -= min((self.current_fodder, herbivore.param['F']))
 
-            elif self.current_fodder < herbivore.param['F']:
-                herbivore.weight_gain(self.current_fodder)
-                self.current_fodder -= self.current_fodder
-
-            elif self.current_fodder == 0:
-                break
 
         self.herbivores.sort(key=lambda animal: animal.fitness, reverse=False)
         random.shuffle(self.carnivores)
@@ -87,7 +82,7 @@ class Landscape:
             delta_phi_max = carnivore.param['DeltaPhiMax']
             carnivore.eaten = 0
 
-            for attempts, herbivore in enumerate(self.herbivores, 1):
+            for herbivore in self.herbivores:
                 p = (carnivore.fitness - herbivore.fitness)/delta_phi_max
                 prev_eaten = carnivore.eaten
                 if random.random() < p and herbivore.alive is True:
@@ -98,8 +93,7 @@ class Landscape:
                         break
                     else:
                         carnivore.weight_gain(herbivore.weight)
-                elif attempts == len(self.herbivores):
-                    break
+
 
         self.herbivores = [herbivore for herbivore in self.herbivores if herbivore.alive is True]
 
@@ -267,8 +261,9 @@ class Lowland(Landscape):
     """
     Subclass of Landscape
     """
-    habitable = True
-    f_max = 800
+    param = {'f_max': 800, 'habitable': True}
+    habitable = param['habitable']
+    f_max = param['f_max']
 
 
 class Highland(Landscape):
