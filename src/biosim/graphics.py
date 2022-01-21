@@ -108,7 +108,7 @@ class Graphics:
 
         """
         if cmax_animals is None:
-            cmax_animals = {'Herbivore': 200, 'Carnivore': 50}
+            cmax_animals = {'Herbivore': 180, 'Carnivore': 75}
 
         if y_max is not None:
             self.y_max = y_max
